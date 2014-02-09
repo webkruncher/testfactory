@@ -6,6 +6,14 @@ namespace Tests
 	struct Test : public Products::Product, Tbd
 	{
 			Test(Machine::MainBase& _main,const string _name) : Product(_main,_name) {}
+			protected:
+			void swap(int a,int b)
+			{
+				Tbd& me(*this);
+				int B(me[b]);
+				me[b]=me[a];
+				me[a]=B;
+			}
 	};
 
 	class Positive : public Test
@@ -31,14 +39,6 @@ namespace Tests
 			virtual operator const bool () ;
 			public: 
 			static Bubble* create(Machine::MainBase& _main){return new Bubble(_main);}
-			private:
-			void swap(int a,int b)
-			{
-				Tbd& me(*this);
-				int B(me[b]);
-				me[b]=me[a];
-				me[a]=B;
-			}
 	};
 
 	class Insertion : public Test
@@ -47,14 +47,6 @@ namespace Tests
 			virtual operator const bool () ;
 			public: 
 			static Insertion* create(Machine::MainBase& _main){return new Insertion(_main);}
-			private:
-			void swap(int a,int b)
-			{
-				Tbd& me(*this);
-				int B(me[b]);
-				me[b]=me[a];
-				me[a]=B;
-			}
 	};
 } // Tests
 
