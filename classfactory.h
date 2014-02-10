@@ -5,19 +5,17 @@
 
 namespace ClassFactory
 {
-	class Factory : protected map<string,Products::Product*>
+	class Factory : protected vector<Products::Product*>
 	{
 		protected:
 		Factory(Machine::MainBase& _main) : main(_main) {}
-		virtual ~Factory() { for (iterator it=begin();it!=end();it++) delete it->second; }
+		virtual ~Factory() { for (iterator it=begin();it!=end();it++) delete (*it);}
 		Machine::MainBase& main;
 		public:
 		template <typename T>
-			void generate(string name)
+			void generate()
 		{
-			Factory& me(*this);
-			if (find(name)!=end()) throw string("Attempting to add ")+name+string(" more than one time");
-			me[name]=T::create(main);
+			push_back(T::create(main));
 		}
 		Products::Product& operator()(string); 
 		virtual operator const bool ()  = 0;

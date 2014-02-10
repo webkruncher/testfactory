@@ -21,20 +21,20 @@ namespace Tests
 			friend class ClassFactory::Factory;
 			Positive(Machine::MainBase& _main) : Test(_main,"Positive Test") {}
 			virtual operator const bool () ;
-			public: 
 			static Positive* create(Machine::MainBase& _main){return new Positive(_main);}
 	};
 
 	class Negative : public Test
 	{
+			friend class ClassFactory::Factory;
 			Negative(Machine::MainBase& _main) : Test(_main,"Negative Test") {}
 			virtual operator const bool () ;
-			public: 
 			static Negative* create(Machine::MainBase& _main){return new Negative(_main);}
 	};
 
 	class Bubble : public Test
 	{
+			friend class ClassFactory::Factory;
 			Bubble(Machine::MainBase& _main) : Test(_main,"Bubble Sort") {}
 			virtual operator const bool () ;
 			public: 
@@ -43,6 +43,7 @@ namespace Tests
 
 	class Insertion : public Test
 	{
+			friend class ClassFactory::Factory;
 			Insertion(Machine::MainBase& _main) : Test(_main,"Insertion Sort") {}
 			virtual operator const bool () ;
 			public: 

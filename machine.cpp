@@ -21,7 +21,7 @@ struct CustomFactory : ClassFactory::Factory
 		bool success(true);
 		for (iterator it=begin();it!=end();it++)
 		{
-			Products::Product& product(*it->second);
+			Products::Product& product(**it);
 			if (!product) success=false;
 		}
 		return success;
@@ -59,8 +59,8 @@ int main(int argc,char** argv)
 			Main main(argc,argv);
 			if (!main) throw "cannot load main";
 			CustomFactory factory(main);
-			factory.generate<Tests::Positive>("Positive");
-			factory.generate<Tests::Negative>("Negative");
+			factory.generate<Tests::Positive>();
+			factory.generate<Tests::Negative>();
 			const bool results(factory);
 			cout<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
@@ -70,8 +70,8 @@ int main(int argc,char** argv)
 			Main main(argc,argv);
 			if (!main) throw "cannot load main";
 			CustomFactory factory(main);
-			factory.generate<Tests::Bubble>("Bubble");
-			factory.generate<Tests::Insertion>("Insertion");
+			factory.generate<Tests::Bubble>();
+			factory.generate<Tests::Insertion>();
 			const bool results(factory);
 			cout<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
