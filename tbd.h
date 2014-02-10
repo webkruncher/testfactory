@@ -7,7 +7,7 @@ using namespace std;
 
 struct Tbd : vector<int>
 {
-	operator const bool ()
+	virtual operator const bool ()
 	{
 		struct timespec tp;
 		clock_gettime(CLOCK_MONOTONIC,&tp);

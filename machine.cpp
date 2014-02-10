@@ -32,13 +32,20 @@ class Main : Machine::MainBase
 {
 	friend int main(int,char**);
 	Main(int _argc,char** _argv) : MainBase(_argc,_argv) {}
+	virtual operator const bool ()
+	{
+		Tbd& tbd(*this);
+		if (!Tbd::operator const bool ()) return false;
+		check=tbd;
+		sort(check.begin(),check.end());
+		return true;
+	}
+	Tbd check;
 	public: 
 	virtual const bool operator()(Tbd& tested,const bool expectation) 
 	{ 
 		Tbd& me(*this);
-		Tbd check=me;
-		sort(check.begin(),check.end());
-		cout<<setw(10)<<"Un sorted:"<<me<<endl;
+		cout<<setw(10)<<"Un-sorted:"<<me<<endl;
 		cout<<setw(10)<<"Sorted:"<<check<<endl;
 		cout<<setw(10)<<"Test:"<<tested<<endl;
 		const bool result(tested==check); 
