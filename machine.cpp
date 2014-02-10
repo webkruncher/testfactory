@@ -54,99 +54,47 @@ template <typename T>
 	}
 };
 
+
+template <typename KeyType, typename ContainerType>
+	const bool Test(int argc,char** argv)
+	{
+		bool Pass(true);
+		{
+			cerr<<endl<<"System Tests"<<endl;
+			Main<ContainerType> main(argc,argv);
+			if (!main) throw "cannot load main";
+			CustomFactory factory;
+			factory.generate<Tests::Positive<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Negative<ContainerType>,Main<ContainerType> >(main);
+			const bool results(factory);
+			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
+			if (!results) Pass=false;
+		}
+		{
+			cerr<<endl<<"Sort Tests"<<endl;
+			Main<ContainerType> main(argc,argv);
+			if (!main) throw "cannot load main";
+
+			CustomFactory factory;
+			factory.generate<Tests::Bubble<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Insertion<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
+			const bool results(factory);
+			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
+			if (!results) Pass=false;
+		}
+		return Pass;
+	}
+
 int main(int argc,char** argv)
 {
 	stringstream except;
 	bool Pass(true);
 	try
 	{
-		{
-			typedef int KeyType ;
-			typedef vector<KeyType> ContainerType;
-			cerr<<endl<<"System Tests"<<endl;
-			Main<ContainerType> main(argc,argv);
-			if (!main) throw "cannot load main";
-			CustomFactory factory;
-			factory.generate<Tests::Positive<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Negative<ContainerType>,Main<ContainerType> >(main);
-			const bool results(factory);
-			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
-			if (!results) Pass=false;
-		}
-		{
-			cerr<<endl<<"Sort Tests"<<endl;
-			typedef int KeyType ;
-			typedef vector<KeyType> ContainerType;
-			cerr<<endl<<"System Tests"<<endl;
-			Main<ContainerType> main(argc,argv);
-			if (!main) throw "cannot load main";
-
-			CustomFactory factory;
-			factory.generate<Tests::Bubble<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Insertion<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
-			const bool results(factory);
-			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
-			if (!results) Pass=false;
-		}
-		{
-			typedef float KeyType ;
-			typedef vector<KeyType> ContainerType;
-			cerr<<endl<<"System Tests"<<endl;
-			Main<ContainerType> main(argc,argv);
-			if (!main) throw "cannot load main";
-			CustomFactory factory;
-			factory.generate<Tests::Positive<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Negative<ContainerType>,Main<ContainerType> >(main);
-			const bool results(factory);
-			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
-			if (!results) Pass=false;
-		}
-		{
-			cerr<<endl<<"Sort Tests"<<endl;
-			typedef float KeyType ;
-			typedef vector<KeyType> ContainerType;
-			cerr<<endl<<"System Tests"<<endl;
-			Main<ContainerType> main(argc,argv);
-			if (!main) throw "cannot load main";
-
-			CustomFactory factory;
-			factory.generate<Tests::Bubble<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Insertion<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
-			const bool results(factory);
-			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
-			if (!results) Pass=false;
-		}
-		{
-			typedef CustomKey::Stuff KeyType ;
-			typedef vector<KeyType> ContainerType;
-			cerr<<endl<<"System Tests"<<endl;
-			Main<ContainerType> main(argc,argv);
-			if (!main) throw "cannot load main";
-			CustomFactory factory;
-			factory.generate<Tests::Positive<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Negative<ContainerType>,Main<ContainerType> >(main);
-			const bool results(factory);
-			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
-			if (!results) Pass=false;
-		}
-		{
-			cerr<<endl<<"Sort Tests"<<endl;
-			typedef CustomKey::Stuff KeyType ;
-			typedef vector<KeyType> ContainerType;
-			cerr<<endl<<"System Tests"<<endl;
-			Main<ContainerType> main(argc,argv);
-			if (!main) throw "cannot load main";
-
-			CustomFactory factory;
-			factory.generate<Tests::Bubble<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Insertion<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
-			const bool results(factory);
-			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
-			if (!results) Pass=false;
-		}
+		if (!Test<int,vector<int> >(argc,argv)) Pass=false;
+		if (!Test<float,vector<float> >(argc,argv)) Pass=false;
+		if (!Test<CustomKey::Stuff,vector<CustomKey::Stuff> >(argc,argv)) Pass=false;
 		cout<<"Overall results:"<<boolalpha<<Pass<<endl;
 	}
 	catch(char* who) {except<<"Exception: "<<who;}
