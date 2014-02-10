@@ -67,5 +67,15 @@ namespace Tests
 			return success;
 		}
 
+		Selection::operator const bool () 
+		{
+			cout<<"Testing "<<name<<endl;
+			Tbd& tbd(main); Tbd& me(*this);
+			//me=tbd;
+
+
+			const bool success(main(*this,false));
+			return success;
+		}
 } //namespace Tests
 

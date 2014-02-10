@@ -79,6 +79,7 @@ int main(int argc,char** argv)
 			CustomFactory factory(main);
 			factory.generate<Tests::Bubble>();
 			factory.generate<Tests::Insertion>();
+			factory.generate<Tests::Selection>();
 			const bool results(factory);
 			cout<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;

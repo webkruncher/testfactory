@@ -47,6 +47,14 @@ namespace Tests
 			virtual operator const bool () ;
 			static Insertion* create(Machine::MainBase& _main){return new Insertion(_main);}
 	};
+
+	class Selection : Test
+	{
+			friend class ClassFactory::Factory;
+			Selection(Machine::MainBase& _main) : Test(_main,"Selection Sort (wip)") {}
+			virtual operator const bool () ;
+			static Selection* create(Machine::MainBase& _main){return new Selection(_main);}
+	};
 } // Tests
 
 #endif // __MISC_H__
