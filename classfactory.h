@@ -9,11 +9,9 @@ namespace ClassFactory
 	class Factory : protected vector<Products::Product*>
 	{
 		protected:
-		Factory(Machine::MainBase& _main) : main(_main) {}
 		virtual ~Factory() { for (iterator it=begin();it!=end();it++) delete (*it);}
-		Machine::MainBase& main;
 		public:
-		template <typename T> void generate() { push_back(T::create(main)); }
+		template <typename T,typename M> void generate(M& _main) { push_back(T::create(_main)); }
 		Products::Product& operator()(string); 
 		virtual operator const bool ()  = 0;
 	};

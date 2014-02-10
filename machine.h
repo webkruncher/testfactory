@@ -8,13 +8,14 @@ namespace Machine
 	{
 		virtual operator const string& () = 0;
 	};
-	class MainBase : public Tbd
+	class MainBase 
 	{
 		protected:
 		MainBase(int _argc,char** _argv) : argc(_argc), argv(_argv) {}
 		int argc; char** argv;
 		public: 
-		virtual const bool operator()(Tbd&,const bool expectation=true) = 0;
+		virtual const bool operator()(TbdBase&,const bool expectation=true) = 0;
+		virtual operator TbdBase& () = 0;
 	};
 } // Machine
 

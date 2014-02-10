@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -15,7 +16,6 @@ namespace MainProgram {class CustomFactory;}
 
 struct CustomFactory : ClassFactory::Factory
 {
-	CustomFactory(Machine::MainBase& _main) : Factory(_main) { }
 	virtual operator const bool ()  
 	{
 		bool success(true);
@@ -28,24 +28,23 @@ struct CustomFactory : ClassFactory::Factory
 	}
 };
 
-class Main : Machine::MainBase
+template <typename T>
+	struct Main : public Machine::MainBase
 {
-	friend int main(int,char**);
 	Main(int _argc,char** _argv) : MainBase(_argc,_argv) {}
 	virtual operator const bool ()
 	{
-		Tbd& tbd(*this);
-		if (!Tbd::operator const bool ()) return false;
-		check=tbd;
+		if (!unsorted) return false;
+		check=unsorted;
 		sort(check.begin(),check.end());
 		return true;
 	}
-	Tbd check;
+	virtual operator TbdBase& () {return unsorted;}
+	Tbd<T> unsorted,check;
 	public: 
-	virtual const bool operator()(Tbd& tested,const bool expectation) 
+	virtual const bool operator()(TbdBase& tested,const bool expectation) 
 	{ 
-		Tbd& me(*this);
-		cerr<<setw(10)<<"Un-sorted:"<<me<<endl;
+		cerr<<setw(10)<<"Un-sorted:"<<unsorted<<endl;
 		cerr<<setw(10)<<"Sorted:"<<check<<endl;
 		cerr<<setw(10)<<"Test:"<<tested<<endl;
 		const bool result(tested==check); 
@@ -62,24 +61,59 @@ int main(int argc,char** argv)
 	try
 	{
 		{
+			typedef int KeyType ;
+			typedef vector<KeyType> ContainerType;
 			cerr<<endl<<"System Tests"<<endl;
-			Main main(argc,argv);
+			Main<ContainerType> main(argc,argv);
 			if (!main) throw "cannot load main";
-			CustomFactory factory(main);
-			factory.generate<Tests::Positive>();
-			factory.generate<Tests::Negative>();
+			CustomFactory factory;
+			factory.generate<Tests::Positive<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Negative<ContainerType>,Main<ContainerType> >(main);
 			const bool results(factory);
 			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
 		}
 		{
 			cerr<<endl<<"Sort Tests"<<endl;
-			Main main(argc,argv);
+			typedef int KeyType ;
+			typedef vector<KeyType> ContainerType;
+			cerr<<endl<<"System Tests"<<endl;
+			Main<ContainerType> main(argc,argv);
 			if (!main) throw "cannot load main";
-			CustomFactory factory(main);
-			factory.generate<Tests::Bubble>();
-			factory.generate<Tests::Insertion>();
-			factory.generate<Tests::Selection>();
+
+			CustomFactory factory;
+			factory.generate<Tests::Bubble<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Insertion<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
+			const bool results(factory);
+			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
+			if (!results) Pass=false;
+		}
+		{
+			typedef float KeyType ;
+			typedef vector<KeyType> ContainerType;
+			cerr<<endl<<"System Tests"<<endl;
+			Main<ContainerType> main(argc,argv);
+			if (!main) throw "cannot load main";
+			CustomFactory factory;
+			factory.generate<Tests::Positive<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Negative<ContainerType>,Main<ContainerType> >(main);
+			const bool results(factory);
+			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
+			if (!results) Pass=false;
+		}
+		{
+			cerr<<endl<<"Sort Tests"<<endl;
+			typedef float KeyType ;
+			typedef vector<KeyType> ContainerType;
+			cerr<<endl<<"System Tests"<<endl;
+			Main<ContainerType> main(argc,argv);
+			if (!main) throw "cannot load main";
+
+			CustomFactory factory;
+			factory.generate<Tests::Bubble<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Insertion<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
 			const bool results(factory);
 			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
@@ -93,3 +127,63 @@ int main(int argc,char** argv)
 	if (!except.str().empty()) cerr<<except.str()<<endl;
 	return !Pass;
 }
+
+#if 1
+template <> inline	ostream& Tbd<vector<int> >::operator<<(ostream& o) 
+{
+	for (tt::const_iterator it= begin();it!=end();it++) { o<<setw(2)<<(*it)<<" "; }
+	return o;
+}
+
+template <> inline TbdBase& Tbd<vector<int> >::operator=(TbdBase& b) 
+{
+	Tbd& you(static_cast<Tbd&>(b));
+	tt& me(*this);
+	me=you;
+	return *this;
+}
+
+template <> inline Tbd<vector<int> >::operator const bool()
+{
+	struct timespec tp;
+	clock_gettime(CLOCK_MONOTONIC,&tp);
+	tp.tv_nsec; srand(tp.tv_nsec);
+	const int M((rand()%10)+10);
+	const int N((rand()%20)+10);
+	cout<<"Loading test with "<<M<<" numbers with maximum value of 30"<<endl;
+	for (int j=0;j<M;j++) push_back(rand()%N);
+	return true;
+}
+
+template <> inline	ostream& Tbd<vector<float> >::operator<<(ostream& o) 
+{
+	for (tt::const_iterator it= begin();it!=end();it++) { o<<setw(4)<<fixed<<setprecision(1)<<(*it)<<" "; }
+	return o;
+}
+
+template <> inline TbdBase& Tbd<vector<float> >::operator=(TbdBase& b) 
+{
+	Tbd& you(static_cast<Tbd&>(b));
+	tt& me(*this);
+	me=you;
+	return *this;
+}
+
+
+template <> inline Tbd<vector<float> >::operator const bool()
+{
+	struct timespec tp;
+	clock_gettime(CLOCK_MONOTONIC,&tp);
+	tp.tv_nsec; srand(tp.tv_nsec);
+	const int M((rand()%10)+10);
+	const int N((rand()%20)+10);
+	cout<<"Loading test with "<<M<<" numbers with maximum value of 30"<<endl;
+	for (int j=0;j<M;j++) 
+	{
+		double j(rand()%(N*7));
+		if (j) j/=5;
+		tt::push_back(j);
+	}
+	return true;
+}
+#endif
