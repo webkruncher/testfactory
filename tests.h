@@ -51,7 +51,7 @@ namespace Tests
 	class Selection : Test
 	{
 			friend class ClassFactory::Factory;
-			Selection(Machine::MainBase& _main) : Test(_main,"Selection Sort (wip)") {}
+			Selection(Machine::MainBase& _main) : Test(_main,"Selection Sort") {}
 			virtual operator const bool () ;
 			static Selection* create(Machine::MainBase& _main){return new Selection(_main);}
 	};

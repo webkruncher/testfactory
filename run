@@ -1,0 +1,11 @@
+
+Pass=true
+ntests=0
+for (( j=0;j<100;j++ )); do
+	./machine 2>/dev/null
+	result=$?
+	if [[ $result != 0 ]]; then Pass=false; fi
+	((ntests++))
+done
+echo "Tested ${ntests} times, Pass:${Pass}"
+

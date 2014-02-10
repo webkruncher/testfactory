@@ -1,8 +1,10 @@
 
-machine: machine.cpp classfactory.h machine.h products.h tbd.h tests.o 
+INCLUDES= machine.h products.h tbd.h 
+
+machine: machine.cpp tests.o classfactory.h 
 	g++ machine.cpp -o machine tests.o
 
-tests.o: tests.cpp tests.h classfactory.h machine.h products.h tbd.h
+tests.o: tests.cpp tests.h $(INCLUDES)
 	g++ tests.cpp -c
 
 clean:

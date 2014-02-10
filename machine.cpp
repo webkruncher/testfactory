@@ -45,12 +45,12 @@ class Main : Machine::MainBase
 	virtual const bool operator()(Tbd& tested,const bool expectation) 
 	{ 
 		Tbd& me(*this);
-		cout<<setw(10)<<"Un-sorted:"<<me<<endl;
-		cout<<setw(10)<<"Sorted:"<<check<<endl;
-		cout<<setw(10)<<"Test:"<<tested<<endl;
+		cerr<<setw(10)<<"Un-sorted:"<<me<<endl;
+		cerr<<setw(10)<<"Sorted:"<<check<<endl;
+		cerr<<setw(10)<<"Test:"<<tested<<endl;
 		const bool result(tested==check); 
 		const bool pass(result==expectation);
-		cout<<"Expected:"<<boolalpha<<expectation<<", result:"<<boolalpha<<result<<", pass:"<<boolalpha<<pass<<endl<<endl;
+		cerr<<"Expected:"<<boolalpha<<expectation<<", result:"<<boolalpha<<result<<", pass:"<<boolalpha<<pass<<endl<<endl;
 		return pass;
 	}
 };
@@ -58,22 +58,22 @@ class Main : Machine::MainBase
 int main(int argc,char** argv)
 {
 	stringstream except;
+	bool Pass(true);
 	try
 	{
-		bool Pass(true);
 		{
-			cout<<endl<<"System Tests"<<endl;
+			cerr<<endl<<"System Tests"<<endl;
 			Main main(argc,argv);
 			if (!main) throw "cannot load main";
 			CustomFactory factory(main);
 			factory.generate<Tests::Positive>();
 			factory.generate<Tests::Negative>();
 			const bool results(factory);
-			cout<<"Success:"<<boolalpha<<results<<endl<<endl;
+			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
 		}
 		{
-			cout<<endl<<"Sort Tests"<<endl;
+			cerr<<endl<<"Sort Tests"<<endl;
 			Main main(argc,argv);
 			if (!main) throw "cannot load main";
 			CustomFactory factory(main);
@@ -81,7 +81,7 @@ int main(int argc,char** argv)
 			factory.generate<Tests::Insertion>();
 			factory.generate<Tests::Selection>();
 			const bool results(factory);
-			cout<<"Success:"<<boolalpha<<results<<endl<<endl;
+			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
 		}
 		cout<<"Overall results:"<<boolalpha<<Pass<<endl;
@@ -91,6 +91,5 @@ int main(int argc,char** argv)
 	catch(exception& e) {except<<"Exception: "<<e.what();}
 	catch(...) {except<<"Unknown Exception";}
 	if (!except.str().empty()) cerr<<except.str()<<endl;
-	return 0;
+	return !Pass;
 }
-

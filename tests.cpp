@@ -71,10 +71,17 @@ namespace Tests
 		{
 			cout<<"Testing "<<name<<endl;
 			Tbd& tbd(main); Tbd& me(*this);
-			//me=tbd;
-
-
-			const bool success(main(*this,false));
+			me=tbd;
+			int split(size());
+			while (split>0)
+			{
+				pair<int,int> selection(0,me[0]);
+				for (int j=0;j<split;j++)
+					if (me[j]>=selection.first) {selection.first=me[j]; selection.second=j;}
+				swap(selection.second,split-1);
+				--split;
+			}
+			const bool success(main(*this));
 			return success;
 		}
 } //namespace Tests
