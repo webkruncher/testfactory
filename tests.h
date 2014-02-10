@@ -3,6 +3,7 @@
 #define __MISC_H__
 namespace Tests
 {
+	using namespace ToBeDone;
 	template <typename T>
 		struct Test : public Products::Product, Tbd<T>
 	{

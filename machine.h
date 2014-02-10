@@ -4,6 +4,7 @@
 
 namespace Machine
 {
+	using namespace ToBeDone;
 	struct ProductBase 
 	{
 		virtual operator const string& () = 0;
