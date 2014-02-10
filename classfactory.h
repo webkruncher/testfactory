@@ -12,11 +12,12 @@ namespace ClassFactory
 		virtual ~Factory() { for (iterator it=begin();it!=end();it++) delete it->second; }
 		Machine::MainBase& main;
 		public:
-		void operator()(string name,Products::Product* p)
+		template <typename T>
+			void generate(string name)
 		{
 			Factory& me(*this);
 			if (find(name)!=end()) throw string("Attempting to add ")+name+string(" more than one time");
-			me[name]=p;
+			me[name]=T::create(main);
 		}
 		Products::Product& operator()(string); 
 		virtual operator const bool ()  = 0;
