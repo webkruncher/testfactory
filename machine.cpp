@@ -118,6 +118,35 @@ int main(int argc,char** argv)
 			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
 		}
+		{
+			typedef CustomKey::Stuff KeyType ;
+			typedef vector<KeyType> ContainerType;
+			cerr<<endl<<"System Tests"<<endl;
+			Main<ContainerType> main(argc,argv);
+			if (!main) throw "cannot load main";
+			CustomFactory factory;
+			factory.generate<Tests::Positive<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Negative<ContainerType>,Main<ContainerType> >(main);
+			const bool results(factory);
+			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
+			if (!results) Pass=false;
+		}
+		{
+			cerr<<endl<<"Sort Tests"<<endl;
+			typedef CustomKey::Stuff KeyType ;
+			typedef vector<KeyType> ContainerType;
+			cerr<<endl<<"System Tests"<<endl;
+			Main<ContainerType> main(argc,argv);
+			if (!main) throw "cannot load main";
+
+			CustomFactory factory;
+			factory.generate<Tests::Bubble<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Insertion<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
+			const bool results(factory);
+			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
+			if (!results) Pass=false;
+		}
 		cout<<"Overall results:"<<boolalpha<<Pass<<endl;
 	}
 	catch(char* who) {except<<"Exception: "<<who;}
@@ -128,7 +157,7 @@ int main(int argc,char** argv)
 	return !Pass;
 }
 
-#if 1
+
 namespace ToBeDone
 {
 	template <> inline	ostream& Tbd<vector<int> >::operator<<(ostream& o) 
@@ -137,13 +166,6 @@ namespace ToBeDone
 		return o;
 	}
 
-	template <> inline TbdBase& Tbd<vector<int> >::operator=(TbdBase& b) 
-	{
-		Tbd& you(static_cast<Tbd&>(b));
-		tt& me(*this);
-		me=you;
-		return *this;
-	}
 
 	template <> inline Tbd<vector<int> >::operator const bool()
 	{
@@ -163,14 +185,6 @@ namespace ToBeDone
 		return o;
 	}
 
-	template <> inline TbdBase& Tbd<vector<float> >::operator=(TbdBase& b) 
-	{
-		Tbd& you(static_cast<Tbd&>(b));
-		tt& me(*this);
-		me=you;
-		return *this;
-	}
-
 
 	template <> inline Tbd<vector<float> >::operator const bool()
 	{
@@ -188,5 +202,30 @@ namespace ToBeDone
 		}
 		return true;
 	}
+
+
+	template <> inline	ostream& Tbd<vector<CustomKey::Stuff> >::operator<<(ostream& o) 
+	{
+		for (tt::const_iterator it= begin();it!=end();it++) { o<<setw(2)<<(*it)<<" "; }
+		return o;
+	}
+
+
+	template <> inline Tbd<vector<CustomKey::Stuff> >::operator const bool()
+	{
+		struct timespec tp;
+		clock_gettime(CLOCK_MONOTONIC,&tp);
+		tp.tv_nsec; srand(tp.tv_nsec);
+		const int M((rand()%10)+10);
+		cout<<"Loading test with "<<M<<" chars "<<endl;
+		for (int j=0;j<M;j++) 
+		{
+			CustomKey::Stuff tmp;
+			push_back(tmp);
+		}
+		return true;
+	}
+
+
 } // ToBeDone
-#endif
+

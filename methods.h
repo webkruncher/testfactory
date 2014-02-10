@@ -78,7 +78,7 @@ namespace Tests
 		int split(size());
 		while (split>0)
 		{
-			pair<KeyType,int> selection(0,me[0]);
+			pair<KeyType,int> selection(me[0],0);
 			for (int j=0;j<split;j++)
 				if (me[j]>=selection.first) {selection.first=me[j]; selection.second=j;}
 			swap<KeyType>(selection.second,split-1);
@@ -89,31 +89,15 @@ namespace Tests
 	}
 } // Tests
 
-#if 0
-template <> inline	ostream& Tbd<ContainerType>::operator<<(ostream& o) 
+namespace ToBeDone
 {
-	for (tt::const_iterator it= begin();it!=end();it++) { o<<setw(2)<<(*it)<<" "; }
-	return o;
-}
+	template <> TbdBase& Tbd<ContainerType>::operator=(TbdBase& b) 
+	{
+		Tbd& you(static_cast<Tbd&>(b));
+		tt& me(*this);
+		me=you;
+		return *this;
+	}
+} // namespace
 
-template <> inline TbdBase& Tbd<ContainerType>::operator=(TbdBase& b) 
-{
-	Tbd& you(static_cast<Tbd&>(b));
-	tt& me(*this);
-	me=you;
-	return *this;
-}
-
-template <> inline Tbd<ContainerType>::operator const bool()
-{
-	struct timespec tp;
-	clock_gettime(CLOCK_MONOTONIC,&tp);
-	tp.tv_nsec; srand(tp.tv_nsec);
-	const int M((rand()%10)+10);
-	const int N((rand()%20)+10);
-	cout<<"Loading test with "<<M<<" numbers with maximum value of 30"<<endl;
-	for (int j=0;j<M;j++) push_back(rand()%N);
-	return true;
-}
-#endif
 

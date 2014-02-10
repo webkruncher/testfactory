@@ -22,3 +22,9 @@ using namespace std;
 
 #undef KeyType
 #undef ContainerType
+#define KeyType CustomKey::Stuff 
+#define ContainerType vector<KeyType> 
+#include "methods.h"
+
+#undef KeyType
+#undef ContainerType

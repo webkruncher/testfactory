@@ -1,6 +1,33 @@
 
 #ifndef __MISC_H__
 #define __MISC_H__
+
+namespace CustomKey
+{
+	struct Stuff
+	{
+		Stuff() {z=(rand()%10)+'a';}
+		Stuff(int j) {z=j;}
+		Stuff(const Stuff& a) : z(a.z) {}
+		Stuff& operator=(const Stuff& a) {z=a.z;}
+		Stuff& operator=(char c) {z=c;}
+		Stuff& operator+=(char c) {z+=c;}
+		bool operator==(const Stuff& a) const { return z==a.z; }
+		bool operator<(const Stuff& a) const { return z<a.z; }
+		bool operator>(const Stuff& a) { return z>a.z; }
+		bool operator>=(const Stuff& a) { return z>=a.z; }
+		private:
+		char z;
+		friend ostream& operator<<(ostream&,const Stuff&);
+		ostream& operator<<(ostream& o) const
+		{
+			o<<z<<" ";
+			return o;
+		}
+	};
+	inline ostream& operator<<(ostream& o,const Stuff& s){return s.operator<<(o);}
+} // CustomKey
+
 namespace Tests
 {
 	using namespace ToBeDone;
@@ -10,7 +37,7 @@ namespace Tests
 			Test(Machine::MainBase& _main,const string _name) : Product(_main,_name) {}
 			protected:
 			template <typename S>
-				void swap(S a,S b)
+				void swap(int a,int b)
 			{
 				Tbd<T>& me(*this);
 				S B(me[b]);
