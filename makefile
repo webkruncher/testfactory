@@ -1,5 +1,5 @@
 
-INCLUDES= machine.h products.h tbd.h methods.h
+INCLUDES= machine.h products.h tbd.h 
 
 machine: machine.cpp tests.o classfactory.h 
 	g++ machine.cpp -o machine tests.o

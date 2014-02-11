@@ -10,39 +10,6 @@ using namespace std;
 #include <sstream>
 using namespace std;
 
-#define KeyType int 
-#define ContainerType vector<KeyType> 
-#include "methods.h"
-
-#undef KeyType
-#undef ContainerType
-#define KeyType float 
-#define ContainerType vector<KeyType> 
-#include "methods.h"
-
-#undef KeyType
-#undef ContainerType
-#define KeyType double 
-#define ContainerType vector<KeyType> 
-#include "methods.h"
-
-#undef KeyType
-#undef ContainerType
-#define KeyType string 
-#define ContainerType vector<KeyType> 
-#include "methods.h"
-
-
-#undef KeyType
-#undef ContainerType
-#define KeyType CustomKey::Stuff 
-#define ContainerType vector<KeyType> 
-#include "methods.h"
-
-#undef KeyType
-#undef ContainerType
-
-
 namespace ToBeDone
 {
 	inline void reseed()	
