@@ -62,7 +62,6 @@ namespace Tests
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				const string& Name(*this);
 				cout<<"Testing "<<Name<<endl;
-				//for (int j=0;j<me.size();j++) me[j]+=(rand()%5);
 				for (typename Tbd<TT>::iterator it=me.begin();it!=me.end();it++) (*it)+=(rand()%5);
 				const bool success(main(*this,false));  // expected to fail
 				return success;
