@@ -95,6 +95,8 @@ int main(int argc,char** argv)
 	{
 		if (!Test<int,vector<int> >(argc,argv)) Pass=false;
 		if (!Test<float,vector<float> >(argc,argv)) Pass=false;
+		if (!Test<double,vector<double> >(argc,argv)) Pass=false;
+		if (!Test<string,vector<string> >(argc,argv)) Pass=false;
 		if (!Test<CustomKey::Stuff,vector<CustomKey::Stuff> >(argc,argv)) Pass=false;
 		cout<<"Overall results:"<<boolalpha<<Pass<<endl;
 	}
