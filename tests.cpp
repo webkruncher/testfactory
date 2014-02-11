@@ -117,7 +117,7 @@ namespace ToBeDone
 	// String specializations
 	template <> ostream& Tbd<vector<string> >::operator<<(ostream& o) 
 	{
-		for (tt::const_iterator it= begin();it!=end();it++) { o<<setw(4)<<fixed<<setprecision(1)<<(*it)<<" "; }
+		for (tt::const_iterator it= begin();it!=end();it++) { o<<(*it)<<" "; }
 		return o;
 	}
 
