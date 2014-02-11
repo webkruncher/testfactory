@@ -2,7 +2,6 @@
 using namespace std;
 #include "tbd.h"
 
-
 #include "machine.h"
 #include "products.h"
 #include "tests.h"
@@ -28,6 +27,8 @@ using namespace std;
 
 #undef KeyType
 #undef ContainerType
+
+
 namespace ToBeDone
 {
 	template <> ostream& Tbd<vector<int> >::operator<<(ostream& o) 
@@ -44,7 +45,7 @@ namespace ToBeDone
 		tp.tv_nsec; srand(tp.tv_nsec);
 		const int M((rand()%10)+10);
 		const int N((rand()%20)+10);
-		cout<<"Loading test with "<<M<<" numbers with maximum value of 30"<<endl;
+		cout<<"Loading int test with "<<M<<" numbers with maximum value of 30"<<endl;
 		for (int j=0;j<M;j++) push_back(rand()%N);
 		return true;
 	}
@@ -63,7 +64,7 @@ namespace ToBeDone
 		tp.tv_nsec; srand(tp.tv_nsec);
 		const int M((rand()%10)+10);
 		const int N((rand()%20)+10);
-		cout<<"Loading test with "<<M<<" numbers with maximum value of 30"<<endl;
+		cout<<"Loading float test with "<<M<<" numbers with maximum value of 30"<<endl;
 		for (int j=0;j<M;j++) 
 		{
 			double j(rand()%(N*7));
@@ -87,11 +88,10 @@ namespace ToBeDone
 		clock_gettime(CLOCK_MONOTONIC,&tp);
 		tp.tv_nsec; srand(tp.tv_nsec);
 		const int M((rand()%10)+10);
-		cout<<"Loading test with "<<M<<" chars "<<endl;
+		cout<<"Loading CustomKey::Stuff test with "<<M<<" chars "<<endl;
 		for (int j=0;j<M;j++) 
 		{
-			CustomKey::Stuff tmp;
-			push_back(tmp);
+			push_back('g'+(rand()%10));
 		}
 		return true;
 	}

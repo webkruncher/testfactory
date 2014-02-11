@@ -6,24 +6,20 @@ namespace CustomKey
 {
 	struct Stuff
 	{
-		Stuff() {z=(rand()%10)+'a';}
-		Stuff(int j) {z=j;}
-		Stuff(const Stuff& a) : z(a.z) {}
-		Stuff& operator=(const Stuff& a) {z=a.z;}
-		Stuff& operator=(char c) {z=c;}
-		Stuff& operator+=(char c) {z+=c;}
-		bool operator==(const Stuff& a) const { return z==a.z; }
-		bool operator<(const Stuff& a) const { return z<a.z; }
-		bool operator>(const Stuff& a) { return z>a.z; }
-		bool operator>=(const Stuff& a) { return z>=a.z; }
+		Stuff() {}
+		Stuff(int j) {Value=j;}
+		Stuff(const Stuff& a) : Value(a.Value) {}
+		Stuff& operator=(const Stuff& a) {Value=a.Value;}
+		Stuff& operator=(char c) {Value=c;}
+		Stuff& operator+=(char c) {Value+=c;}
+		bool operator==(const Stuff& a) const { return Value==a.Value; }
+		bool operator<(const Stuff& a) const { return (Value<a.Value); }
+		bool operator>(const Stuff& a) { return (Value>a.Value); }
+		bool operator>=(const Stuff& a) { return (Value>=a.Value); }
 		private:
-		char z;
+		char Value;
 		friend ostream& operator<<(ostream&,const Stuff&);
-		ostream& operator<<(ostream& o) const
-		{
-			o<<z<<" ";
-			return o;
-		}
+		ostream& operator<<(ostream& o) const { o<<Value<<" "; return o; }
 	};
 	inline ostream& operator<<(ostream& o,const Stuff& s){return s.operator<<(o);}
 } // CustomKey
