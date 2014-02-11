@@ -227,8 +227,7 @@ namespace Tests
 					int child((root * 2) + 1);
 					int swp(root);
 					if (me[swp] < me[child]) swp=child;
-					if ( ( (child+1) <= finish) and (me[swp] < me[child+1]) )
-					swp=(child + 1);
+					if ( ( (child+1) <= finish) and (me[swp] < me[child+1]) ) swp=(child + 1);
 					if (swp!=root)
 					{
 						ty.swap<K>(root,swp);
