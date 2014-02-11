@@ -87,6 +87,61 @@ namespace Tests
 		const bool success(main(*this));
 		return success;
 	}
+
+
+	template <> void HeapSort<ContainerType>::SiftDown(int start,int finish) 
+	{
+		TbdBase& _me(*this);
+		Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+    int root(start);
+    while (((root * 2) + 1) <= finish)
+		{
+        int child((root * 2) + 1);
+        int swp(root);
+        if (me[swp] < me[child]) swp=child;
+        if ( ( (child+1) <= finish) and (me[swp] < me[child+1]) )
+            swp=(child + 1);
+        if (swp!=root)
+				{
+            swap<KeyType>(root,swp);
+            root=swp;
+				} else return;
+		}
+	}
+
+	template <> void HeapSort<ContainerType>::Heapify(int finish) 
+	{
+    int start((finish-2)/2);
+    while (start >= 0) 
+		{
+			SiftDown(start, finish-1);
+			--start; 
+		}
+	}
+
+	template <> HeapSort<ContainerType>::operator const bool () 
+	{
+		cout<<"Testing "<<name<<endl;
+		TbdBase& _tbd(main); 
+		TbdBase& _me(*this);
+		_me=_tbd;
+		Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
+		Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+
+		Heapify(size());
+
+		int finish(size()-1);
+		while (finish)
+		{
+			swap<KeyType>(finish,0);
+			--finish;
+			SiftDown(0,finish);
+		}
+
+		const bool success(main(*this));
+		return success;
+	}
+
 } // Tests
 
 namespace ToBeDone

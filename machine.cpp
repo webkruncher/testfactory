@@ -79,6 +79,7 @@ template <typename KeyType, typename ContainerType>
 			factory.generate<Tests::Bubble<ContainerType>,Main<ContainerType> >(main);
 			factory.generate<Tests::Insertion<ContainerType>,Main<ContainerType> >(main);
 			factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::HeapSort<ContainerType>,Main<ContainerType> >(main);
 			const bool results(factory);
 			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;

@@ -1,3 +1,5 @@
 
+make clean
 make
-./run
+#./run
+./machine

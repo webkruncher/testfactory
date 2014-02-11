@@ -92,6 +92,18 @@ namespace Tests
 			static Selection* create(Machine::MainBase& _main){return new Selection(_main);}
 	};
 
+	template <typename T>
+		class HeapSort : Test<T>
+	{
+			typedef T TT;
+			friend class ClassFactory::Factory;
+			HeapSort(Machine::MainBase& _main) : Test<T>(_main,"Heap Sort (wip)") {}
+			virtual operator const bool () ;
+			static HeapSort* create(Machine::MainBase& _main){return new HeapSort(_main);}
+			void Heapify(int finish);
+			void SiftDown(int start,int finish);
+	};
+
 } // Tests
 
 #endif // __TESTS_H__
