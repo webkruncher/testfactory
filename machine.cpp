@@ -10,9 +10,10 @@ using namespace std;
 #include "products.h"
 #include "classfactory.h"
 namespace MainProgram {class CustomFactory;}
-#include "tests.h"
 #include <set>
 #include <iomanip>
+#include "tests.h"
+#include "customkey.h"
 
 struct CustomFactory : ClassFactory::Factory
 {

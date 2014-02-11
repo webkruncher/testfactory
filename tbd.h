@@ -6,6 +6,13 @@ using namespace std;
 
 namespace ToBeDone
 {
+	inline void reseed()	
+	{
+		struct timespec tp;
+		clock_gettime(CLOCK_MONOTONIC,&tp);
+		tp.tv_nsec; srand(tp.tv_nsec);
+	}
+
 	struct TbdBase 
 	{
 		virtual TbdBase& operator=(TbdBase& b) {return b;}

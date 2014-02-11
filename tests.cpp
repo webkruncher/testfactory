@@ -12,12 +12,6 @@ using namespace std;
 
 namespace ToBeDone
 {
-	inline void reseed()	
-	{
-		struct timespec tp;
-		clock_gettime(CLOCK_MONOTONIC,&tp);
-		tp.tv_nsec; srand(tp.tv_nsec);
-	}
 
 	// Integer specializations
 	template <> ostream& Tbd<vector<int> >::operator<<(ostream& o) 
@@ -103,24 +97,6 @@ namespace ToBeDone
 		}
 		return true;
 	}
-
-
-	// CustomKey::Stuff specializations
-	template <> ostream& Tbd<vector<CustomKey::Stuff> >::operator<<(ostream& o) 
-	{
-		for (tt::const_iterator it= begin();it!=end();it++) { o<<setw(2)<<(*it)<<" "; }
-		return o;
-	}
-
-	template <> Tbd<vector<CustomKey::Stuff> >::operator const bool()
-	{
-		reseed();
-		const int M((rand()%10)+10);
-		cout<<"Loading CustomKey::Stuff test with "<<M<<" chars "<<endl;
-		for (int j=0;j<M;j++) { push_back('g'+(rand()%10)); }
-		return true;
-	}
-
 
 } // ToBeDone
 
