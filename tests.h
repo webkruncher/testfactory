@@ -1,6 +1,6 @@
 
-#ifndef __MISC_H__
-#define __MISC_H__
+#ifndef __TESTS_H__
+#define __TESTS_H__
 
 namespace CustomKey
 {
@@ -94,5 +94,5 @@ namespace Tests
 
 } // Tests
 
-#endif // __MISC_H__
+#endif // __TESTS_H__
 
