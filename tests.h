@@ -144,26 +144,107 @@ namespace Tests
 			static Insertion* create(Machine::MainBase& _main){return new Insertion(_main);}
 	};
 
-	template <typename T>
+	template <typename T,typename K>
 		class Selection : Test<T>
 	{
 			typedef T TT;
+			typedef K KK;
+			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			Selection(Machine::MainBase& _main) : Test<T>(_main,"Selection Sort") {}
-			virtual operator const bool () ;
+			virtual operator const bool () 
+			{
+				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
+				TbdBase& _tbd(_main);
+				TbdBase& _me(*this);
+				TY& ty(*this);
+				_me=_tbd;
+				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
+				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				const string& Name(*this);
+				cout<<"Testing "<<Name<<endl;
+
+				int split(me.size());
+				while (split>0)
+				{
+					pair<K,int> selection(me[0],0);
+					for (int j=0;j<split;j++)
+						if (me[j]>=selection.first) {selection.first=me[j]; selection.second=j;}
+					ty.swap<K>(selection.second,split-1);
+					--split;
+				}
+				const bool success(main(*this));
+				return success;
+			}
 			static Selection* create(Machine::MainBase& _main){return new Selection(_main);}
 	};
 
-	template <typename T>
+	template <typename T,typename K>
 		class HeapSort : Test<T>
 	{
 			typedef T TT;
+			typedef K KK;
+			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			HeapSort(Machine::MainBase& _main) : Test<T>(_main,"Heap Sort") {}
-			virtual operator const bool () ;
+			virtual operator const bool () 
+			{
+				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
+				TbdBase& _tbd(_main);
+				TbdBase& _me(*this);
+				TY& ty(*this);
+				_me=_tbd;
+				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
+				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				const string& Name(*this);
+				cout<<"Testing "<<Name<<endl;
+
+				Heapify(me.size());
+
+				int finish(me.size()-1);
+				while (finish)
+				{
+					ty.swap<K>(finish,0);
+					--finish;
+					SiftDown(0,finish);
+				}
+
+				const bool success(main(*this));
+				return success;
+			}
 			static HeapSort* create(Machine::MainBase& _main){return new HeapSort(_main);}
-			void Heapify(int finish);
-			void SiftDown(int start,int finish);
+			void Heapify(int finish)
+			{
+				int start((finish-2)/2);
+				while (start >= 0) 
+				{
+					SiftDown(start, finish-1);
+					--start; 
+				}
+			}
+			void SiftDown(int start,int finish)
+			{
+				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
+				TbdBase& _tbd(_main);
+				TbdBase& _me(*this);
+				TY& ty(*this);
+				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
+				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				int root(start);
+				while (((root * 2) + 1) <= finish)
+				{
+					int child((root * 2) + 1);
+					int swp(root);
+					if (me[swp] < me[child]) swp=child;
+					if ( ( (child+1) <= finish) and (me[swp] < me[child+1]) )
+					swp=(child + 1);
+					if (swp!=root)
+					{
+						ty.swap<K>(root,swp);
+						root=swp;
+					} else return;
+				}
+			}
 	};
 
 } // Tests

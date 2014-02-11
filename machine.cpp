@@ -78,8 +78,8 @@ template <typename KeyType, typename ContainerType>
 			CustomFactory factory;
 			factory.generate<Tests::Bubble<ContainerType,KeyType>,Main<ContainerType> >(main);
 			factory.generate<Tests::Insertion<ContainerType,KeyType>,Main<ContainerType> >(main);
-			//factory.generate<Tests::Selection<ContainerType>,Main<ContainerType> >(main);
-			//factory.generate<Tests::HeapSort<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Selection<ContainerType,KeyType>,Main<ContainerType> >(main);
+			factory.generate<Tests::HeapSort<ContainerType,KeyType>,Main<ContainerType> >(main);
 			const bool results(factory);
 			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
