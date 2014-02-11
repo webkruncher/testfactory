@@ -14,48 +14,8 @@ namespace Tests
 		return success;
 	}
 
-	template <> Bubble<ContainerType>::operator const bool () 
-	{
-		cout<<"Testing "<<name<<endl;
-		TbdBase& _tbd(main); 
-		TbdBase& _me(*this);
-		_me=_tbd;
-		Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
-		Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
-		int times(size()-1);
-		while (times)
-		{
-			for (int j=0;j<(times);j++)
-				if (me[j]>me[j+1]) 
-					swap<KeyType>(j,j+1);
-			times--;
-		}
-		const bool success(main(*this));
-		return success;
-	}
 
-	template <> Insertion<ContainerType>::operator const bool () 
-	{
-		cout<<"Testing "<<name<<endl;
-		TbdBase& _tbd(main); 
-		TbdBase& _me(*this);
-		_me=_tbd;
-		Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
-		Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 
-		for (int i=1; i<size(); i++)
-		{
-			int j=i;
-			while ((j>0) and (me[j-1] > me[j]) )
-			{
-				swap<KeyType>(j,j-1);
-				--j;
-			}
-		}
-
-		const bool success(main(*this,true));
-		return success;
-	}
 
 	template <> Selection<ContainerType>::operator const bool () 
 	{

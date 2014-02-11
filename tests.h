@@ -77,23 +77,70 @@ namespace Tests
 			static Negative* create(Machine::MainBase& _main){return new Negative(_main);}
 	};
 
-	template <typename T>
+	template <typename T,typename K>
 		class Bubble : Test<T>
 	{
 			typedef T TT;
+			typedef K KK;
+			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			Bubble(Machine::MainBase& _main) : Test<T>(_main,"Bubble Sort") {}
-			virtual operator const bool () ;
+			virtual operator const bool () 
+			{
+				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
+				TbdBase& _tbd(_main);
+				TbdBase& _me(*this);
+				TY& ty(*this);
+				_me=_tbd;
+				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
+				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				const string& Name(*this);
+				cout<<"Testing "<<Name<<endl;
+				int times(me.size()-1);
+				while (times)
+				{
+					for (int j=0;j<(times);j++)
+						if (me[j]>me[j+1]) 
+							ty.swap<KK>(j,j+1);
+					times--;
+				}
+				const bool success(main(*this));
+				return success;
+			}
 			static Bubble* create(Machine::MainBase& _main){return new Bubble(_main);}
 	};
 
-	template <typename T>
+	template <typename T,typename K>
 		class Insertion : Test<T>
 	{
 			typedef T TT;
+			typedef K KK;
+			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			Insertion(Machine::MainBase& _main) : Test<T>(_main,"Insertion Sort") {}
-			virtual operator const bool () ;
+			virtual operator const bool () 
+			{
+				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
+				TbdBase& _tbd(_main);
+				TbdBase& _me(*this);
+				TY& ty(*this);
+				_me=_tbd;
+				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
+				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				const string& Name(*this);
+				cout<<"Testing "<<Name<<endl;
+				for (int i=1; i<me.size(); i++)
+				{
+					int j=i;
+					while ((j>0) and (me[j-1] > me[j]) )
+					{
+						ty.swap<K>(j,j-1);
+						--j;
+					}
+				}
+				const bool success(main(*this,true));
+				return success;
+			}
 			static Insertion* create(Machine::MainBase& _main){return new Insertion(_main);}
 	};
 
