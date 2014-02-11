@@ -131,7 +131,7 @@ namespace ToBeDone
 		{
 			int j(rand()%(N*7));
 			if (j) j/=5;
-			stringstream ss; ss<<"t"<<j;
+			stringstream ss; ss<<"t"<<setfill('0')<<setw(2)<<j;
 			tt::push_back(ss.str());
 		}
 		return true;
