@@ -2,7 +2,7 @@
 #ifndef __TESTS_H__
 #define __TESTS_H__
 
-#if 0
+
 namespace CustomKey
 {
 	struct Stuff
@@ -24,7 +24,7 @@ namespace CustomKey
 	};
 	inline ostream& operator<<(ostream& o,const Stuff& s){return s.operator<<(o);}
 } // CustomKey
-#endif
+
 
 namespace Tests
 {
@@ -67,13 +67,29 @@ namespace Tests
 			static Positive* create(Machine::MainBase& _main){return new Positive(_main);}
 	};
 
-	template <typename T>
+	template <typename T,typename K>
 		class Negative : Test<T>
 	{
 			typedef T TT;
+			typedef K KK;
+			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			Negative(Machine::MainBase& _main) : Test<T>(_main,"Negative Test") {}
-			virtual operator const bool () ;
+			virtual operator const bool () 
+			{
+				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
+				TbdBase& _tbd(_main);
+				TbdBase& _me(*this);
+				TY& ty(*this);
+				_me=_tbd;
+				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
+				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				const string& Name(*this);
+				cout<<"Testing "<<Name<<endl;
+				for (int j=0;j<me.size();j++) me[j]+=(rand()%5);
+				const bool success(main(*this,false));  // expected to fail
+				return success;
+			}
 			static Negative* create(Machine::MainBase& _main){return new Negative(_main);}
 	};
 
@@ -208,7 +224,6 @@ namespace Tests
 					--finish;
 					SiftDown(0,finish);
 				}
-
 				const bool success(main(*this));
 				return success;
 			}

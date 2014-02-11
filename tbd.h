@@ -21,7 +21,13 @@ namespace ToBeDone
 	{
 
 		typedef T tt;
-		virtual TbdBase& operator=(TbdBase& b)  {return *this;}
+		virtual TbdBase& operator=(TbdBase& b)
+		{
+			Tbd& you(static_cast<Tbd&>(b));
+			tt& me(*this);
+			me=you;
+			return *this;
+		}
 		virtual bool operator==(TbdBase& b) 
 		{
 			Tbd& you(static_cast<Tbd&>(b));

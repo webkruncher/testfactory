@@ -33,11 +33,11 @@ using namespace std;
 #include "methods.h"
 
 
-//#undef KeyType
-//#undef ContainerType
-//#define KeyType CustomKey::Stuff 
-//#define ContainerType vector<KeyType> 
-//#include "methods.h"
+#undef KeyType
+#undef ContainerType
+#define KeyType CustomKey::Stuff 
+#define ContainerType vector<KeyType> 
+#include "methods.h"
 
 #undef KeyType
 #undef ContainerType
@@ -69,7 +69,7 @@ namespace ToBeDone
 		for (int j=0;j<M;j++) push_back(rand()%N);
 		return true;
 	}
-#if 0
+
 	// Float specializations
 	template <> ostream& Tbd<vector<float> >::operator<<(ostream& o) 
 	{
@@ -153,7 +153,7 @@ namespace ToBeDone
 		for (int j=0;j<M;j++) { push_back('g'+(rand()%10)); }
 		return true;
 	}
-#endif
+
 
 } // ToBeDone
 

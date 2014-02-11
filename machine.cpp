@@ -65,7 +65,7 @@ template <typename KeyType, typename ContainerType>
 			if (!main) throw "cannot load main";
 			CustomFactory factory;
 			factory.generate<Tests::Positive<ContainerType>,Main<ContainerType> >(main);
-			factory.generate<Tests::Negative<ContainerType>,Main<ContainerType> >(main);
+			factory.generate<Tests::Negative<ContainerType,KeyType>,Main<ContainerType> >(main);
 			const bool results(factory);
 			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
@@ -94,10 +94,10 @@ int main(int argc,char** argv)
 	try
 	{
 		if (!Test<int,vector<int> >(argc,argv)) Pass=false;
-		//if (!Test<float,vector<float> >(argc,argv)) Pass=false;
-		//if (!Test<double,vector<double> >(argc,argv)) Pass=false;
-		//if (!Test<string,vector<string> >(argc,argv)) Pass=false;
-		//if (!Test<CustomKey::Stuff,vector<CustomKey::Stuff> >(argc,argv)) Pass=false;
+		if (!Test<float,vector<float> >(argc,argv)) Pass=false;
+		if (!Test<double,vector<double> >(argc,argv)) Pass=false;
+		if (!Test<string,vector<string> >(argc,argv)) Pass=false;
+		if (!Test<CustomKey::Stuff,vector<CustomKey::Stuff> >(argc,argv)) Pass=false;
 		cout<<"Overall results:"<<boolalpha<<Pass<<endl;
 	}
 	catch(char* who) {except<<"Exception: "<<who;}
