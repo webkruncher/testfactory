@@ -2,6 +2,7 @@
 #ifndef __TESTS_H__
 #define __TESTS_H__
 
+#if 0
 namespace CustomKey
 {
 	struct Stuff
@@ -23,6 +24,7 @@ namespace CustomKey
 	};
 	inline ostream& operator<<(ostream& o,const Stuff& s){return s.operator<<(o);}
 } // CustomKey
+#endif
 
 namespace Tests
 {
@@ -48,7 +50,20 @@ namespace Tests
 			typedef T TT;
 			friend class ClassFactory::Factory;
 			Positive(Machine::MainBase& _main) : Test<T>(_main,"Positive Test") {}
-			virtual operator const bool () ;
+			virtual operator const bool () 
+			{
+				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
+				TbdBase& _tbd(_main);
+				TbdBase& _me(*this);
+				_me=_tbd;
+				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
+				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				const string& Name(*this);
+				cout<<"Testing "<<Name<<endl;
+				sort(me.begin(),me.end());
+				const bool success(main(*this));
+				return success;
+			}
 			static Positive* create(Machine::MainBase& _main){return new Positive(_main);}
 	};
 

@@ -2,15 +2,6 @@
 namespace Tests
 {
 	using namespace ToBeDone;
-	template <> Positive<ContainerType>::operator const bool () 
-	{
-		cout<<"Testing "<<name<<endl;
-		TbdBase& tbd(main); TbdBase& me(*this);
-		me=tbd;
-		sort(begin(),end());
-		const bool success(main(*this));
-		return success;
-	}
 
 	template <> Negative<ContainerType>::operator const bool () 
 	{
