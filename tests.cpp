@@ -89,10 +89,7 @@ namespace ToBeDone
 		tp.tv_nsec; srand(tp.tv_nsec);
 		const int M((rand()%10)+10);
 		cout<<"Loading CustomKey::Stuff test with "<<M<<" chars "<<endl;
-		for (int j=0;j<M;j++) 
-		{
-			push_back('g'+(rand()%10));
-		}
+		for (int j=0;j<M;j++) { push_back('g'+(rand()%10)); }
 		return true;
 	}
 
