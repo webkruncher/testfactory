@@ -93,26 +93,26 @@ namespace Tests
 	{
 		TbdBase& _me(*this);
 		Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
-    int root(start);
-    while (((root * 2) + 1) <= finish)
+		int root(start);
+		while (((root * 2) + 1) <= finish)
 		{
-        int child((root * 2) + 1);
-        int swp(root);
-        if (me[swp] < me[child]) swp=child;
-        if ( ( (child+1) <= finish) and (me[swp] < me[child+1]) )
-            swp=(child + 1);
-        if (swp!=root)
-				{
-            swap<KeyType>(root,swp);
-            root=swp;
-				} else return;
+			int child((root * 2) + 1);
+			int swp(root);
+			if (me[swp] < me[child]) swp=child;
+			if ( ( (child+1) <= finish) and (me[swp] < me[child+1]) )
+			swp=(child + 1);
+			if (swp!=root)
+			{
+				swap<KeyType>(root,swp);
+				root=swp;
+			} else return;
 		}
 	}
 
 	template <> void HeapSort<ContainerType>::Heapify(int finish) 
 	{
-    int start((finish-2)/2);
-    while (start >= 0) 
+		int start((finish-2)/2);
+		while (start >= 0) 
 		{
 			SiftDown(start, finish-1);
 			--start; 
