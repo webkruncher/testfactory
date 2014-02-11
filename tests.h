@@ -97,7 +97,7 @@ namespace Tests
 	{
 			typedef T TT;
 			friend class ClassFactory::Factory;
-			HeapSort(Machine::MainBase& _main) : Test<T>(_main,"Heap Sort (wip)") {}
+			HeapSort(Machine::MainBase& _main) : Test<T>(_main,"Heap Sort") {}
 			virtual operator const bool () ;
 			static HeapSort* create(Machine::MainBase& _main){return new HeapSort(_main);}
 			void Heapify(int finish);
