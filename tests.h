@@ -1,6 +1,7 @@
 
 #ifndef __TESTS_H__
 #define __TESTS_H__
+#include <vector>
 
 namespace Tests
 {
@@ -62,7 +63,19 @@ namespace Tests
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				const string& Name(*this);
 				cout<<"Testing "<<Name<<endl;
+
+				// This works
 				for (int j=0;j<me.size();j++) me[j]+=(rand()%5);
+
+				// But, the accessing the vector iterator won't compile, even if I use me.begin and me.end
+				// for (iterator it=me.begin();it!=me.end();it++) (*it)+=(rand()%5);
+				// So, I tried this:
+				// for (TT::iterator it=me.begin();it!=me.end();it++) (*it)+=(rand()%5);
+				// So, I tried this, wich assumes the container is a vector, but at least the vector type is specialized
+				// for (std::vector<KK>::iterator it=me.begin();it!=me.end();it++) (*it)+=(rand()%5);
+				// But, that won't work either.  So, how do I access my vector iterator?
+
+
 				const bool success(main(*this,false));  // expected to fail
 				return success;
 			}
