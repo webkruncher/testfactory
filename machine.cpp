@@ -30,20 +30,13 @@ struct CustomFactory : ClassFactory::Factory
 	}
 };
 
-struct MashBase
-{
-	virtual void go()
-	{
-		cout<<"Curious"<<endl;
-	}
-};
 
 template <typename T,typename K>
-	struct Mash : Mutants<T,K,MashBase>
+	struct Mash : Mutants<T,K,Machine::MainBase>
 {
-	Mash() {}
-	Mash(const Mash& a) : Mutants<T,K,MashBase>(a) {}
-	virtual void operator()(Mash& b) { Mutants<T,K,MashBase>::operator()(b); }
+	Mash(Machine::MainBase& _machine) : Mutants<T,K,Machine::MainBase>(_machine) {}
+	Mash(Machine::MainBase& _machine, const Mash& a) : Mutants<T,K,Machine::MainBase>(a,_machine) {}
+	virtual void operator()(Mash& b) { Mutants<T,K,Machine::MainBase>::operator()(b); }
 	virtual void operator()() 
 	{
 		T& o(*this);
@@ -55,7 +48,7 @@ template <typename T,typename K>
 template <typename T,typename K>
 	struct Main : public Machine::MainBase
 {
-	Main(int _argc,char** _argv) : MainBase(_argc,_argv) {}
+	Main(int _argc,char** _argv) : MainBase(_argc,_argv),unsorted(*this) {}
 	virtual operator const bool ()
 	{
 		randomlimits.clear();
@@ -74,7 +67,7 @@ template <typename T,typename K>
 	public: 
 	virtual const bool operator()(ToBeDone::TbdBase& tested,const bool expectation) 
 	{ 
-		Mash<ToBeDone::Tbd<T>,K > full(unsorted),empty;
+		Mash<ToBeDone::Tbd<T>,K > full(*this,unsorted),empty(*this);
 		full(empty);
 
 		cerr<<setw(10)<<"Un-sorted:"<<unsorted<<endl;
@@ -84,6 +77,10 @@ template <typename T,typename K>
 		const bool pass(result==expectation);
 		cerr<<"Expected:"<<boolalpha<<expectation<<", result:"<<boolalpha<<result<<", pass:"<<boolalpha<<pass<<endl<<endl;
 		return pass;
+	}
+	virtual void Run(ToBeDone::TbdBase& tbd) 
+	{
+		cout<<"Mashing:"<<tbd<<endl;
 	}
 };
 
