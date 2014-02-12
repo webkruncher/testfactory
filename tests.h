@@ -37,9 +37,9 @@ namespace Tests
 				TbdBase& _me(*this);
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				const string& Name(*this);
-				cout<<"Testing "<<Name<<endl;
 				sort(me.begin(),me.end());
 				const bool success(main(*this));
+				cout<<Name<<"->"<<boolalpha<<success<<endl;
 				return success;
 			}
 			static Positive* create(Machine::MainBase& _main){return new Positive(_main);}
@@ -59,9 +59,9 @@ namespace Tests
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				TY& ty(*this);
 				const string& Name(*this);
-				cout<<"Testing "<<Name<<endl;
 				for (typename Tbd<TT>::iterator it=me.begin();it!=me.end();it++) (*it)+=(rand()%5);
 				const bool success(main(*this,false));  // expected to fail
+				cout<<Name<<"->"<<boolalpha<<success<<endl;
 				return success;
 			}
 			static Negative* create(Machine::MainBase& _main){return new Negative(_main);}
@@ -81,7 +81,6 @@ namespace Tests
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				TY& ty(*this);
 				const string& Name(*this);
-				cout<<"Testing "<<Name<<endl;
 				int times(me.size()-1);
 				while (times)
 				{
@@ -91,6 +90,7 @@ namespace Tests
 					times--;
 				}
 				const bool success(main(*this));
+				cout<<Name<<"->"<<boolalpha<<success<<endl;
 				return success;
 			}
 			static Bubble* create(Machine::MainBase& _main){return new Bubble(_main);}
@@ -110,7 +110,6 @@ namespace Tests
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				TY& ty(*this);
 				const string& Name(*this);
-				cout<<"Testing "<<Name<<endl;
 				for (int i=1; i<me.size(); i++)
 				{
 					int j=i;
@@ -121,6 +120,7 @@ namespace Tests
 					}
 				}
 				const bool success(main(*this,true));
+				cout<<Name<<"->"<<boolalpha<<success<<endl;
 				return success;
 			}
 			static Insertion* create(Machine::MainBase& _main){return new Insertion(_main);}
@@ -140,7 +140,6 @@ namespace Tests
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				TY& ty(*this);
 				const string& Name(*this);
-				cout<<"Testing "<<Name<<endl;
 
 				int split(me.size());
 				while (split>0)
@@ -152,6 +151,7 @@ namespace Tests
 					--split;
 				}
 				const bool success(main(*this));
+				cout<<Name<<"->"<<boolalpha<<success<<endl;
 				return success;
 			}
 			static Selection* create(Machine::MainBase& _main){return new Selection(_main);}
@@ -171,7 +171,6 @@ namespace Tests
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				TY& ty(*this);
 				const string& Name(*this);
-				cout<<"Testing "<<Name<<endl;
 
 				Heapify(me.size());
 
@@ -183,6 +182,7 @@ namespace Tests
 					SiftDown(0,finish);
 				}
 				const bool success(main(*this));
+				cout<<Name<<"->"<<boolalpha<<success<<endl;
 				return success;
 			}
 			static HeapSort* create(Machine::MainBase& _main){return new HeapSort(_main);}

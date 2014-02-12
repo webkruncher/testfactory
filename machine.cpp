@@ -37,14 +37,7 @@ template <typename T,typename K>
 	Mash(Machine::MainBase& _machine) : Mutants<ToBeDone::TbdBase,T,K,Machine::MainBase>(_machine) {}
 	Mash(Machine::MainBase& _machine, const Mash& a) : Mutants<ToBeDone::TbdBase,T,K,Machine::MainBase>(a,_machine) {}
 	virtual void operator()(Mash& b,ToBeDone::TbdBase& tbd)
-	{ 
-		Mutants<ToBeDone::TbdBase,T,K,Machine::MainBase>::operator()(b,tbd); 
-	}
-	virtual void operator()() 
-	{
-		T& o(*this);
-		cout<<">:"<<o<<endl;
-	}
+		{ Mutants<ToBeDone::TbdBase,T,K,Machine::MainBase>::operator()(b,tbd); }
 };
 
 
@@ -56,8 +49,7 @@ template <typename T,typename K>
 	{
 		randomlimits.clear();
 		ToBeDone::reseed();	
-		//randomlimits["M"]=((rand()%4)+3);
-		randomlimits["M"]=3;
+		randomlimits["M"]=((rand()%5)+3);
 		randomlimits["N"]=((rand()%20)+10);
 		ToBeDone::Tbd<T>& loader(unsorted);
 		if (!loader(randomlimits["M"],randomlimits["N"])) return false;
@@ -72,15 +64,13 @@ template <typename T,typename K>
 	virtual bool Traverse(ToBeDone::TbdBase& tbd)
 	{
 		Mash<ToBeDone::Tbd<T>,K > full(*this,unsorted),empty(*this);
-		cout<<"Traverse:"<<tbd<<endl;
 		full(empty,tbd);
-		cout<<"Done Traverse:"<<tbd<<endl;
 		return true;
 	} 
 	virtual void Run(ToBeDone::TbdBase& mutant,ToBeDone::TbdBase& tbd)
 	{
 		tbd=mutant;
-		cout<<"Mashing:"<<tbd<<endl;
+		cout<<"Mutants:"<<tbd<<"->";
 		tbd.Run();
 	}
 	virtual const bool operator()(ToBeDone::TbdBase& tested,const bool expectation) 
@@ -99,6 +89,7 @@ template <typename KeyType, typename ContainerType>
 	const bool Test(int argc,char** argv)
 	{
 		bool Pass(true);
+		if (false)
 		{
 			cerr<<endl<<"System Tests"<<endl;
 			Main<ContainerType,KeyType> main(argc,argv);
@@ -115,7 +106,6 @@ template <typename KeyType, typename ContainerType>
 			cerr<<endl<<"Sort Tests"<<endl;
 			Main<ContainerType,KeyType> main(argc,argv);
 			if (!main) throw "cannot load main";
-
 			CustomFactory factory;
 			factory.generate<Tests::Bubble<ContainerType,KeyType>,Main<ContainerType,KeyType> >(main);
 			factory.generate<Tests::Insertion<ContainerType,KeyType>,Main<ContainerType,KeyType> >(main);

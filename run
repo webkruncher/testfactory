@@ -3,10 +3,23 @@ Pass=true
 ntests=0
 times=1
 [[ ! -z $1 ]] && times=$1
+
+when=`date`
+err="machine.err"
+log="machine.log"
+echo "$when">$log
+echo "$when">$err
+
 for (( j=0;j<$times;j++ )); do
-	./machine 2>/dev/null
+	echo -n -e "Test:$j "
+	./machine 2>>$err 1>>$log
 	result=$?
-	if [[ $result != 0 ]]; then Pass=false; fi
+	if [[ $result != 0 ]]; then 
+		Pass=false;	
+		echo "Fail"
+	else
+		echo "Pass"
+	fi
 	((ntests++))
 done
 echo "Tested ${ntests} times, Pass:${Pass}"
