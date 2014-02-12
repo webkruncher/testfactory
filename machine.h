@@ -31,7 +31,8 @@ namespace Machine
 		public: 
 		virtual const bool operator()(TbdBase&,const bool expectation=true) = 0;
 		virtual operator TbdBase& () = 0;
-		virtual void Run(TbdBase&) = 0;
+		virtual void Run(TbdBase&,TbdBase&) = 0;
+		virtual bool Traverse(TbdBase&) = 0;
 	};
 } // Machine
 

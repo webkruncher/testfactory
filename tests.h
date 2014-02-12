@@ -9,6 +9,11 @@ namespace Tests
 		struct Test : public Products::Product, Tbd<T>
 	{
 			Test(Machine::MainBase& _main,const string _name) : Product(_main,_name) {}
+			virtual operator const bool () 
+			{
+				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
+				return _main.Traverse(*this);
+			}
 			protected:
 			template <typename S>
 				void swap(int a,int b)
@@ -26,13 +31,10 @@ namespace Tests
 			typedef T TT;
 			friend class ClassFactory::Factory;
 			Positive(Machine::MainBase& _main) : Test<T>(_main,"Positive Test") {}
-			virtual operator const bool () 
+
+			virtual const bool Run()
 			{
-				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
-				TbdBase& _tbd(_main);
 				TbdBase& _me(*this);
-				_me=_tbd;
-				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
 				const string& Name(*this);
 				cout<<"Testing "<<Name<<endl;
@@ -51,15 +53,11 @@ namespace Tests
 			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			Negative(Machine::MainBase& _main) : Test<T>(_main,"Negative Test") {}
-			virtual operator const bool () 
+			virtual const bool Run()
 			{
-				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
-				TbdBase& _tbd(_main);
 				TbdBase& _me(*this);
-				TY& ty(*this);
-				_me=_tbd;
-				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				TY& ty(*this);
 				const string& Name(*this);
 				cout<<"Testing "<<Name<<endl;
 				for (typename Tbd<TT>::iterator it=me.begin();it!=me.end();it++) (*it)+=(rand()%5);
@@ -77,15 +75,11 @@ namespace Tests
 			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			Bubble(Machine::MainBase& _main) : Test<T>(_main,"Bubble Sort") {}
-			virtual operator const bool () 
+			virtual const bool Run()
 			{
-				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
-				TbdBase& _tbd(_main);
 				TbdBase& _me(*this);
-				TY& ty(*this);
-				_me=_tbd;
-				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				TY& ty(*this);
 				const string& Name(*this);
 				cout<<"Testing "<<Name<<endl;
 				int times(me.size()-1);
@@ -110,15 +104,11 @@ namespace Tests
 			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			Insertion(Machine::MainBase& _main) : Test<T>(_main,"Insertion Sort") {}
-			virtual operator const bool () 
+			virtual const bool Run()
 			{
-				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
-				TbdBase& _tbd(_main);
 				TbdBase& _me(*this);
-				TY& ty(*this);
-				_me=_tbd;
-				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				TY& ty(*this);
 				const string& Name(*this);
 				cout<<"Testing "<<Name<<endl;
 				for (int i=1; i<me.size(); i++)
@@ -144,15 +134,11 @@ namespace Tests
 			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			Selection(Machine::MainBase& _main) : Test<T>(_main,"Selection Sort") {}
-			virtual operator const bool () 
+			virtual const bool Run()
 			{
-				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
-				TbdBase& _tbd(_main);
 				TbdBase& _me(*this);
-				TY& ty(*this);
-				_me=_tbd;
-				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				TY& ty(*this);
 				const string& Name(*this);
 				cout<<"Testing "<<Name<<endl;
 
@@ -179,15 +165,11 @@ namespace Tests
 			typedef Test<T> TY;
 			friend class ClassFactory::Factory;
 			HeapSort(Machine::MainBase& _main) : Test<T>(_main,"Heap Sort") {}
-			virtual operator const bool () 
+			virtual const bool Run()
 			{
-				Machine::MainBase& _main(static_cast<Machine::MainBase&>(this->main)); 
-				TbdBase& _tbd(_main);
 				TbdBase& _me(*this);
-				TY& ty(*this);
-				_me=_tbd;
-				Tbd<TT>& tbd(static_cast<Tbd<TT>&>(_tbd));
 				Tbd<TT>& me(static_cast<Tbd<TT>&>(_me));
+				TY& ty(*this);
 				const string& Name(*this);
 				cout<<"Testing "<<Name<<endl;
 

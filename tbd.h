@@ -17,6 +17,11 @@ namespace ToBeDone
 	{
 		virtual TbdBase& operator=(TbdBase& b) {return b;}
 		virtual bool operator==(TbdBase& b) = 0;
+		virtual const bool Run()
+		{
+			throw string("Tbd::Run must be specialized");
+			return true;
+		}
 		private:
 		friend ostream& operator<<(ostream&,TbdBase&);
 		virtual ostream& operator<<(ostream&) = 0;
@@ -44,6 +49,11 @@ namespace ToBeDone
 		virtual const bool operator()(const int,const int)
 		{
 			throw string("Tbd::bool operator()(int,int) must be specialized");
+			return true;
+		}
+		virtual const bool Run()
+		{
+			throw string("Tbd::Run must be specialized");
 			return true;
 		}
 		private:

@@ -32,11 +32,14 @@ struct CustomFactory : ClassFactory::Factory
 
 
 template <typename T,typename K>
-	struct Mash : Mutants<T,K,Machine::MainBase>
+	struct Mash : Mutants<ToBeDone::TbdBase,T,K,Machine::MainBase>
 {
-	Mash(Machine::MainBase& _machine) : Mutants<T,K,Machine::MainBase>(_machine) {}
-	Mash(Machine::MainBase& _machine, const Mash& a) : Mutants<T,K,Machine::MainBase>(a,_machine) {}
-	virtual void operator()(Mash& b) { Mutants<T,K,Machine::MainBase>::operator()(b); }
+	Mash(Machine::MainBase& _machine) : Mutants<ToBeDone::TbdBase,T,K,Machine::MainBase>(_machine) {}
+	Mash(Machine::MainBase& _machine, const Mash& a) : Mutants<ToBeDone::TbdBase,T,K,Machine::MainBase>(a,_machine) {}
+	virtual void operator()(Mash& b,ToBeDone::TbdBase& tbd)
+	{ 
+		Mutants<ToBeDone::TbdBase,T,K,Machine::MainBase>::operator()(b,tbd); 
+	}
 	virtual void operator()() 
 	{
 		T& o(*this);
@@ -53,7 +56,8 @@ template <typename T,typename K>
 	{
 		randomlimits.clear();
 		ToBeDone::reseed();	
-		randomlimits["M"]=((rand()%4)+3);
+		//randomlimits["M"]=((rand()%4)+3);
+		randomlimits["M"]=3;
 		randomlimits["N"]=((rand()%20)+10);
 		ToBeDone::Tbd<T>& loader(unsorted);
 		if (!loader(randomlimits["M"],randomlimits["N"])) return false;
@@ -65,22 +69,28 @@ template <typename T,typename K>
 	ToBeDone::Tbd<T> check;
 	Mash<ToBeDone::Tbd<T>,K> unsorted;
 	public: 
+	virtual bool Traverse(ToBeDone::TbdBase& tbd)
+	{
+		Mash<ToBeDone::Tbd<T>,K > full(*this,unsorted),empty(*this);
+		cout<<"Traverse:"<<tbd<<endl;
+		full(empty,tbd);
+		cout<<"Done Traverse:"<<tbd<<endl;
+		return true;
+	} 
+	virtual void Run(ToBeDone::TbdBase& mutant,ToBeDone::TbdBase& tbd)
+	{
+		tbd=mutant;
+		cout<<"Mashing:"<<tbd<<endl;
+		tbd.Run();
+	}
 	virtual const bool operator()(ToBeDone::TbdBase& tested,const bool expectation) 
 	{ 
-		Mash<ToBeDone::Tbd<T>,K > full(*this,unsorted),empty(*this);
-		full(empty);
-
-		cerr<<setw(10)<<"Un-sorted:"<<unsorted<<endl;
 		cerr<<setw(10)<<"Sorted:"<<check<<endl;
 		cerr<<setw(10)<<"Test:"<<tested<<endl;
 		const bool result(tested==check); 
 		const bool pass(result==expectation);
 		cerr<<"Expected:"<<boolalpha<<expectation<<", result:"<<boolalpha<<result<<", pass:"<<boolalpha<<pass<<endl<<endl;
 		return pass;
-	}
-	virtual void Run(ToBeDone::TbdBase& tbd) 
-	{
-		cout<<"Mashing:"<<tbd<<endl;
 	}
 };
 
@@ -100,6 +110,7 @@ template <typename KeyType, typename ContainerType>
 			cerr<<"Success:"<<boolalpha<<results<<endl<<endl;
 			if (!results) Pass=false;
 		}
+		if (true)
 		{
 			cerr<<endl<<"Sort Tests"<<endl;
 			Main<ContainerType,KeyType> main(argc,argv);
