@@ -1,7 +1,7 @@
 
 
-#ifndef __CLASS_FACTORY_H__
-#define __CLASS_FACTORY_H__
+#ifndef CLASS_FACTORY_H
+#define CLASS_FACTORY_H
 
 
 namespace ClassFactory
@@ -20,5 +20,5 @@ namespace ClassFactory
 
 } // ClassFactory
 
-#endif //__CLASS_FACTORY_H__
+#endif //CLASS_FACTORY_H
 

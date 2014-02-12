@@ -1,6 +1,6 @@
 
-#ifndef __CUSTOM_KEY_H__
-#define __CUSTOM_KEY_H__
+#ifndef CUSTOM_KEY_H
+#define CUSTOM_KEY_H
 
 
 namespace CustomKey
@@ -25,5 +25,5 @@ namespace CustomKey
 	inline ostream& operator<<(ostream& o,const Stuff& s){return s.operator<<(o);}
 } // CustomKey
 
-#endif //__CUSTOM_KEY_H__
+#endif //__CUSTOM_KEY_H
 

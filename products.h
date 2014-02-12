@@ -1,6 +1,6 @@
 
-#ifndef __PRODUCTS_H__
-#define __PRODUCTS_H__
+#ifndef PRODUCTS_H
+#define PRODUCTS_H
 
 namespace ClassFactory { class Factory; }
 namespace Products
@@ -19,5 +19,5 @@ namespace Products
 	};
 } // Products
 
-#endif //__PRODUCTS_H__
+#endif //__PRODUCTS_H
 

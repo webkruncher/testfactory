@@ -1,6 +1,6 @@
 
-#ifndef __TESTS_H__
-#define __TESTS_H__
+#ifndef TESTS_H
+#define TESTS_H
 
 namespace Tests
 {
@@ -239,5 +239,5 @@ namespace Tests
 
 } // Tests
 
-#endif // __TESTS_H__
+#endif // TESTS_H
 

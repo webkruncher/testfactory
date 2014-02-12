@@ -21,12 +21,18 @@ namespace ToBeDone
 		return o;
 	}
 
-	template <> Tbd<vector<CustomKey::Stuff> >::operator const bool()
+	template <> const bool Tbd<vector<CustomKey::Stuff> >::operator()(const int M,const int N)
 	{
-		reseed();
-		const int M((rand()%10)+10);
-		cout<<"Loading CustomKey::Stuff test with "<<M<<" chars "<<endl;
-		for (int j=0;j<M;j++) { push_back('g'+(rand()%10)); }
+		for (int j=0;j<M;j++) 
+		{ 
+			while (true)
+			{
+				char c(('g'+(rand()%N))); 
+				if (!isalpha(c)) continue;	
+				push_back(c);
+				break;
+			}
+		}
 		return true;
 	}
 

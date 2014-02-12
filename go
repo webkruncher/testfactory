@@ -1,5 +1,4 @@
 
-make clean
+#make clean
 make
-#./run
-./machine
+./run $1

@@ -21,12 +21,9 @@ namespace ToBeDone
 	}
 
 
-	template <> Tbd<vector<int> >::operator const bool()
+	template <> const bool Tbd<vector<int> >::operator()(const int M,const int N)
 	{
-		reseed();
-		const int M((rand()%10)+10);
-		const int N((rand()%20)+10);
-		cout<<"Loading int test with "<<M<<" numbers with maximum value of 30"<<endl;
+		cout<<"Loading int test with "<<M<<" numbers with maximum value of "<<N<<endl; 
 		for (int j=0;j<M;j++) push_back(rand()%N);
 		return true;
 	}
@@ -38,12 +35,9 @@ namespace ToBeDone
 		return o;
 	}
 
-	template <> Tbd<vector<float> >::operator const bool()
+	template <> const bool Tbd<vector<float> >::operator()(const int M,const int N)
 	{
-		reseed();
-		const int M((rand()%10)+10);
-		const int N((rand()%20)+10);
-		cout<<"Loading float test with "<<M<<" numbers with maximum value of 30"<<endl;
+		cout<<"Loading float test with "<<M<<" numbers with maximum value of "<<(N*7)/5<<endl; 
 		for (int j=0;j<M;j++) 
 		{
 			double j(rand()%(N*7));
@@ -60,12 +54,9 @@ namespace ToBeDone
 		return o;
 	}
 
-	template <> Tbd<vector<double> >::operator const bool()
+	template <> const bool Tbd<vector<double> >::operator()(const int M,const int N)
 	{
-		reseed();
-		const int M((rand()%10)+10);
-		const int N((rand()%20)+10);
-		cout<<"Loading double test with "<<M<<" numbers with maximum value of 30"<<endl;
+		cout<<"Loading double test with "<<M<<" numbers with maximum value of "<<(N*7)/5<<endl; 
 		for (int j=0;j<M;j++) 
 		{
 			double j(rand()%(N*7));
@@ -82,12 +73,9 @@ namespace ToBeDone
 		return o;
 	}
 
-	template <> Tbd<vector<string> >::operator const bool()
+	template <> const bool Tbd<vector<string> >::operator()(const int M,const int N)
 	{
-		reseed();
-		const int M((rand()%10)+10);
-		const int N((rand()%20)+10);
-		cout<<"Loading string test with "<<M<<" numbers with maximum value of 30"<<endl;
+		cout<<"Loading string test with "<<M<<" strings, prefixed with 't', followed by a number with maximum value of "<<(N*7)/5<<endl; 
 		for (int j=0;j<M;j++) 
 		{
 			int j(rand()%(N*7));

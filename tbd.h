@@ -1,6 +1,6 @@
 
-#ifndef __TBD_H__
-#define __TBD_H__
+#ifndef TBD_H
+#define TBD_H
 #include <iomanip>
 using namespace std;
 
@@ -41,15 +41,15 @@ namespace ToBeDone
 			tt& me(*this);
 			return (me==you);
 		}
-		virtual operator const bool ()
+		virtual const bool operator()(const int,const int)
 		{
-			throw string("Tbd::operator bool must be specialized");
+			throw string("Tbd::bool operator()(int,int) must be specialized");
 			return true;
 		}
 		private:
-		ostream& operator<<(ostream& o) ;
+		virtual ostream& operator<<(ostream& o) ;
 	};
 }
 
-#endif // __TBD_H__
+#endif // TBD_H
 
