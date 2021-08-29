@@ -1,7 +1,8 @@
 
 function Build
 {
-	pushd ~/Info/${1}
+	pushd ~/Info/${1}/src
+	sudo chown -R jmt ../*
 	rm -rf ../src.build
 	./go
 	if [ $? != 0 ]; then
@@ -11,10 +12,18 @@ function Build
 	popd
 }
 
+function ReBuild
+{
+	Build informationkruncher
+	Install informationkruncher
+	Build webkruncher
+	Build TestFactory/Restful
+	Build testsites
+}
+
 function Install
 {
-	pushd ~/Info/${1}
-	rm -rf ../src.build
+	pushd ~/Info/${1}/src
 	sudo ./go install
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` install failed\033[0m\n"
@@ -23,21 +32,23 @@ function Install
 	popd
 }
 
-function ReBuild
-{
-	Build informationkruncher/src
-	Install informationkruncher/src
-	Build webkruncher/src
-	Build TestFactory/Restful
-	Build testsites/src
-}
-
 
 function InstallSites
 {
-	Install webkruncher/src
-	install TestFactory/Restful
-	Install testsites/src
+	Install webkruncher
+	Install TestFactory/Restful
+	Install testsites
 }
 
+function Test
+{
+	ReBuild
+	sudo pkill webkruncher
+	sudo pkill testsite
+	sleep 1
+	InstallSites
+	sudo webkruncher --https
+	sudo testsite
+	sudo restful
+}	
 
