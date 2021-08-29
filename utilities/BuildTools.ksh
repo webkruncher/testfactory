@@ -51,9 +51,10 @@ function Test
 	ReBuild
 	sudo pkill webkruncher
 	sudo pkill testsite
+	sudo pkill restful
 	sleep 1
 	InstallSites
-	sudo webkruncher --https
+	sudo webkruncher #--https
 	sudo testsite
 	sudo restful
 }	
