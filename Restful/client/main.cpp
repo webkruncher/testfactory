@@ -27,7 +27,19 @@
 
 
 #include <infokruncher.h>
+#include <infosite.h>
 #include <restful.h>
+
+
+template<> void InfoKruncher::Service< WebKruncher >::ForkAndServe( const ServiceOptions& svcoptions )
+{
+	if ( svcoptions.protocol == ServiceOptions::Protocol::http )  RunService< streamingsocket  >( svcoptions );
+	if ( svcoptions.protocol == ServiceOptions::Protocol::https ) RunService< streamingsocket >( svcoptions );
+}
+
+struct Sites : vector< InfoKruncher::Service<WebKruncher> > { void Terminate(); };
+template<> void InfoKruncher::Service< WebKruncher >::Terminate() { subprocesses.Terminate(); }
+void Sites::Terminate() { for ( iterator it=begin(); it!=end(); it++ ) it->Terminate(); }
 
 
 
@@ -36,10 +48,23 @@ int main( int argc, char** argv )
 	stringstream ssexcept;
 	try
 	{
-		InfoKruncher::Options< ClientList > options( argc, argv );
+		InfoKruncher::Options< ServiceList > options( argc, argv );
 		if ( ! options ) throw "Invalid options";
-		KruncherTools::Daemonizer daemon( options.daemonize, "Restful" );
+		KruncherTools::Daemonizer daemon( options.daemonize, "TestSite" );
+
 		Initialize();
+
+		Sites sites;
+
+		const ServiceList& servicelist( options.servicelist );
+		for ( ServiceList::const_iterator it=servicelist.begin(); it!=servicelist.end(); it++ )
+		{
+			InfoKruncher::Service<WebKruncher> info;
+			sites.push_back( info );
+			InfoKruncher::Service<WebKruncher>& site( sites.back() );
+			const InfoKruncher::ServiceOptions& svcoptions( *it );
+			site.ForkAndServe( svcoptions );
+		}
 		while ( !TERMINATE ) usleep( (rand()%100000)+100000 );
 		sites.Terminate();
 	}

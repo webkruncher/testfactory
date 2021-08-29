@@ -6,6 +6,7 @@ get_filename_component(INCLUDES_PATH ../include/ REALPATH)
 add_executable(
 	restful
 		main.cpp
+		restful.cpp
 )
 
 #add_library( kruncher::restful  ALIAS restful  )

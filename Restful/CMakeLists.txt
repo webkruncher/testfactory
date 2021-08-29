@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-project("webkruncher")
+project("restful")
+
+#find_library(infokruncher REQUIRED )
 
 message( SYSTEM: ${CMAKE_SYSTEM_NAME} ) 
 
@@ -61,6 +63,6 @@ ENDIF()
 
 
 add_subdirectory( include )
-add_subdirectory( src )
+add_subdirectory( client )
 
 

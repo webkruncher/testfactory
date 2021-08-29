@@ -26,17 +26,21 @@
  */
 
 
+#ifndef WEBKRUNCHER_WEBSITE_H
+#define WEBKRUNCHER_WEBSITE_H
 
-#ifndef WEBKRUNCHER_RESTFUL_H
-#define WEBKRUNCHER_RESTFUL_H
-
-	struct ClientList : vector< InfoKruncher::ServiceOptions >
+	struct ServiceList : vector< InfoKruncher::ServiceOptions >
 	{
 		virtual bool operator ()( const KruncherTools::Args& );
 	};
 
+	struct WebKruncher : InfoKruncher::Site
+	{
+		virtual string LoadResponse( Responder& );
+		virtual void Throttle( const InfoKruncher::ServiceOptions& );
+	};
 
-#endif //WEBKRUNCHER_RESTFUL_H
+#endif //WEBKRUNCHER_WEBSITE_H
 
 
 
