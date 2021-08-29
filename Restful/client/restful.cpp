@@ -35,9 +35,9 @@
 
 		if ( true )
 		{
-			InfoKruncher::ServiceOptions o;
+			InfoKruncher::SocketProcessOptions o;
 			o.port=80;
-			o.protocol=InfoKruncher::ServiceOptions::Protocol::http;
+			o.protocol=InfoKruncher::SocketProcessOptions::Protocol::http;
 			o.path="/home/jmt/websites/text/webkruncher/";
 			push_back( o );
 		}
@@ -47,9 +47,9 @@
 		{
 
 			SecureInformation::init_openssl();
-			InfoKruncher::ServiceOptions o;
+			InfoKruncher::SocketProcessOptions o;
 			o.port=443;
-			o.protocol=InfoKruncher::ServiceOptions::Protocol::https;
+			o.protocol=InfoKruncher::SocketProcessOptions::Protocol::https;
 			o.path="/home/jmt/websites/text/webkruncher/";
 
 			const string passwordfile( "/etc/webkruncher.pwd" );
@@ -111,7 +111,7 @@
 		return s;
 	}
 
-	void WebKruncher::Throttle( const InfoKruncher::ServiceOptions& svcoptions )
+	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
 	{
 		usleep( (rand()%10)+20 );
 	}

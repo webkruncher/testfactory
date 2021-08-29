@@ -15,8 +15,11 @@ function ReBuild
 {
 
 	Build informationkruncher/src
-	Build testsites/src
+	pushd ~/Info/informationkruncher/src
+	sudo ./go install
+	popd
 	Build webkruncher/src
 	Build TestFactory/Restful
+	Build testsites/src
 }
 
