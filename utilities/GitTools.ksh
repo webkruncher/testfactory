@@ -15,3 +15,36 @@ function GitCommit
 	gitCommit TestFactory/Restful ${1}
 }
 
+
+
+function gitStatus
+{
+	pushd ~/Info/${1}
+	git status
+	popd
+}
+
+function GitStatus
+{
+	gitStatus informationkruncher/src ${1}
+	gitStatus testsites/src ${1}
+	gitStatus webkruncher/src ${1}
+	gitStatus TestFactory/Restful ${1}
+}
+
+
+function gitPush
+{
+	pushd ~/Info/${1}
+	git push
+	popd
+}
+
+function GitPush
+{
+	gitPush informationkruncher
+	gitPush testsites
+	gitPush webkruncher
+	gitPush TestFactory
+}
+
