@@ -1,4 +1,10 @@
 
+
+function Wip
+{
+	cd ~/Info/${1}/src
+}
+
 function Build
 {
 	pushd ~/Info/${1}/src
