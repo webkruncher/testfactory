@@ -54,7 +54,7 @@ function Test
 	sudo pkill restful
 	sleep 1
 	InstallSites
-	sudo webkruncher #--https
+	sudo webkruncher --https
 	sudo testsite
 	sudo restful
 }	
