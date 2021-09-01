@@ -1,0 +1,34 @@
+
+OStag=`uname -a | cut -d ' ' -f1`
+[ ${OStag} == "Linux" ] && export OS=LINUX
+[ ${OStag} == "OpenBSD" ] && export OS=UNIX
+
+
+if [ "${1}" == "test" ]; then
+	shift
+	if [ "${1}" == "rebuild" ]; then
+		shift
+		sudo rm -rf ../src.build
+		pushd ~/informationkruncher/src
+		sudo rm -rf ../src.build
+		./go
+		sudo ./go install
+		popd
+	fi
+	./go
+	sudo pkill webkruncher
+	sudo ./go install
+	echo "sudo webkruncher $@"
+	sudo webkruncher $@
+else
+
+
+	echo -ne "\033[32mBuilding TestSite for ${OS}\033[0m\n"
+	mkdir -p ../src.build
+	cmake  -S . -B ../src.build/  
+	cmake  --build ../src.build/ 
+	[ $? != 0 ] && exit -1
+
+	[ "${1}" == "install" ] &&  cmake --install ../src.build
+fi
+exit 0
