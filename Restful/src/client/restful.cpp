@@ -32,20 +32,21 @@
 
 	bool ClientList::operator()( const KruncherTools::Args& options)
 	{
-
 		if ( true )
 		{
 			InfoKruncher::SocketProcessOptions o;
-			o.port=82;
+			o.port=80;
 			o.protocol=InfoKruncher::SocketProcessOptions::Protocol::http;
 			o.path="/home/jmt/websites/text/webkruncher/";
+			o.host="webkruncher.com";
+o.forks=2;
+o.threads=2;
 			push_back( o );
 		}
 
 		KruncherTools::Args::const_iterator usehttps( options.find( "--https" ) );
 		if ( usehttps != options.end() )
 		{
-
 			SecureInformation::init_openssl();
 			InfoKruncher::SocketProcessOptions o;
 			o.port=443;

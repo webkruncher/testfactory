@@ -9,17 +9,17 @@ if [ "${1}" == "test" ]; then
 	if [ "${1}" == "rebuild" ]; then
 		shift
 		sudo rm -rf ../src.build
-		pushd ~/informationkruncher/src
+		pushd ~/Info/informationkruncher/src
 		sudo rm -rf ../src.build
 		./go
 		sudo ./go install
 		popd
 	fi
 	./go
-	sudo pkill webkruncher
+	pkill restful
 	sudo ./go install
-	echo "sudo webkruncher $@"
-	sudo webkruncher $@
+	echo "restful $@"
+	sudo restful $@
 else
 
 
