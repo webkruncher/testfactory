@@ -72,44 +72,13 @@ o.threads=2;
 		return true;
 	}
 
-	string WebKruncher::LoadResponse( Responder& r  )
+	void WebKruncher::LoadRequest( Requester& r  )
 	{
-		int status( 401 );
+		r.ss << "GET /ajax/WinMover.js HTTP/1.1" << endl;
+		r.ss << "Host: WebKruncher.com" << endl;
+		r.ss << "Accept: text/html" << endl;
 
-		stringstream ss;
-
-		const string contenttype(Hyper::ContentType( r.uri ));
-
-		const string filename( r.options.path + r.uri );
-
-		LoadFile(filename.c_str(), ss);
-		if ( ss.str().size() ) status=200;
-
-		const string ExistingCookie( Hyper::mimevalue( r.headers, "cookie" ) );
-		const string CookieName("webkruncher.com");
-
-		string NewCookie;
-
-		if ( ExistingCookie.empty() )
-		{
-			NewCookie=KruncherTools::GetUuid();
-			{stringstream ssl; ssl<<"Created uuid:" << NewCookie; Log( ssl.str() );}
-		}
-
-
-		stringstream response;
-		response << "HTTP/1.1 ";
-		response << status << " " << Hyper::statusText(status) << endl;
-		response << "Content-Type: " << contenttype << endl;
-		response << "Server: WebKruncher" << endl;
-		response << "Connection: close" << endl;
-		response << "Content-Length:" << ss.str().size() << endl;
-		if ( ! NewCookie.empty() ) response << "Set-Cookie:" << CookieName << "=" << NewCookie << ";" << endl;
-		response << endl;
-		response << ss.str();
-
-		string s( response.str() );
-		return s;
+		r.ss << endl;
 	}
 
 	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )

@@ -36,7 +36,7 @@
 
 	struct WebKruncher : InfoKruncher::Client
 	{
-		virtual string LoadResponse( Responder& );
+		virtual void LoadRequest( Requester& );
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
 	};
 
