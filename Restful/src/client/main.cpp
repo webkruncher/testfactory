@@ -31,15 +31,15 @@
 #include <restful.h>
 
 
-template<> void InfoKruncher::Service< WebKruncher >::ForkAndServe( const SocketProcessOptions& svcoptions )
+template<> void InfoKruncher::Consumer< WebKruncher >::ForkAndRequest( const SocketProcessOptions& svcoptions )
 {
 	if ( svcoptions.protocol == SocketProcessOptions::Protocol::http )  RunClients< streamingsocket  >( svcoptions );
 	if ( svcoptions.protocol == SocketProcessOptions::Protocol::https ) RunClients< streamingsocket >( svcoptions );
 }
 
-struct Clients : vector< InfoKruncher::Service<WebKruncher> > { void Terminate(); };
-template<> void InfoKruncher::Service< WebKruncher >::Terminate() { subprocesses.Terminate(); }
-void Clients::Terminate() { for ( iterator it=begin(); it!=end(); it++ ) it->Terminate(); }
+struct Consumer : vector< InfoKruncher::Consumer<WebKruncher> > { void Terminate(); };
+template<> void InfoKruncher::Consumer< WebKruncher >::Terminate() { subprocesses.Terminate(); }
+void Consumer::Terminate() { for ( iterator it=begin(); it!=end(); it++ ) it->Terminate(); }
 
 
 
@@ -55,16 +55,16 @@ int main( int argc, char** argv )
 
 		Initialize();
 
-		Clients clients;
+		Consumer clients;
 
 		const ClientList& clientlist( options.workerlist );
 		for ( ClientList::const_iterator it=clientlist.begin(); it!=clientlist.end(); it++ )
 		{
-			InfoKruncher::Service<WebKruncher> info;
+			InfoKruncher::Consumer<WebKruncher> info;
 			clients.push_back( info );
-			InfoKruncher::Service<WebKruncher>& site( clients.back() );
+			InfoKruncher::Consumer<WebKruncher>& client( clients.back() );
 			const InfoKruncher::SocketProcessOptions& svcoptions( *it );
-			site.ForkAndServe( svcoptions );
+			client.ForkAndRequest( svcoptions );
 		}
 		while ( !TERMINATE ) usleep( (rand()%100000)+100000 );
 		clients.Terminate();

@@ -34,7 +34,7 @@
 		virtual bool operator ()( const KruncherTools::Args& );
 	};
 
-	struct WebKruncher : InfoKruncher::Site
+	struct WebKruncher : InfoKruncher::Client
 	{
 		virtual string LoadResponse( Responder& );
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
