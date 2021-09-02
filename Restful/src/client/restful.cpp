@@ -81,6 +81,11 @@ o.threads=2;
 		r.ss << endl;
 	}
 
+	void WebKruncher::HandlePayload( const unsigned char* payload, const InfoKruncher::SocketProcessOptions& ) throw()
+	{
+		//cout << "Payload" << blue << (char*) payload << normal << endl;
+	} 
+
 	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
 	{
 		usleep( (rand()%10)+20 );
