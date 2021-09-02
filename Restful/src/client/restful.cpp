@@ -39,8 +39,6 @@
 			o.protocol=InfoKruncher::SocketProcessOptions::Protocol::http;
 			o.path="/home/jmt/websites/text/webkruncher/";
 			o.host="webkruncher.com";
-o.forks=2;
-o.threads=2;
 			push_back( o );
 		}
 
@@ -67,6 +65,7 @@ o.threads=2;
 			o.certfile=certs+string("WEBKRUNCHER.COM.crt");
 			o.cafile=certs+string("dv_chain.txt");
 			o.keyfile=certs+string("server.key");
+			o.host="webkruncher.com";
 			push_back( o );
 		}
 		return true;
@@ -83,7 +82,7 @@ o.threads=2;
 
 	void WebKruncher::HandlePayload( const unsigned char* payload, const InfoKruncher::SocketProcessOptions& ) throw()
 	{
-		//cout << "Payload" << blue << (char*) payload << normal << endl;
+		cout << yellow << "Payload" << green << (char*) payload << normal << endl;
 	} 
 
 	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
