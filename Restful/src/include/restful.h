@@ -26,8 +26,8 @@
  */
 
 
-#ifndef WEBKRUNCHER_WEBSITE_H
-#define WEBKRUNCHER_WEBSITE_H
+#ifndef WEBKRUNCHER_CONSUMER_H
+#define WEBKRUNCHER_CONSUMER_H
 
 	struct ClientList : vector< InfoKruncher::SocketProcessOptions >
 	{
@@ -41,7 +41,7 @@
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
 	};
 
-#endif //WEBKRUNCHER_WEBSITE_H
+#endif //WEBKRUNCHER_CONSUMER_H
 
 
 

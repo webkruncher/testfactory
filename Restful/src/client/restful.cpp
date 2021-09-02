@@ -87,7 +87,8 @@
 
 	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
 	{
-		usleep( (rand()%10)+20 );
+		//usleep( (rand()%1000)+2000 );
+		sleep( 1 );
 	}
 
 
