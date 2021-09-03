@@ -32,19 +32,24 @@
 
 	bool ClientList::operator()( const KruncherTools::Args& options)
 	{
-		if ( true )
+		KruncherTools::Args::const_iterator usehttp( options.find( "--http" ) );
+		if ( usehttp != options.end() )
 		{
+cout << red << "Using http" << normal << endl;
 			InfoKruncher::SocketProcessOptions o;
 			o.port=80;
 			o.protocol=InfoKruncher::SocketProcessOptions::Protocol::http;
 			o.path="/home/jmt/websites/text/webkruncher/";
 			o.host="webkruncher.com";
+o.threads=1;
+o.forks=1;
 			push_back( o );
 		}
 
 		KruncherTools::Args::const_iterator usehttps( options.find( "--https" ) );
 		if ( usehttps != options.end() )
 		{
+cout << red << "Using https" << normal << endl;
 			SecureInformation::init_openssl();
 			InfoKruncher::SocketProcessOptions o;
 			o.port=443;
@@ -66,6 +71,8 @@
 			o.cafile=certs+string("dv_chain.txt");
 			o.keyfile=certs+string("server.key");
 			o.host="webkruncher.com";
+o.threads=1;
+o.forks=1;
 			push_back( o );
 		}
 		return true;
@@ -109,9 +116,8 @@
 	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
 	{
 		usleep( (rand()%1000)+2000 );
-		//sleep( 1 );
+		sleep( 2 );
 	}
-
 
 	void WebKruncher::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& )
 	{

@@ -1,4 +1,5 @@
 
+
 OStag=`uname -a | cut -d ' ' -f1`
 [ ${OStag} == "Linux" ] && export OS=LINUX
 [ ${OStag} == "OpenBSD" ] && export OS=UNIX
@@ -10,7 +11,7 @@ if [ "${1}" == "test" ]; then
 		shift
 		sudo rm -rf ../src.build
 		pushd ~/Info/informationkruncher/src
-		sudo rm -rf ../src.build
+		#sudo rm -rf ../src.build
 		./go
 		sudo ./go install
 		popd
