@@ -81,29 +81,41 @@
 
 	void WebKruncher::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
-		if ( ! payload ) return;
-		cout << blue << headers << yellow << "Payload" << endl << green << (char*) payload << normal << endl;
-#if 0
-		Hyper::MimeHeaders::const_iterator ctypeit( headers.find( "content-type" ) );
-		if ( ctypeit == headers.end() )
+		stringstream ssexcept;
+		try
 		{
-			Log( "No content type" );
-			return;
+			if ( ! payload ) return;
+			Hyper::MimeHeaders::const_iterator ctypeit( headers.find( "content-type" ) );
+			if ( ctypeit == headers.end() )
+			{
+				Log( "No content type" );
+				return;
+			}
+			const string contenttype( ctypeit->second );
+			if ( contenttype.find( "text/" ) != string::npos ) 
+			{
+				const string text( (char*) payload );
+				HandleText( text, headers, options );
+			}
 		}
-		const string contenttype( ctypeit->second );
-		if ( contenttype.find( "text/" ) != string::npos ) 
-		{
-#endif
-			const string text( (char*) payload );
-			HandleText( text, headers, options );
-//		}
+		catch( const exception& e ) { ssexcept<<e.what(); }
+		catch( const string& s ) { ssexcept<<s;}
+		catch( const char* s ) { ssexcept<<s;}
+		catch( ... ) { ssexcept<<"unknown";}
+		if ( ! ssexcept.str().empty() ) ExceptionLog( "main", ssexcept.str() );
 		
 	} 
 
 	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
 	{
-		//usleep( (rand()%1000)+2000 );
-		sleep( 1 );
+		usleep( (rand()%1000)+2000 );
+		//sleep( 1 );
 	}
 
 
+	void WebKruncher::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& )
+	{
+		stringstream ss;
+		ss << blue << headers << normal << endl;
+		cout << ss.str() ;
+	}
