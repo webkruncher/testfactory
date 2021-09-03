@@ -79,12 +79,12 @@
 		r.ss << endl;
 	}
 
-	void WebKruncher::HandlePayload( const unsigned char* payload, const InfoKruncher::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
+	void WebKruncher::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
 		if ( ! payload ) return;
 		cout << blue << headers << yellow << "Payload" << endl << green << (char*) payload << normal << endl;
 #if 0
-		InfoKruncher::MimeHeaders::const_iterator ctypeit( headers.find( "content-type" ) );
+		Hyper::MimeHeaders::const_iterator ctypeit( headers.find( "content-type" ) );
 		if ( ctypeit == headers.end() )
 		{
 			Log( "No content type" );

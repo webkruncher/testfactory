@@ -37,12 +37,12 @@
 	struct WebKruncher : InfoKruncher::Client
 	{
 		virtual void LoadRequest( Requester& );
-		virtual void HandlePayload( const unsigned char*, const InfoKruncher::MimeHeaders&, const InfoKruncher::SocketProcessOptions& ) throw(); 
+		virtual void HandlePayload( const unsigned char*, const Hyper::MimeHeaders&, const InfoKruncher::SocketProcessOptions& ) throw(); 
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
 		private:
-		void HandleText( const string&, const InfoKruncher::MimeHeaders&, const InfoKruncher::SocketProcessOptions& )
+		void HandleText( const string&, const Hyper::MimeHeaders&, const InfoKruncher::SocketProcessOptions& )
 		{
-			throw string( "throw" );
+			//throw string( "throw" );
 		}
 	};
 
