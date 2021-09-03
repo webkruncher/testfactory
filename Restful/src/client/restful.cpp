@@ -76,7 +76,6 @@
 		r.ss << "GET /ajax/WinMover.js HTTP/1.1" << endl;
 		r.ss << "Host: WebKruncher.com" << endl;
 		r.ss << "Accept: text/html" << endl;
-
 		r.ss << endl;
 	}
 
