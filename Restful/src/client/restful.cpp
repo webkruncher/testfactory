@@ -80,9 +80,9 @@
 		r.ss << endl;
 	}
 
-	void WebKruncher::HandlePayload( const unsigned char* payload, const InfoKruncher::SocketProcessOptions& ) throw()
+	void WebKruncher::HandlePayload( const unsigned char* payload, const stringvector& headers, const InfoKruncher::SocketProcessOptions& ) throw()
 	{
-		cout << yellow << "Payload" << green << (char*) payload << normal << endl;
+		cout << blue << headers << yellow << "Payload" << endl << green << (char*) payload << normal << endl;
 	} 
 
 	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
