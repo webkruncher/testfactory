@@ -79,9 +79,25 @@
 		r.ss << endl;
 	}
 
-	void WebKruncher::HandlePayload( const unsigned char* payload, const stringvector& headers, const InfoKruncher::SocketProcessOptions& ) throw()
+	void WebKruncher::HandlePayload( const unsigned char* payload, const InfoKruncher::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
+		if ( ! payload ) return;
 		cout << blue << headers << yellow << "Payload" << endl << green << (char*) payload << normal << endl;
+#if 0
+		InfoKruncher::MimeHeaders::const_iterator ctypeit( headers.find( "content-type" ) );
+		if ( ctypeit == headers.end() )
+		{
+			Log( "No content type" );
+			return;
+		}
+		const string contenttype( ctypeit->second );
+		if ( contenttype.find( "text/" ) != string::npos ) 
+		{
+#endif
+			const string text( (char*) payload );
+			HandleText( text, headers, options );
+//		}
+		
 	} 
 
 	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )

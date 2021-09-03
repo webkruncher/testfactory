@@ -19,7 +19,7 @@ if [ "${1}" == "test" ]; then
 	pkill restful
 	sudo ./go install
 	echo "restful $@"
-	sudo restful $@
+	restful $@
 else
 
 
