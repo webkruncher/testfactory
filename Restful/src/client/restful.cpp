@@ -65,11 +65,13 @@ cout << red << "Using https" << normal << endl;
 				o.keypasswd=KruncherTools::getpass();
 			}
 
-			const string certs( "/home/jmt/websites/certs/webkruncher/" );
+			//const string certs( "/home/jmt/websites/certs/webkruncher/" );
+			const string certs( "/etc/ssl/" );
 			o.cadir=certs;
 			o.certfile=certs+string("WEBKRUNCHER.COM.crt");
-			o.cafile=certs+string("dv_chain.txt");
-			o.keyfile=certs+string("server.key");
+			//o.cafile=certs+string("dv_chain.txt");
+			o.cafile=certs+string("cert.pem");
+			//o.keyfile=certs+string("server.key");
 			o.host="webkruncher.com";
 o.threads=1;
 o.forks=1;
