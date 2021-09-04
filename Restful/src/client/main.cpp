@@ -49,9 +49,9 @@ int main( int argc, char** argv )
 	stringstream ssexcept;
 	try
 	{
-		cout << green << "Restful is starting up" << normal << endl;
+		cerr << green << "Restful is starting up" << normal << endl;
 		InfoKruncher::Options< ClientList > options( argc, argv );
-		if ( ! options ) throw "Invalid options";
+		if ( ! options ) throw string( "Invalid options" );
 		KruncherTools::Daemonizer daemon( options.daemonize, "RestfulClient" );
 
 		Initialize();
@@ -69,6 +69,7 @@ int main( int argc, char** argv )
 		}
 		while ( !TERMINATE ) usleep( (rand()%100000)+100000 );
 		clients.Terminate();
+		cerr << green << "Restful is exiting" << normal << endl;
 	}
 	catch( const exception& e ) { ssexcept<<e.what(); }
 	catch( const string& s ) { ssexcept<<s;}

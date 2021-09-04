@@ -32,8 +32,7 @@
 
 	bool ClientList::operator()( const KruncherTools::Args& options)
 	{
-		KruncherTools::Args::const_iterator usehttp( options.find( "--http" ) );
-		if ( usehttp != options.end() )
+		if ( options.find( "--http" ) != options.end() )
 		{
 			InfoKruncher::SocketProcessOptions o;
 			o.port=80;
@@ -43,8 +42,7 @@
 			push_back( o );
 		}
 
-		KruncherTools::Args::const_iterator usehttps( options.find( "--https" ) );
-		if ( usehttps != options.end() )
+		if ( options.find( "--https" ) != options.end() )
 		{
 			SecureInformation::init_openssl();
 			InfoKruncher::SocketProcessOptions o;
@@ -71,13 +69,7 @@
 		return true;
 	}
 
-	void WebKruncher::LoadRequest( Requester& r  )
-	{
-		r.ss << "GET /ajax/WinMover.js HTTP/1.1" << endl;
-		r.ss << "Host: WebKruncher.com" << endl;
-		r.ss << "Accept: text/html" << endl;
-		r.ss << endl;
-	}
+	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+1000000 ); }
 
 	void WebKruncher::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
@@ -103,12 +95,15 @@
 		catch( const char* s ) { ssexcept<<s;}
 		catch( ... ) { ssexcept<<"unknown";}
 		if ( ! ssexcept.str().empty() ) ExceptionLog( "main", ssexcept.str() );
-		
 	} 
 
-	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
+
+	void WebKruncher::LoadRequest( Requester& r  )
 	{
-		usleep( (rand()%10000)+1000000 );
+		r.ss << "GET /ajax/WinMover.js HTTP/1.1" << endl;
+		r.ss << "Host: WebKruncher.com" << endl;
+		r.ss << "Accept: text/html" << endl;
+		r.ss << endl;
 	}
 
 	void WebKruncher::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& )
@@ -117,4 +112,6 @@
 		ss << blue << headers << normal << endl;
 		cout << ss.str() ;
 	}
+
+
 
