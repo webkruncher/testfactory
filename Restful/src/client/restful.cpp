@@ -103,7 +103,9 @@
 		r.ss << "GET /ajax/WinMover.js HTTP/1.1" << endl;
 		r.ss << "Host: WebKruncher.com" << endl;
 		r.ss << "Accept: text/html" << endl;
+		r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << endl;
 		r.ss << endl;
+		cout << green << r.ss.str() << normal << endl;
 	}
 
 	void WebKruncher::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& )

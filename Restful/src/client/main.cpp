@@ -37,6 +37,13 @@ template<> void InfoKruncher::Consumer< WebKruncher >::ForkAndRequest( const Soc
 	if ( svcoptions.protocol == SocketProcessOptions::Protocol::https ) RunClients< streamingsocket >( svcoptions );
 }
 
+template<> void InfoKruncher::Consumer< WebKruncher >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
+{
+	svcoptions.metadata[ "cookie" ] = "tester";
+	//if ( svcoptions.protocol == SocketProcessOptions::Protocol::http )  RunClients< streamingsocket  >( svcoptions );
+	//if ( svcoptions.protocol == SocketProcessOptions::Protocol::https ) RunClients< streamingsocket >( svcoptions );
+}
+
 struct Consumer : vector< InfoKruncher::Consumer<WebKruncher> > { void Terminate(); };
 template<> void InfoKruncher::Consumer< WebKruncher >::Terminate() { subprocesses.Terminate(); }
 void Consumer::Terminate() { for ( iterator it=begin(); it!=end(); it++ ) it->Terminate(); }
@@ -65,6 +72,7 @@ int main( int argc, char** argv )
 			clients.push_back( info );
 			InfoKruncher::Consumer<WebKruncher>& client( clients.back() );
 			const InfoKruncher::SocketProcessOptions& svcoptions( *it );
+			client.GetSiteMetaData( svcoptions ); // pre-load cookies and oauth tokens
 			client.ForkAndRequest( svcoptions );
 		}
 		while ( !TERMINATE ) usleep( (rand()%100000)+100000 );
