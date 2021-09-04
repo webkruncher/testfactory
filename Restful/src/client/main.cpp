@@ -53,7 +53,7 @@ template<> void InfoKruncher::Consumer< WebKruncher >::GetSiteMetaData( const So
 		if ( svcoptions.protocol == SocketProcessOptions::Protocol::https ) 
 		{
 			InfoKruncher::Requests< SecureInformation::Socket > client;
-			client.plain( sock.GetSock(), *this, svcoptions );
+			client.secure( sock.GetSock(), *this, svcoptions );
 		}
 	}
 	mode=Mode::None;
