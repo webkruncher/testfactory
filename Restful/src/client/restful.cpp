@@ -101,7 +101,7 @@
 
 	void Restful::LoadRequest( Requester& r  )
 	{
-		stringmap& metadata( r.options.metadata );
+		const stringmap& metadata( r.options.metadata );
 
 		string uri;
 		if ( mode == Mode::Cookie ) uri="Home.xml";
@@ -117,13 +117,15 @@
 
 	void Restful::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
-		stringmap& metadata( options.metadata );
 		stringstream ss;
-
-		Hyper::MimeHeaders::const_iterator cookit( headers.find( "set-cookie" ) ); 
-		if ( cookit != headers.end() ) metadata[ "cookie" ] = cookit->second;
-
-		ss << blue << headers << yellow << text << normal << endl;
+		if ( mode == Mode::Cookie )
+		{ 
+			stringmap& metadata( options.metadata );
+			Hyper::MimeHeaders::const_iterator cookit( headers.find( "set-cookie" ) ); 
+			if ( cookit != headers.end() ) metadata[ "cookie" ] = cookit->second;
+			ss << yellow << headers << normal << endl;
+		}
+		ss << green << headers << normal << endl;
 		cout << ss.str() ;
 	}
 
