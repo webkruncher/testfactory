@@ -69,9 +69,9 @@
 		return true;
 	}
 
-	void WebKruncher::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+1000000 ); }
+	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+1000000 ); }
 
-	void WebKruncher::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
+	void Restful::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
 		stringstream ssexcept;
 		try
@@ -84,6 +84,7 @@
 				return;
 			}
 			const string contenttype( ctypeit->second );
+			Log( "Restful::HandlePayload",  contenttype );
 			if ( contenttype.find( "text/" ) != string::npos ) 
 			{
 				const string text( (char*) payload );
@@ -98,7 +99,7 @@
 	} 
 
 
-	void WebKruncher::LoadRequest( Requester& r  )
+	void Restful::LoadRequest( Requester& r  )
 	{
 		stringmap& metadata( r.options.metadata );
 
@@ -106,7 +107,7 @@
 		if ( mode == Mode::Cookie ) uri="Home.xml";
 
 		r.ss << "GET /" << uri << " HTTP/1.1" << endl;
-		r.ss << "Host: WebKruncher.com" << endl;
+		r.ss << "Host: Restful.com" << endl;
 		r.ss << "Accept: text/html" << endl;
 		if ( metadata.find( "cookie" ) != metadata.end() )
 			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << endl;
@@ -114,7 +115,7 @@
 		cout << green << r.ss.str() << normal << endl;
 	}
 
-	void WebKruncher::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
+	void Restful::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
 		stringmap& metadata( options.metadata );
 		stringstream ss;

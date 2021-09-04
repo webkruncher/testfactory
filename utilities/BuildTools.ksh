@@ -56,6 +56,6 @@ function Test
 	InstallSites
 	sudo webkruncher --http --https
 	sudo testsite
-	sudo restful --http --https
+	restful --http --https
 }	
 

@@ -31,14 +31,14 @@
 #include <restful.h>
 
 
-template<> void InfoKruncher::Consumer< WebKruncher >::ForkAndRequest( const SocketProcessOptions& svcoptions )
+template<> void InfoKruncher::Consumer< Restful >::ForkAndRequest( const SocketProcessOptions& svcoptions )
 {
 	if ( svcoptions.protocol == SocketProcessOptions::Protocol::http )  RunClients< streamingsocket  >( svcoptions );
 	if ( svcoptions.protocol == SocketProcessOptions::Protocol::https ) RunClients< streamingsocket >( svcoptions );
 }
 
  
-template<> void InfoKruncher::Consumer< WebKruncher >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
+template<> void InfoKruncher::Consumer< Restful >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
 {
 	mode=Mode::Cookie;
 	streamingsocket sock( svcoptions.host.c_str(), svcoptions.port );
@@ -59,8 +59,8 @@ template<> void InfoKruncher::Consumer< WebKruncher >::GetSiteMetaData( const So
 	mode=Mode::None;
 }
 
-struct Consumer : vector< InfoKruncher::Consumer<WebKruncher> > { void Terminate(); };
-template<> void InfoKruncher::Consumer< WebKruncher >::Terminate() { subprocesses.Terminate(); }
+struct Consumer : vector< InfoKruncher::Consumer<Restful> > { void Terminate(); };
+template<> void InfoKruncher::Consumer< Restful >::Terminate() { subprocesses.Terminate(); }
 void Consumer::Terminate() { for ( iterator it=begin(); it!=end(); it++ ) it->Terminate(); }
 
 
@@ -83,9 +83,9 @@ int main( int argc, char** argv )
 		const ClientList& clientlist( options.workerlist );
 		for ( ClientList::const_iterator it=clientlist.begin(); it!=clientlist.end(); it++ )
 		{
-			InfoKruncher::Consumer<WebKruncher> info;
+			InfoKruncher::Consumer<Restful> info;
 			clients.push_back( info );
-			InfoKruncher::Consumer<WebKruncher>& client( clients.back() );
+			InfoKruncher::Consumer<Restful>& client( clients.back() );
 			const InfoKruncher::SocketProcessOptions& svcoptions( *it );
 			client.GetSiteMetaData( svcoptions ); // pre-load cookies and oauth tokens
 			client.ForkAndRequest( svcoptions );

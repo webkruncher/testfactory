@@ -34,9 +34,9 @@
 		virtual bool operator ()( const KruncherTools::Args& );
 	};
 
-	struct WebKruncher : InfoKruncher::Client
+	struct Restful : InfoKruncher::Client
 	{
-		WebKruncher() : mode( Mode::None ) {}
+		Restful() : mode( Mode::None ) {}
 		virtual void LoadRequest( Requester& );
 		virtual void HandlePayload( const unsigned char*, const Hyper::MimeHeaders&, const InfoKruncher::SocketProcessOptions& ) throw(); 
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
