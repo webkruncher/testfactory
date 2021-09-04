@@ -36,11 +36,15 @@
 
 	struct WebKruncher : InfoKruncher::Client
 	{
+		WebKruncher() : mode( Mode::None ) {}
 		virtual void LoadRequest( Requester& );
 		virtual void HandlePayload( const unsigned char*, const Hyper::MimeHeaders&, const InfoKruncher::SocketProcessOptions& ) throw(); 
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
 		private:
 		void HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& );
+		protected:
+		enum struct Mode{ None, Cookie, Oauth };
+		Mode mode;
 	};
 
 #endif //WEBKRUNCHER_CONSUMER_H

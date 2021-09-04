@@ -37,11 +37,26 @@ template<> void InfoKruncher::Consumer< WebKruncher >::ForkAndRequest( const Soc
 	if ( svcoptions.protocol == SocketProcessOptions::Protocol::https ) RunClients< streamingsocket >( svcoptions );
 }
 
+ 
 template<> void InfoKruncher::Consumer< WebKruncher >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
 {
-	svcoptions.metadata[ "cookie" ] = "tester";
-	//if ( svcoptions.protocol == SocketProcessOptions::Protocol::http )  RunClients< streamingsocket  >( svcoptions );
-	//if ( svcoptions.protocol == SocketProcessOptions::Protocol::https ) RunClients< streamingsocket >( svcoptions );
+	mode=Mode::Cookie;
+	streamingsocket sock( svcoptions.host.c_str(), svcoptions.port );
+	sock.blocking( true );
+	if ( sock.open() && sock.connect() )
+	{
+		if ( svcoptions.protocol == SocketProcessOptions::Protocol::http ) 
+		{
+			InfoKruncher::Requests< PlainInformation::Socket > client;
+			client.plain( sock.GetSock(), *this, svcoptions );
+		}
+		if ( svcoptions.protocol == SocketProcessOptions::Protocol::https ) 
+		{
+			InfoKruncher::Requests< SecureInformation::Socket > client;
+			client.plain( sock.GetSock(), *this, svcoptions );
+		}
+	}
+	mode=Mode::None;
 }
 
 struct Consumer : vector< InfoKruncher::Consumer<WebKruncher> > { void Terminate(); };

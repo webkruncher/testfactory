@@ -100,18 +100,29 @@
 
 	void WebKruncher::LoadRequest( Requester& r  )
 	{
-		r.ss << "GET /ajax/WinMover.js HTTP/1.1" << endl;
+		stringmap& metadata( r.options.metadata );
+
+		string uri;
+		if ( mode == Mode::Cookie ) uri="Home.xml";
+
+		r.ss << "GET /" << uri << " HTTP/1.1" << endl;
 		r.ss << "Host: WebKruncher.com" << endl;
 		r.ss << "Accept: text/html" << endl;
-		r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << endl;
+		if ( metadata.find( "cookie" ) != metadata.end() )
+			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << endl;
 		r.ss << endl;
 		cout << green << r.ss.str() << normal << endl;
 	}
 
-	void WebKruncher::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& )
+	void WebKruncher::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
+		stringmap& metadata( options.metadata );
 		stringstream ss;
-		ss << blue << headers << normal << endl;
+
+		Hyper::MimeHeaders::const_iterator cookit( headers.find( "set-cookie" ) ); 
+		if ( cookit != headers.end() ) metadata[ "cookie" ] = cookit->second;
+
+		ss << blue << headers << yellow << text << normal << endl;
 		cout << ss.str() ;
 	}
 
