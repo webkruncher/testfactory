@@ -95,7 +95,7 @@
 		catch( const string& s ) { ssexcept<<s;}
 		catch( const char* s ) { ssexcept<<s;}
 		catch( ... ) { ssexcept<<"unknown";}
-		if ( ! ssexcept.str().empty() ) ExceptionLog( "main", ssexcept.str() );
+		if ( ! ssexcept.str().empty() ) ExceptionLog( "Restful::HandlePayload", ssexcept.str() );
 	} 
 
 
