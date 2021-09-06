@@ -48,14 +48,23 @@ function InstallSites
 
 function Test
 {
+	sudo pkill tail
 	ReBuild
 	sudo pkill webkruncher
 	#sudo pkill testsite
 	sudo pkill restful
 	sleep 1
 	InstallSites
-	sudo webkruncher --http --https
+	#sudo webkruncher --http --https
 	#sudo testsite
+	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml 
+	sleep 1
 	restful --http --https
+
+	sleep 1
+	Status.ksh
+	sleep 1	
+	sudo tail -f /var/log/messages
+
 }	
 
