@@ -24,7 +24,7 @@ function ReBuild
 	Install informationkruncher
 	Build webkruncher
 	Build TestFactory/Restful
-	Build testsites
+	#Build testsites
 }
 
 function Install
@@ -43,19 +43,19 @@ function InstallSites
 {
 	Install webkruncher
 	Install TestFactory/Restful
-	Install testsites
+	#Install testsites
 }
 
 function Test
 {
 	ReBuild
 	sudo pkill webkruncher
-	sudo pkill testsite
+	#sudo pkill testsite
 	sudo pkill restful
 	sleep 1
 	InstallSites
 	sudo webkruncher --http --https
-	sudo testsite
+	#sudo testsite
 	restful --http --https
 }	
 
