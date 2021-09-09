@@ -10,3 +10,4 @@ cat ${Manifest} | grep "mode=compile"
 cat ${Manifest} | grep "link: ar"
 
 popd 2>&1 >> /dev/stderr
+
