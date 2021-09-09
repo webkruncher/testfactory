@@ -55,7 +55,7 @@ struct Rules : map< string, stringvector >
 			const size_t up( std::count(it->first.begin(), it->first.end(), '/') );
 			macrofile << "set(INCLUDEPATH " << endl;
 			macrofile << tab; for ( int u=0; u<up; u++ ) macrofile << "../"; macrofile << "../build_unix/" << endl;
-			macrofile << tab << where << "/src/" << endl;
+			macrofile << tab; for ( int u=0; u<up; u++ ) macrofile << "../"; macrofile << "../src/" << endl;
 			macrofile << ")" << endl;
 
 			macrofile << "set(SOURCES " << endl;
