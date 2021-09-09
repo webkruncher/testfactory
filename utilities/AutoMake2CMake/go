@@ -4,7 +4,7 @@
 #echo -ne "\033[32mManifest: ${manifest}\033[0m\n"
 #./GetRecipe.ksh ~/libdb ${manifest}  | grep libtool > recipe.txt
 
-
+[ -f CreateCmakeMacros ] && rm CreateCmakeMacros 
 make
 cat recipe.txt | grep "mode=compile" | ./CreateCmakeMacros ~/libdb -compile
 cat recipe.txt | grep "link: ar" | ./CreateCmakeMacros ~/libdb -link
