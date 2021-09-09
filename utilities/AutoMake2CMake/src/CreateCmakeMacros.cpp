@@ -45,16 +45,27 @@ inline ostream& operator<<(ostream& o,const Macro& m) { return m.operator<<(o); 
 struct Rules : map< string, stringvector > 
 {
 	Rules( const string _where ) : where( _where ) {}
+	operator bool () const
+	{
+		for (const_iterator it=begin();it!=end();it++) 
+		{
+			const string macroincludefile( where + string( "/" ) + it->first + string( "/CMake.inc" ) );
+			//cerr << macroincludefile << endl;
+			ofstream macrofile( macroincludefile.c_str() );
+			macrofile << "set(SOURCES " << endl;
+			for (stringvector::const_iterator sit=it->second.begin();sit!=it->second.end();sit++) 
+				macrofile << tab << ( *sit ) << endl;
+			macrofile << ")" << endl;
+		}
+		return true;
+	}
 	private:
 	const string where;
 	friend ostream& operator<<(ostream&,const Rules&);
 	virtual ostream& operator<<(ostream& o) const
 	{
-		cout << red << where << normal << endl;
 		for (const_iterator it=begin();it!=end();it++) 
-		{
-			o << green << it->first << endl << blue << it->second << normal << endl;
-		}
+			o << where << "/" << it->first << endl ;// << it->second << endl;
 		return o;
 	} 
 }; 
@@ -71,7 +82,7 @@ struct Macros : vector< Macro >
 		const size_t ls( nodots.find_last_of( "/" ));
 		if ( ls == string::npos )
 		{
-			cerr << red << nodots << normal << endl;
+			cerr << redbk << nodots << normal << endl;
 		} else {
 			const string path( nodots.substr( 0, ls ) );
 			const size_t ls1( ls + 1 );
@@ -88,7 +99,7 @@ struct Macros : vector< Macro >
 			const Macro& macro( *it );
 			rules[ macro.path ].push_back( macro.file );
 		}
-		return true;
+		return !!rules;
 	}
 	private:
 	Rules rules;
@@ -115,7 +126,8 @@ struct CompileLines : Lines
 			{
 				const string part( *vit );
 				const size_t trigger( part.find("../" ) );
-				if ( trigger  == 0 ) macros+=part; }
+				if ( trigger  == 0 ) macros+=part; 
+			}
 		}
 		
 		return !!macros;
@@ -149,7 +161,7 @@ int main( int argc, char** argv)
 
 	const string where( argv[ 1 ] );
 	const string how( argv[ 2 ] );
-	cerr << where << " / " << how << endl;
+	//cerr << where << " / " << how << endl;
 
 
 	unique_ptr< Lines > sublines;
@@ -169,7 +181,7 @@ int main( int argc, char** argv)
 	if ( ! lines )
 	{
 		cerr << "Cannot generate macros for " << how << endl;
-		return 0;
+		return -1;
 	}
 	cout << lines << endl;
 	return 0;
