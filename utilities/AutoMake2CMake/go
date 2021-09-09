@@ -1,12 +1,7 @@
 
-if [ 1 == 1 ]; then
-	./bdb/KludgeBdb.ksh ~/libdb
-	manifest=`./CreateManifest.ksh ~/libdb | grep "MANIFEST:" | cut -d ':' -f2`
-	echo -ne "\033[32mManifest: ${manifest}\033[0m\n"
-else
-	manifest="/tmp/cmakizer.manifest.HvtQouzm6M"
-fi
-
-
-./cmakeizer.ksh ~/libdb ${manifest} 
+./bdb/KludgeBdb.ksh ~/libdb
+manifest=`./CreateManifest.ksh ~/libdb | grep "MANIFEST:" | cut -d ':' -f2`
+echo -ne "\033[32mManifest: ${manifest}\033[0m\n"
+./GetRecipe.ksh ~/libdb ${manifest}  | grep libtool > recipe.txt
+cat recipe.txt | ./MakeCMake.ksh 
 
