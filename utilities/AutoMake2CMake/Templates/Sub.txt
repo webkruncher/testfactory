@@ -1,0 +1,29 @@
+
+set(CMAKE_CXX_FLAGS " -std=c++11 -pthread " )
+
+include( CMake.inc )
+
+add_library(
+	LIBRARYNAME
+		STATIC
+			${SOURCES}
+)
+
+add_library( PROJECTNAME::LIBRARYNAME  ALIAS LIBRARYNAME  )
+
+target_include_directories(
+    LIBRARYNAME
+	    PRIVATE
+		${INCLUDEPATH}
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+		$<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(
+    LIBRARYNAME
+	    PUBLIC
+)
+
+	    
+install(TARGETS LIBRARYNAME DESTINATION lib/PROJECTNAME )
+

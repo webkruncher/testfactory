@@ -50,8 +50,14 @@ struct Rules : map< string, stringvector >
 		for (const_iterator it=begin();it!=end();it++) 
 		{
 			const string macroincludefile( where + string( "/" ) + it->first + string( "/CMake.inc" ) );
-			//cerr << macroincludefile << endl;
 			ofstream macrofile( macroincludefile.c_str() );
+
+			const size_t up( std::count(it->first.begin(), it->first.end(), '/') );
+			macrofile << "set(INCLUDEPATH " << endl;
+			macrofile << tab; for ( int u=0; u<up; u++ ) macrofile << "../"; macrofile << "../build_unix/" << endl;
+			macrofile << tab; for ( int u=0; u<up; u++ ) macrofile << "../"; macrofile << "../src/dbinc/" << endl;
+			macrofile << ")" << endl;
+
 			macrofile << "set(SOURCES " << endl;
 			for (stringvector::const_iterator sit=it->second.begin();sit!=it->second.end();sit++) 
 				macrofile << tab << ( *sit ) << endl;
@@ -65,7 +71,7 @@ struct Rules : map< string, stringvector >
 	virtual ostream& operator<<(ostream& o) const
 	{
 		for (const_iterator it=begin();it!=end();it++) 
-			o << where << "/" << it->first << endl ;// << it->second << endl;
+			o << it->first << endl ;// << it->second << endl;
 		return o;
 	} 
 }; 
@@ -162,7 +168,6 @@ int main( int argc, char** argv)
 	const string where( argv[ 1 ] );
 	const string how( argv[ 2 ] );
 	//cerr << where << " / " << how << endl;
-
 
 	unique_ptr< Lines > sublines;
 	

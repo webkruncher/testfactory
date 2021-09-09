@@ -1,16 +1,38 @@
 
-#./bdb/KludgeBdb.ksh ~/libdb
-#manifest=`./CreateManifest.ksh ~/libdb | grep "MANIFEST:" | cut -d ':' -f2`
+
+PROJECTNAME=libdb
+
+#./bdb/KludgeBdb.ksh ~/${PROJECTNAME}
+#manifest=`./CreateManifest.ksh ~/${PROJECTNAME} | grep "MANIFEST:" | cut -d ':' -f2`
 #echo -ne "\033[32mManifest: ${manifest}\033[0m\n"
-#./GetRecipe.ksh ~/libdb ${manifest}  | grep libtool > recipe.txt
+#./GetRecipe.ksh ~/${PROJECTNAME} ${manifest}  | grep libtool > recipe.txt
 
 [ -d ../src.build ] && rm -rf ../src.build
 mkdir -p ../src.build
 cmake  -S . -B ../src.build/  
 cmake  --build ../src.build/ 
 
-cat recipe.txt | grep "mode=compile" | ../src.build/src/CreateCmakeMacros ~/libdb -compile
+
+cat Templates/Root.txt | sed "s/PROJECTNAME/${PROJECTNAME}/g" > ~/${PROJECTNAME}/CMakeLists.txt 
+
+for directory in `cat recipe.txt | grep "mode=compile" | ../src.build/src/CreateCmakeMacros ~/${PROJECTNAME} -compile`; do
+	echo "add_subdirectory( ${directory} )" >> ~/${PROJECTNAME}/CMakeLists.txt
+
+	LIBRARYNAME=`basename ${directory}`
+
+	cat Templates/Sub.txt | \
+		sed "s/LIBRARYNAME/${LIBRARYNAME}/g" | \
+		sed "s/PROJECTNAME/${PROJECTNAME}/g" > ~/${PROJECTNAME}/${directory}/CMakeLists.txt	
+done
 
 
-cat recipe.txt | grep "link: ar" | ../src.build/src/CreateCmakeMacros ~/libdb -link
+for directory in `cat recipe.txt | grep "link: ar" | ../src.build/src/CreateCmakeMacros ~/${PROJECTNAME} -link`; do
+	echo -ne "Link rules for ${directory}\n"
+done;
+
+
+pushd ~/${PROJECTNAME}
+cmake  -S . -B src.build/
+cmake  --build src.build/
+popd
 
