@@ -32,7 +32,12 @@ done;
 
 
 pushd ~/${PROJECTNAME}
-cmake  -S . -B src.build/
-cmake  --build src.build/
+
+[ -d src.build ] && rm -rf src.build 
+mkdir src.build
+cmake -S .  -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++  -B src.build/
+#cmake -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++  --build src.build/
+#cmake  -S . -B src.build/
+cmake  --build src.build/ --verbose
 popd
 
