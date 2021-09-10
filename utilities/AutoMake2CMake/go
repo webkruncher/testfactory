@@ -35,11 +35,19 @@ pushd ~/${PROJECTNAME}
 
 [ -d src.build ] && rm -rf src.build 
 mkdir src.build
-cmake -S .  -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++  -B src.build/
-cmake  --build src.build/ 
+#cmake -S .  -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++  -B src.build/
+#cmake -S .  -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++  -B src.build/
+#cmake  --build src.build/ 
 #sudo cmake  --install src.build/ 
 
+
+cmake -S .  -B  ./src.build
+[ $? != 0 ] && exit -1
+cmake  --build ./src.build/ 
+[ $? != 0 ] && exit -1
+
 ar cru libdb_cxx.a  `find . -name "*.o" | xargs `
+[ $? != 0 ] && exit -1
 sudo cp libdb_cxx.a /usr/lib
 
 

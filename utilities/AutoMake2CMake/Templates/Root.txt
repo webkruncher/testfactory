@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 3.10)
 
 project("PROJECTNAME")
 
+#set(CMAKE_CXX_FLAGS "-std=c++11 -pthread " )
+#set(CMAKE_CXX_FLAGS "-std=libstdc++ -pthread " )
+#set(CMAKE_CXX_FLAGS "-std=gnu++11 -pthread " )
+set(CMAKE_C_COMPILER "c++")
+set(CMAKE_CXX_COMPILER "c++")
+#set(CMAKE_CXX_FLAGS "-std=c++11 -pthread " )
+#set(CMAKE_CXX_FLAGS "-stdlib=libc++ -pthread " )
+
+#-stdlib=libc++
 
 set(
 	NIX_INCLUDE_PATHS
