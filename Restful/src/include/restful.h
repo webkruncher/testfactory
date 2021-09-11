@@ -34,16 +34,16 @@
 		virtual bool operator ()( const KruncherTools::Args& );
 	};
 
+	enum Mode{ None, Cookie, Oauth };
 	struct Restful : InfoKruncher::Client
 	{
-		Restful() : mode( Mode::None ) {}
+		Restful() : mode( None ) {}
 		virtual void LoadRequest( Requester& );
 		virtual void HandlePayload( const unsigned char*, const Hyper::MimeHeaders&, const InfoKruncher::SocketProcessOptions& ) throw(); 
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
 		private:
 		void HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& );
 		protected:
-		enum struct Mode{ None, Cookie, Oauth };
 		Mode mode;
 	};
 

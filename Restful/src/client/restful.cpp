@@ -36,7 +36,7 @@
 		{
 			InfoKruncher::SocketProcessOptions o;
 			o.port=80;
-			o.protocol=InfoKruncher::SocketProcessOptions::Protocol::http;
+			o.protocol=InfoKruncher::http;
 			o.path="/home/jmt/websites/text/webkruncher/";
 			o.host="webkruncher.com";
 			push_back( o );
@@ -47,7 +47,7 @@
 			SecureInformation::init_openssl();
 			InfoKruncher::SocketProcessOptions o;
 			o.port=443;
-			o.protocol=InfoKruncher::SocketProcessOptions::Protocol::https;
+			o.protocol=InfoKruncher::https;
 			o.path="/home/jmt/websites/text/webkruncher/";
 
 			const string passwordfile( "/etc/webkruncher.pwd" );
@@ -104,7 +104,7 @@
 		const stringmap& metadata( r.options.metadata );
 
 		string uri;
-		if ( mode == Mode::Cookie ) uri="Home.xml";
+		if ( mode == Cookie ) uri="Home.xml";
 
 		r.ss << "GET /" << uri << " HTTP/1.1" << endl;
 		r.ss << "Host: Restful.com" << endl;
@@ -118,7 +118,7 @@
 	void Restful::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
 		stringstream ss;
-		if ( mode == Mode::Cookie )
+		if ( mode == Cookie )
 		{ 
 			stringmap& metadata( options.metadata );
 			Hyper::MimeHeaders::const_iterator cookit( headers.find( "set-cookie" ) ); 
