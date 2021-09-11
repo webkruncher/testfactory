@@ -36,7 +36,7 @@ namespace InfoKruncher
 
 	template<> void InfoKruncher::Consumer< Restful >::ForkAndRequest( const SocketProcessOptions& svcoptions )
 	{
-		//RunClients( svcoptions );
+		RunClients( svcoptions );
 	}
  
 	template<> void InfoKruncher::Consumer< Restful >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
@@ -85,14 +85,12 @@ int main( int argc, char** argv )
 		const ClientList& clientlist( options.workerlist );
 		for ( ClientList::const_iterator it=clientlist.begin(); it!=clientlist.end(); it++ )
 		{
-#if 0
 			InfoKruncher::Consumer<Restful> info;
-			clients.push_back( info );
+			//clients.push_back( info );
 			InfoKruncher::Consumer<Restful>& client( clients.back() );
 			const InfoKruncher::SocketProcessOptions& svcoptions( *it );
 			client.GetSiteMetaData( svcoptions ); // pre-load cookies and oauth tokens
 			client.ForkAndRequest( svcoptions );
-#endif
 		}
 		while ( !TERMINATE ) usleep( (rand()%100000)+100000 );
 		clients.Terminate();
