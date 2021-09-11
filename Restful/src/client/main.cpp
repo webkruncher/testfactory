@@ -79,21 +79,20 @@ int main( int argc, char** argv )
 		KruncherTools::Daemonizer daemon( options.daemonize, "RestfulClient" );
 
 		Initialize();
-
-		Consumer clients;
-
 		const ClientList& clientlist( options.workerlist );
-		for ( ClientList::const_iterator it=clientlist.begin(); it!=clientlist.end(); it++ )
+		InfoKruncher::Consumer< Restful > clients[ options.workerlist.size() ];
+		const size_t nClients( options.workerlist.size() );
+		
+		for ( size_t c=0; c < nClients; c++ )
 		{
 			InfoKruncher::Consumer<Restful> info;
-			//clients.push_back( info );
-			InfoKruncher::Consumer<Restful>& client( clients.back() );
-			const InfoKruncher::SocketProcessOptions& svcoptions( *it );
+			InfoKruncher::Consumer<Restful>& client( clients[ c ] );
+			const InfoKruncher::SocketProcessOptions& svcoptions( clientlist[ c ] );
 			client.GetSiteMetaData( svcoptions ); // pre-load cookies and oauth tokens
 			client.ForkAndRequest( svcoptions );
 		}
 		while ( !TERMINATE ) usleep( (rand()%100000)+100000 );
-		clients.Terminate();
+		for ( size_t t=0; t < nClients; t++ ) clients[ t ].Terminate();
 		cerr << green << "Restful is exiting" << normal << endl;
 	}
 	catch( const exception& e ) { ssexcept<<e.what(); }
