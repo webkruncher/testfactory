@@ -59,6 +59,7 @@ function Test
 	#sudo testsite
 	#sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml 
 	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --filter `hostname`
+	sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --filter `hostname`
 	sleep 1
 	restful --http --https
 
