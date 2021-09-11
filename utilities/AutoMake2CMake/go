@@ -14,8 +14,10 @@ cmake  --build ../src.build/
 
 
 cat Templates/Root.txt | sed "s/PROJECTNAME/${PROJECTNAME}/g" > ~/${PROJECTNAME}/CMakeLists.txt 
+cat Templates/go.${PROJECTNAME}  > ~/${PROJECTNAME}/go
+chmod u+x ~/${PROJECTNAME}/go
 
-for directory in `cat recipe.txt | grep "mode=compile" | ../src.build/src/CreateCmakeMacros ~/${PROJECTNAME} -compile`; do
+for directory in `cat recipe.txt | grep "mode=compile" | ../src.build/src/CreateCmakeMacros ~/${PROJECTNAME} -compile | grep 'lang\/cxx' `; do
 	echo "add_subdirectory( ${directory} )" >> ~/${PROJECTNAME}/CMakeLists.txt
 
 	LIBRARYNAME=`basename ${directory}`
@@ -26,29 +28,18 @@ for directory in `cat recipe.txt | grep "mode=compile" | ../src.build/src/Create
 done
 
 
-for directory in `cat recipe.txt | grep "link: ar" | ../src.build/src/CreateCmakeMacros ~/${PROJECTNAME} -link`; do
-	echo -ne "Link rules for ${directory}\n"
-done;
+#set(CMAKE_CXX_FLAGS "-std=c++11 -pthread ")
+
+
+
 
 
 pushd ~/${PROJECTNAME}
 
-[ -d src.build ] && rm -rf src.build 
-mkdir src.build
-#cmake -S .  -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++  -B src.build/
-#cmake -S .  -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++  -B src.build/
-#cmake  --build src.build/ 
-#sudo cmake  --install src.build/ 
 
-
-cmake -S .  -B  ./src.build
+./go $@
 [ $? != 0 ] && exit -1
-cmake  --build ./src.build/ 
-[ $? != 0 ] && exit -1
-
-ar cru libdb_cxx.a  `find . -name "*.o" | xargs `
-[ $? != 0 ] && exit -1
-sudo cp libdb_cxx.a /usr/lib
+exit 0
 
 
 popd
