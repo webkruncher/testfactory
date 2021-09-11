@@ -62,8 +62,8 @@ namespace InfoKruncher
 	template<> void InfoKruncher::Consumer< Restful >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher
 
-struct Consumer : vector< InfoKruncher::Consumer<Restful> > { void Terminate(); };
-void Consumer::Terminate() { for ( iterator it=begin(); it!=end(); it++ ) it->Terminate(); }
+//struct Consumer : vector< InfoKruncher::Consumer<Restful> > { void Terminate(); };
+//void Consumer::Terminate() { for ( iterator it=begin(); it!=end(); it++ ) it->Terminate(); }
 
 
 
@@ -80,12 +80,11 @@ int main( int argc, char** argv )
 
 		Initialize();
 		const ClientList& clientlist( options.workerlist );
-		InfoKruncher::Consumer< Restful > clients[ options.workerlist.size() ];
 		const size_t nClients( options.workerlist.size() );
+		InfoKruncher::Consumer< Restful > clients[ nClients ];
 		
 		for ( size_t c=0; c < nClients; c++ )
 		{
-			InfoKruncher::Consumer<Restful> info;
 			InfoKruncher::Consumer<Restful>& client( clients[ c ] );
 			const InfoKruncher::SocketProcessOptions& svcoptions( clientlist[ c ] );
 			client.GetSiteMetaData( svcoptions ); // pre-load cookies and oauth tokens
