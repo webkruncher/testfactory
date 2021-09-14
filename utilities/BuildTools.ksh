@@ -10,7 +10,7 @@ function Build
 	pushd ~/Info/${1}/src
 	sudo chown -R jmt ../*
 	rm -rf ../src.build
-	./go
+	./go -rebuild
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` build failed\033[0m\n"
 		exit -1 
@@ -30,7 +30,7 @@ function ReBuild
 function Install
 {
 	pushd ~/Info/${1}/src
-	sudo ./go install
+	sudo ./go -install
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` install failed\033[0m\n"
 		exit -1 
