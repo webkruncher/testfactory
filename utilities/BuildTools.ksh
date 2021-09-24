@@ -10,7 +10,7 @@ function Build
 	pushd ~/Info/${1}/src
 	sudo chown -R jmt ../*
 	rm -rf ../src.build
-	./go -rebuild
+	./go 
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` build failed\033[0m\n"
 		exit -1 
@@ -23,7 +23,8 @@ function ReBuild
 	Build informationkruncher
 	Install informationkruncher
 	Build webkruncher
-	Build TestFactory/Restful
+	Install webkruncher
+	#Build TestFactory/Restful
 	#Build testsites
 }
 
@@ -49,19 +50,15 @@ function InstallSites
 function Test
 {
 	sudo pkill tail
-	ReBuild
+	sudo pkill datafactory
 	sudo pkill webkruncher
-	#sudo pkill testsite
 	sudo pkill restful
+	ReBuild
 	sleep 1
-	InstallSites
-	#sudo webkruncher --http --https
-	#sudo testsite
-	#sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml 
 	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --filter `hostname`
 	sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --filter `hostname`
-	sleep 1
-	restful --http --https
+	#sleep 1
+	#restful --http --https
 
 	sleep 1
 	Status.ksh
