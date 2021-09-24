@@ -53,12 +53,15 @@ function Test
 	sudo pkill datafactory
 	sudo pkill webkruncher
 	sudo pkill restful
-	ReBuild
+	if [ "${1}" == "-rebuild" ]; then 
+		ReBuild
+		shift
+	fi
 	sleep 1
-	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --filter `hostname`
-	sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --filter `hostname`
-	#sleep 1
-	#restful --http --https
+	echo -ne "Press enter"
+	read ok
+	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter `hostname`
+	sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --node data --filter `hostname`
 
 	sleep 1
 	Status.ksh
