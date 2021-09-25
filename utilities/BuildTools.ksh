@@ -58,8 +58,6 @@ function Test
 		shift
 	fi
 	sleep 1
-	echo -ne "Press enter"
-	read ok
 	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter `hostname`
 	sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --node data --filter `hostname`
 
