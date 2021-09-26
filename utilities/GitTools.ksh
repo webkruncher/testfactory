@@ -11,7 +11,6 @@ function GitCommit
 {
 	gitCommit krunchercore/src ${1}
 	gitCommit informationkruncher/src ${1}
-	gitCommit testsites/src ${1}
 	gitCommit webkruncher/src ${1}
 	gitCommit testfactory/Restful ${1}
 }
@@ -29,7 +28,6 @@ function GitStatus
 {
 	gitStatus krunchercore/src ${1}
 	gitStatus informationkruncher/src ${1}
-	gitStatus testsites/src ${1}
 	gitStatus webkruncher/src ${1}
 	gitStatus testfactory/Restful ${1}
 }
@@ -46,7 +44,6 @@ function GitPush
 {
 	gitPush krunchercore
 	gitPush informationkruncher
-	gitPush testsites
 	gitPush webkruncher
 	gitPush testfactory
 }
