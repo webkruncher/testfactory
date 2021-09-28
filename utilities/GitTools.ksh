@@ -12,9 +12,8 @@ function GitCommit
 	gitCommit datakruncher/src ${1}
 	gitCommit krunchercore/src ${1}
 	gitCommit informationkruncher/src ${1}
-	gitCommit testsites/src ${1}
 	gitCommit webkruncher/src ${1}
-	gitCommit TestFactory/Restful ${1}
+	gitCommit testfactory/Restful ${1}
 }
 
 
@@ -31,9 +30,8 @@ function GitStatus
 	gitStatus datakruncher/src ${1}
 	gitStatus krunchercore/src ${1}
 	gitStatus informationkruncher/src ${1}
-	gitStatus testsites/src ${1}
 	gitStatus webkruncher/src ${1}
-	gitStatus TestFactory/Restful ${1}
+	gitStatus testfactory/Restful ${1}
 }
 
 
@@ -49,8 +47,7 @@ function GitPush
 	gitPush datakruncher
 	gitPush krunchercore
 	gitPush informationkruncher
-	gitPush testsites
 	gitPush webkruncher
-	gitPush TestFactory
+	gitPush testfactory
 }
 
