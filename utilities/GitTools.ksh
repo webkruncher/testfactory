@@ -2,13 +2,14 @@
 
 function gitCommit
 {
-	pushd ~/Info/${1}
+	echo -ne "\033[33m" && pushd ~/Info/${1} && echo -ne "\033[0m"
 	git commit -am "${2}"
-	popd
+	popd 2>&1 >> /dev/null
 }
 
 function GitCommit
 {
+	gitCommit datakruncher/src ${1}
 	gitCommit krunchercore/src ${1}
 	gitCommit informationkruncher/src ${1}
 	gitCommit testsites/src ${1}
@@ -20,13 +21,14 @@ function GitCommit
 
 function gitStatus
 {
-	pushd ~/Info/${1}
+	echo -ne "\033[33m" && pushd ~/Info/${1} && echo -ne "\033[0m"
 	git status
-	popd
+	popd 2>&1 >> /dev/null
 }
 
 function GitStatus
 {
+	gitStatus datakruncher/src ${1}
 	gitStatus krunchercore/src ${1}
 	gitStatus informationkruncher/src ${1}
 	gitStatus testsites/src ${1}
@@ -37,13 +39,14 @@ function GitStatus
 
 function gitPush
 {
-	pushd ~/Info/${1}
+	echo -ne "\033[33m" && pushd ~/Info/${1} && echo -ne "\033[0m"
 	git push
-	popd
+	popd 2>&1 >> /dev/null
 }
 
 function GitPush
 {
+	gitPush datakruncher
 	gitPush krunchercore
 	gitPush informationkruncher
 	gitPush testsites
