@@ -42,7 +42,7 @@ namespace InfoKruncher
 	template<> void InfoKruncher::Consumer< Restful >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
 	{
 		mode=Cookie;
-		streamingsocket sock( svcoptions.host.c_str(), svcoptions.port, KruncherTools::GetUuid() );
+		streamingsocket sock( svcoptions.host.c_str(), svcoptions.port, KruncherTools::GetConnectionId() );
 		sock.blocking( true );
 		if ( sock.open() && sock.connect() )
 		{
@@ -62,18 +62,13 @@ namespace InfoKruncher
 	template<> void InfoKruncher::Consumer< Restful >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher
 
-//struct Consumer : vector< InfoKruncher::Consumer<Restful> > { void Terminate(); };
-//void Consumer::Terminate() { for ( iterator it=begin(); it!=end(); it++ ) it->Terminate(); }
-
-
-
 
 int main( int argc, char** argv )
 {
 	stringstream ssexcept;
 	try
 	{
-		VERBOSITY=VERB_SIGNALS|VERB_PSOCKETS|VERB_SSOCKETS;
+		VERBOSITY=VERB_SIGNALS|VERB_ASOCKETS;
 		cerr << green << "Restful is starting up" << normal << endl;
 		InfoKruncher::Options< ClientList > options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );

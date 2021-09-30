@@ -9,11 +9,13 @@ function gitCommit
 
 function GitCommit
 {
-	gitCommit datakruncher/src ${1}
-	gitCommit krunchercore/src ${1}
-	gitCommit informationkruncher/src ${1}
-	gitCommit webkruncher/src ${1}
-	gitCommit testfactory/Restful ${1}
+	where=${1}
+	shift
+	gitCommit datakruncher/src ${where} "$@"
+	gitCommit krunchercore/src ${where} "$@"
+	gitCommit informationkruncher/src  ${where} "$@"
+	gitCommit webkruncher/src ${where} "$@"
+	gitCommit testfactory/Restful ${where} "$@"
 }
 
 
