@@ -1,7 +1,19 @@
 
-set(CMAKE_CXX_FLAGS "-pthread " )
+set(INCLUDE_PATHS)
+IncludeProjects(
+	krunchercore/src/include
+	exexml/include
+	informationkruncher/src/include
+	informationkruncher/src/include/db
+)
 
-get_filename_component(INCLUDES_PATH ../include/ REALPATH) 
+set(LIBRARY_PATHS)
+set(LIBRARIES)
+IncludeLibraryPaths(
+	krunchercore
+	informationkruncher
+)
+
 
 add_executable(
 	restful
@@ -9,11 +21,11 @@ add_executable(
 		restful.cpp
 )
 
-#add_library( kruncher::restful  ALIAS restful  )
 
 target_include_directories(
     restful
 	    PRIVATE
+		../include/
 		${INCLUDE_PATHS}
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 		$<INSTALL_INTERFACE:include>
@@ -28,7 +40,10 @@ target_link_directories(
 target_link_libraries(
     restful
 	    PUBLIC
-			${LIBRARIES}
+		${LIBRARIES}
+		ssl
+		crypto
+		/home/jmt/libdb/build_unix/libdb_cxx.a
 )
 
 install(
@@ -37,4 +52,5 @@ install(
 		    EXPORT exports
 		    RUNTIME DESTINATION bin
 ) 
+
 

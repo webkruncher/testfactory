@@ -69,7 +69,7 @@
 		return true;
 	}
 
-	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+1000000 ); }
+	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+10000000 ); }
 
 	void Restful::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
@@ -127,6 +127,7 @@
 		}
 		ss << green << headers << normal << endl;
 		cout << ss.str() ;
+cout << text << endl;
 	}
 
 
