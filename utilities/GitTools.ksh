@@ -56,3 +56,20 @@ function GitPush
 	gitPush testfactory
 }
 
+function gitPull
+{
+	pushd ~/Info/${1} >> /dev/null
+	echo -ne "\033[33m`pwd`\033[0m"
+	git pull
+	popd 2>&1 >> /dev/null
+}
+
+function GitPull
+{
+	gitPull datakruncher
+	gitPull krunchercore
+	gitPull informationkruncher
+	gitPull webkruncher
+	gitPull testfactory
+}
+
