@@ -1,6 +1,6 @@
 
 
-. ../../krunchercore/Builder.ksh
+. ../../../krunchercore/Builder.ksh
 OStag=`uname -a | cut -d ' ' -f1`
 [ ${OStag} == "Linux" ] && export OS=LINUX
 [ ${OStag} == "OpenBSD" ] && export OS=UNIX

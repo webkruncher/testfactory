@@ -3,7 +3,7 @@
 function gitCommit
 {
 	pushd ~/Info/${1} >> /dev/null
-	echo -ne "\033[33m`pwd`\033[0m"
+	echo -ne "\033[33m`pwd`\n\033[0m"
 	git commit -am "${2}"
 	popd 2>&1 >> /dev/null
 }
@@ -24,7 +24,7 @@ function GitCommit
 function gitStatus
 {
 	pushd ~/Info/${1} >> /dev/null
-	echo -ne "\033[33m`pwd`\033[0m"
+	echo -ne "\033[33m`pwd`\n\033[0m"
 	git status
 	popd 2>&1 >> /dev/null
 }
@@ -42,7 +42,7 @@ function GitStatus
 function gitPush
 {
 	pushd ~/Info/${1} >> /dev/null
-	echo -ne "\033[33m`pwd`\033[0m"
+	echo -ne "\033[33m`pwd`\n\033[0m"
 	git push
 	popd 2>&1 >> /dev/null
 }
@@ -59,7 +59,7 @@ function GitPush
 function gitPull
 {
 	pushd ~/Info/${1} >> /dev/null
-	echo -ne "\033[33m`pwd`\033[0m"
+	echo -ne "\033[33m`pwd`\n\033[0m"
 	git pull
 	popd 2>&1 >> /dev/null
 }
