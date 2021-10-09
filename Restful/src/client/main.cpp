@@ -42,7 +42,7 @@ namespace InfoKruncher
 	template<> void InfoKruncher::Consumer< Restful >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
 	{
 		mode=Cookie;
-		streamingsocket sock( svcoptions.host.c_str(), svcoptions.port, KruncherTools::GetConnectionId() );
+		streamingsocket sock( svcoptions.host.c_str(), svcoptions.port, KruncherTools::GetUuid() );
 		sock.blocking( true );
 		if ( sock.open() && sock.connect() )
 		{
