@@ -28,6 +28,8 @@
 
 #include <infokruncher.h>
 #include <infosite.h>
+#include <exexml.h>
+#include <db/site/infofigur.h>
 #include <restful.h>
 
 
@@ -70,7 +72,8 @@ int main( int argc, char** argv )
 	{
 		VERBOSITY=VERB_SIGNALS|VERB_ASOCKETS;
 		cerr << green << "Restful is starting up" << normal << endl;
-		InfoKruncher::Options< ClientList > options( argc, argv );
+		//InfoKruncher::Options< ClientList > options( argc, argv );
+		InfoKruncher::Options< InfoDataService::ServiceList > options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );
 		KruncherTools::Daemonizer daemon( options.daemonize, "RestfulClient" );
 
