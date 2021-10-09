@@ -66,7 +66,6 @@ namespace RestfulClient
 
 	void Restful::LoadRequest( Requester& r  )
 	{
-cout << "Loading requets" << endl;
 		const stringmap& metadata( r.options.metadata );
 
 		string uri;

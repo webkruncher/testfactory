@@ -43,8 +43,6 @@ namespace InfoKruncher
  
 	template<> void InfoKruncher::Consumer< RestfulClient::Restful >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
 	{
-cout << "GetSiteMetaData" << endl;
-cout << svcoptions << endl;
 		mode=RestfulClient::Cookie;
 		streamingsocket sock( svcoptions.host.c_str(), svcoptions.port, KruncherTools::GetUuid() );
 		sock.blocking( true );
@@ -74,7 +72,6 @@ int main( int argc, char** argv )
 	{
 		VERBOSITY=VERB_SIGNALS|VERB_ASOCKETS;
 		cerr << green << "Restful is starting up" << normal << endl;
-		//InfoKruncher::Options< ClientList > options( argc, argv );
 		InfoKruncher::Options< InfoKruncher::ServiceList > options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );
 		KruncherTools::Daemonizer daemon( options.daemonize, "RestfulClient" );
