@@ -68,7 +68,7 @@ namespace RestfulClient
 	{
 		const stringmap& metadata( r.options.metadata );
 
-		string uri;
+		string uri( "index.xml" );
 		if ( mode == Cookie ) uri="Home.xml";
 
 		r.ss << "GET /" << uri << " HTTP/1.1" << endl;
@@ -77,7 +77,9 @@ namespace RestfulClient
 		if ( metadata.find( "cookie" ) != metadata.end() )
 			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << endl;
 		r.ss << endl;
-		cout << green << r.ss.str() << normal << endl;
+	
+		const string proto( ( r.options.protocol == InfoKruncher::http ) ? "http" : "https" );	
+		cout << green << proto << "://" << r.options.host << "/" << yellow << uri << normal << endl;
 	}
 
 	void Restful::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
@@ -91,8 +93,8 @@ namespace RestfulClient
 			ss << yellow << headers << normal << endl;
 		}
 		ss << green << headers << normal << endl;
-		cout << ss.str() ;
-//cout << text << endl;
+		//cout << ss.str() ;
+		//cout << text << endl;
 	}
 
 } // RestfulClient
