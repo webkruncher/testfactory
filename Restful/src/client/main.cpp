@@ -29,21 +29,23 @@
 #include <infokruncher.h>
 #include <infosite.h>
 #include <exexml.h>
-#include <db/site/infofigur.h>
+#include <infofigur.h>
 #include <restful.h>
 
 
 namespace InfoKruncher
 {
 
-	template<> void InfoKruncher::Consumer< Restful >::ForkAndRequest( const SocketProcessOptions& svcoptions )
+	template<> void InfoKruncher::Consumer< RestfulClient::Restful >::ForkAndRequest( const SocketProcessOptions& svcoptions )
 	{
 		RunClients( svcoptions );
 	}
  
-	template<> void InfoKruncher::Consumer< Restful >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
+	template<> void InfoKruncher::Consumer< RestfulClient::Restful >::GetSiteMetaData( const SocketProcessOptions& svcoptions )
 	{
-		mode=Cookie;
+cout << "GetSiteMetaData" << endl;
+cout << svcoptions << endl;
+		mode=RestfulClient::Cookie;
 		streamingsocket sock( svcoptions.host.c_str(), svcoptions.port, KruncherTools::GetUuid() );
 		sock.blocking( true );
 		if ( sock.open() && sock.connect() )
@@ -59,9 +61,9 @@ namespace InfoKruncher
 				client.secure( sock.GetSock(), *this, svcoptions );
 			}
 		}
-		mode=None;
+		mode=RestfulClient::None;
 	}
-	template<> void InfoKruncher::Consumer< Restful >::Terminate() { subprocesses.Terminate(); }
+	template<> void InfoKruncher::Consumer< RestfulClient::Restful >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher
 
 
@@ -73,18 +75,18 @@ int main( int argc, char** argv )
 		VERBOSITY=VERB_SIGNALS|VERB_ASOCKETS;
 		cerr << green << "Restful is starting up" << normal << endl;
 		//InfoKruncher::Options< ClientList > options( argc, argv );
-		InfoKruncher::Options< InfoDataService::ServiceList > options( argc, argv );
+		InfoKruncher::Options< InfoKruncher::ServiceList > options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );
 		KruncherTools::Daemonizer daemon( options.daemonize, "RestfulClient" );
 
-		Initialize();
-		const ClientList& clientlist( options.workerlist );
+		if ( options.find( "-d" ) == options.end() ) Initialize();
+		const InfoKruncher::ServiceList& clientlist( options.workerlist );
 		const size_t nClients( options.workerlist.size() );
-		InfoKruncher::Consumer< Restful > clients[ nClients ];
+		InfoKruncher::Consumer< RestfulClient::Restful > clients[ nClients ];
 		
 		for ( size_t c=0; c < nClients; c++ )
 		{
-			InfoKruncher::Consumer<Restful>& client( clients[ c ] );
+			InfoKruncher::Consumer<RestfulClient::Restful>& client( clients[ c ] );
 			const InfoKruncher::SocketProcessOptions& svcoptions( clientlist[ c ] );
 			client.GetSiteMetaData( svcoptions ); // pre-load cookies and oauth tokens
 			client.ForkAndRequest( svcoptions );

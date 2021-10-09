@@ -28,7 +28,8 @@
 
 #ifndef WEBKRUNCHER_CONSUMER_H
 #define WEBKRUNCHER_CONSUMER_H
-
+namespace RestfulClient
+{
 	struct ClientList : vector< InfoKruncher::SocketProcessOptions >
 	{
 		virtual bool operator ()( const KruncherTools::Args& );
@@ -46,7 +47,7 @@
 		protected:
 		Mode mode;
 	};
-
+} //RestfulClient
 #endif //WEBKRUNCHER_CONSUMER_H
 
 

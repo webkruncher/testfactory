@@ -29,46 +29,8 @@
 #include <infosite.h>
 #include <restful.h>
 
-
-	bool ClientList::operator()( const KruncherTools::Args& options)
-	{
-		if ( options.find( "--http" ) != options.end() )
-		{
-			InfoKruncher::SocketProcessOptions o;
-			o.port=80;
-			o.protocol=InfoKruncher::http;
-			o.path="/home/jmt/websites/text/webkruncher/";
-			o.host="webkruncher.com";
-			push_back( o );
-		}
-
-		if ( options.find( "--https" ) != options.end() )
-		{
-			SecureInformation::init_openssl();
-			InfoKruncher::SocketProcessOptions o;
-			o.port=443;
-			o.protocol=InfoKruncher::https;
-			o.path="/home/jmt/websites/text/webkruncher/";
-
-			const string passwordfile( "/etc/webkruncher.pwd" );
-			if ( KruncherTools::FileExists( passwordfile ) )
-			{
-				o.keypasswd=KruncherTools::LoadFile( passwordfile );
-			} else {
-				cout << "Ssl Password: ";
-				o.keypasswd=KruncherTools::getpass();
-			}
-
-			const string certs( "/etc/ssl/" );
-			o.cadir=certs;
-			o.certfile=certs+string("WEBKRUNCHER.COM.crt");
-			o.cafile=certs+string("cert.pem");
-			o.host="webkruncher.com";
-			push_back( o );
-		}
-		return true;
-	}
-
+namespace RestfulClient
+{
 	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+1000000 ); }
 
 	void Restful::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
@@ -104,6 +66,7 @@
 
 	void Restful::LoadRequest( Requester& r  )
 	{
+cout << "Loading requets" << endl;
 		const stringmap& metadata( r.options.metadata );
 
 		string uri;
@@ -133,5 +96,5 @@
 //cout << text << endl;
 	}
 
-
+} // RestfulClient
 
