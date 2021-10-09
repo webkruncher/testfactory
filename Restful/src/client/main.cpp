@@ -94,8 +94,10 @@ int main( int argc, char** argv )
 	catch( const string& s ) { ssexcept<<s;}
 	catch( const char* s ) { ssexcept<<s;}
 	catch( ... ) { ssexcept<<"unknown";}
-	if ( ! ssexcept.str().empty() ) ExceptionLog( "main", ssexcept.str() );
-
+	if (!ssexcept.str().empty())
+	{
+		stringstream ssout; ssout << fence << "[EXCEPT]" << fence << ssexcept.str(); Log(VERB_ALWAYS, "restfulclientmain", ssout.str());
+	}
 	return 0;
 }
 
