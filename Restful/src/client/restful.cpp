@@ -59,7 +59,9 @@ namespace RestfulClient
 		catch( ... ) { ssexcept<<"unknown";}
 		if (!ssexcept.str().empty())
 		{
-			stringstream ssout; ssout << fence << "[EXCEPT]" << fence << ssexcept.str(); Log(VERB_ALWAYS, "Restful::HandlePayload", ssout.str());
+			stringstream ssout; 
+			ssout << fence << "[EXCEPT]" << fence << ssexcept.str(); 
+			Log(VERB_ALWAYS, "Restful::HandlePayload", ssout.str());
 		}
 	} 
 
@@ -72,7 +74,7 @@ namespace RestfulClient
 		if ( mode == Cookie ) uri="Home.xml";
 
 		r.ss << "GET /" << uri << " HTTP/1.1" << endl;
-		r.ss << "Host: Restful.com" << endl;
+		r.ss << "Host: WebKruncher.com" << endl;
 		r.ss << "Accept: text/html" << endl;
 		if ( metadata.find( "cookie" ) != metadata.end() )
 			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << endl;
