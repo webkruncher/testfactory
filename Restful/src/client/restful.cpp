@@ -70,12 +70,13 @@ namespace RestfulClient
 	{
 		const stringmap& metadata( r.options.metadata );
 
-		string uri( "index.xml" );
+		string uri( "Steel/Logo/0031.png" );
+		//string uri( "index.xml" );
 		if ( mode == Cookie ) uri="Home.xml";
 
 		r.ss << "GET /" << uri << " HTTP/1.1" << endl;
 		r.ss << "Host: WebKruncher.com" << endl;
-		r.ss << "Accept: text/html" << endl;
+		r.ss << "Accept: text/html; image/png;" << endl;
 		if ( metadata.find( "cookie" ) != metadata.end() )
 			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << endl;
 		r.ss << endl;
