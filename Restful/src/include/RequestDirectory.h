@@ -69,7 +69,8 @@ namespace RequestDirectory
 		ostream& operator<<(ostream& o) const
 		{
 			for ( const_iterator it=begin();it!=end();it++ )
-				o << where << separator << *it << endl;
+				o << pathseparators( where, *it ) << endl;
+				
 			for ( vector< Dir >::const_iterator sit=subs.begin();sit!=subs.end(); sit++ )
 			{
 				const Dir& sub( *sit );
@@ -87,18 +88,6 @@ namespace RequestDirectory
 		subs.push_back( tmp );
 		return subs.back();
 	}
-#if 0
-	int FilteredDirectoryListing( const string path )
-	{
-		regex_t rx;
-		const string exp( "^.*\\.js$|^.*\\.xml$" );
-		if ( regcomp( &rx, exp.c_str(), REG_EXTENDED ) ) throw exp;
-		Dir dir( path, true, rx );
-		if ( ! dir ) return -1;
-		cerr << dir ;
-		return 0;
-	}
-#endif
 } // RequestDirectory
 
 #endif// REQUEST_DIRECTORY
