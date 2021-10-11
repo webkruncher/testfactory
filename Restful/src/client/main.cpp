@@ -31,7 +31,7 @@
 #include <exexml.h>
 #include <infofigur.h>
 #include <restful.h>
-
+#include <RequestDirectory.h>
 
 namespace InfoKruncher
 {
@@ -60,6 +60,14 @@ namespace InfoKruncher
 			}
 		}
 		mode=RestfulClient::None;
+	
+		const string& path( svcoptions.path );	
+		regex_t rx;
+		const string exp( "^.*\\.js$|^.*\\.xml$" );
+		if ( regcomp( &rx, exp.c_str(), REG_EXTENDED ) ) throw exp;
+		directory( path, true, rx );
+		if ( ! directory ) throw path;
+cerr << directory;
 	}
 	template<> void InfoKruncher::Consumer< RestfulClient::Restful >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher

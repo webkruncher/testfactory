@@ -25,6 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef REQUEST_DIRECTORY
+#define REQUEST_DIRECTORY
 #include <infotools.h>
 using namespace KruncherTools;
 #include <directory.h>
@@ -98,6 +100,8 @@ namespace RequestDirectory
 	}
 #endif
 } // RequestDirectory
+
+#endif// REQUEST_DIRECTORY
  
 
 
