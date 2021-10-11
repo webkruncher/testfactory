@@ -61,13 +61,21 @@ namespace InfoKruncher
 		}
 		mode=RestfulClient::None;
 	
+		RequestDirectory::Dir directory;
 		const string& path( svcoptions.path );	
 		regex_t rx;
-		const string exp( "^.*\\.js$|^.*\\.xml$" );
+		const string exp( "^.*\\.js$|^.*\\.xml$|^.*\\.png$|^.*\\.jpg$" );
 		if ( regcomp( &rx, exp.c_str(), REG_EXTENDED ) ) throw exp;
 		directory( path, true, rx );
 		if ( ! directory ) throw path;
-cerr << directory;
+		stringstream sss; sss << directory;
+		stringvector files;
+		files.split( sss.str(), "\n" );
+		for ( stringvector::const_iterator it=files.begin();it!=files.end();it++)
+		{
+			const string fname( *it );
+			Files.push_back( fname.substr( path.size(), fname.size()-path.size() ) ); 
+		}
 	}
 	template<> void InfoKruncher::Consumer< RestfulClient::Restful >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher

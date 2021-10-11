@@ -49,7 +49,7 @@ namespace RestfulClient
 		void HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& );
 		protected:
 		Mode mode;
-		RequestDirectory::Dir directory;
+		stringvector Files;
 	};
 } //RestfulClient
 #endif //WEBKRUNCHER_CONSUMER_H
