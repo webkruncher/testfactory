@@ -70,9 +70,18 @@ namespace RestfulClient
 	{
 		const stringmap& metadata( r.options.metadata );
 
-		string uri( "Steel/Logo/0031.png" );
-		//string uri( "index.xml" );
+		
+
+		string uri;
 		if ( mode == Cookie ) uri="Home.xml";
+		else
+		{
+			const size_t item( rand() % Files.size() );
+			//uri=(*fit);
+			//fit++;
+			//if ( fit == Files.end() ) fit=Files.begin();
+			uri=Files[ item ];
+		}
 
 		r.ss << "GET /" << uri << " HTTP/1.1" << endl;
 		r.ss << "Host: WebKruncher.com" << endl;

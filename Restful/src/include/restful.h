@@ -50,6 +50,7 @@ namespace RestfulClient
 		protected:
 		Mode mode;
 		stringvector Files;
+		stringvector::iterator fit;
 	};
 } //RestfulClient
 #endif //WEBKRUNCHER_CONSUMER_H

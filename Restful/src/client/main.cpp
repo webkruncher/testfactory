@@ -76,6 +76,7 @@ namespace InfoKruncher
 			const string fname( *it );
 			Files.push_back( fname.substr( path.size(), fname.size()-path.size() ) ); 
 		}
+		fit=Files.begin();
 	}
 	template<> void InfoKruncher::Consumer< RestfulClient::Restful >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher
@@ -86,6 +87,7 @@ int main( int argc, char** argv )
 	stringstream ssexcept;
 	try
 	{
+		srand( time(0) );
 		VERBOSITY=VERB_SIGNALS|VERB_ASOCKETS;
 		cerr << green << "Restful is starting up" << normal << endl;
 		InfoKruncher::Options< InfoKruncher::ServiceList > options( argc, argv );
