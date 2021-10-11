@@ -46,7 +46,7 @@ namespace RestfulClient
 		virtual void HandlePayload( const unsigned char*, const Hyper::MimeHeaders&, const InfoKruncher::SocketProcessOptions& ) throw(); 
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
 		private:
-		void HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& );
+		void ProcessPayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& );
 		protected:
 		Mode mode;
 		stringvector Files;

@@ -47,11 +47,7 @@ namespace RestfulClient
 			}
 			const string contenttype( ctypeit->second );
 			Log( "Restful::HandlePayload",  contenttype );
-			if ( contenttype.find( "text/" ) != string::npos ) 
-			{
-				const string text( (char*) payload );
-				HandleText( text, headers, options );
-			}
+			ProcessPayload( payload, headers, options );
 		}
 		catch( const exception& e ) { ssexcept<<e.what(); }
 		catch( const string& s ) { ssexcept<<s;}
@@ -70,16 +66,11 @@ namespace RestfulClient
 	{
 		const stringmap& metadata( r.options.metadata );
 
-		
-
 		string uri;
 		if ( mode == Cookie ) uri="Home.xml";
 		else
 		{
 			const size_t item( rand() % Files.size() );
-			//uri=(*fit);
-			//fit++;
-			//if ( fit == Files.end() ) fit=Files.begin();
 			uri=Files[ item ];
 		}
 
@@ -91,22 +82,39 @@ namespace RestfulClient
 		r.ss << endl;
 	
 		const string proto( ( r.options.protocol == InfoKruncher::http ) ? "http" : "https" );	
-		cout << green << proto << "://" << r.options.host << "/" << yellow << uri << normal << endl;
+		//cout << green << proto << "://" << blue << r.options.host << "/" << yellow << uri << normal << endl;
 	}
 
-	void Restful::HandleText( const string& text, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
+	void Restful::ProcessPayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
-		stringstream ss;
 		if ( mode == Cookie )
 		{ 
 			stringmap& metadata( options.metadata );
 			Hyper::MimeHeaders::const_iterator cookit( headers.find( "set-cookie" ) ); 
 			if ( cookit != headers.end() ) metadata[ "cookie" ] = cookit->second;
-			ss << yellow << headers << normal << endl;
 		}
-		ss << green << headers << normal << endl;
-		//cout << ss.str() ;
-		//cout << text << endl;
+		stringmap::const_iterator cit( headers.find("content-length") );
+		stringmap::const_iterator rit( headers.find("request") );
+		if ( ( rit != headers.end() ) && ( cit != headers.end() ) )
+		{
+			bool Same( true );	
+			char *Ender( NULL );
+			const int ContentLength( strtol(cit->second.c_str(), &Ender, 10) );
+			const string request( rit->second );
+			const string pathname( pathseparators( options.path, request ) );
+			if ( FileExists( pathname ) )
+			{
+				const size_t fsize( FileSize( pathname ) );
+				if ( fsize != ContentLength ) Same=false;
+
+			
+				if ( Same ) 	
+					cout << green << pathname << normal << endl ;
+				else 
+					cout << red << pathname << ":" << fsize << "!=" << ContentLength << normal << endl ;
+			
+			}
+		}
 	}
 
 } // RestfulClient
