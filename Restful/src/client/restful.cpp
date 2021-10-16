@@ -33,6 +33,37 @@ namespace RestfulClient
 {
 	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+1000000 ); }
 
+	void Restful::Consume( KruncherMimes::SocketManager& sock, const InfoKruncher::SocketProcessOptions& options ) throw()
+	{
+		const string proto( ( options.protocol == InfoKruncher::http ) ? "http" : "https" );	
+		if ( ! sock ) return;
+		string& headertext( sock.Headers() );
+		cerr << blue << proto << ":" << yellow << headertext << normal << endl;
+		//Hyper::MimeHeaders headers( sock.Headers() );
+
+		//cerr << green << headers << endl;
+#if 0
+		KruncherTools::stringvector Headers;
+		Headers.split( headers, "\r\n" );
+
+		size_t ContentLength( 0 );
+		for ( KruncherTools::stringvector::const_iterator hit=Headers.begin();hit!=Headers.end();hit++)
+		{
+			const string H( *hit );
+			if ( H.find("Content-Length:") == 0 )
+			{ 
+				const size_t coln( H.find( ":" ) );
+				if ( coln == string::npos ) throw H;
+				const string cls( H.substr( coln+1, H.size()-1 ) );
+				char *Ender( NULL );
+				ContentLength=strtol( cls.c_str(), &Ender, 10 );
+			}
+		}
+		const binarystring& payload( sock.Payload( ContentLength ) );
+		ProcessPayload( payload.data(), Headers, options);
+#endif
+	}
+
 	void Restful::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
 		stringstream ssexcept;
@@ -104,14 +135,30 @@ namespace RestfulClient
 			const string pathname( pathseparators( options.path, request ) );
 			if ( FileExists( pathname ) )
 			{
-				const size_t fsize( FileSize( pathname ) );
+				const int fsize( FileSize( pathname ) );
 				if ( fsize != ContentLength ) Same=false;
+
+				if ( Same )
+				{
+					const size_t fsize( FileSize( pathname ) );
+					unsigned char* data( (unsigned char*) malloc( fsize ) );
+					if ( ! data ) throw pathname;
+					LoadBinaryFile( pathname , data, fsize );
+					if ( memcmp( data, payload, fsize ) ) Same=false;
+
+if ( request=="/index.xml" )
+{
+	cerr << teal << (char*) data << endl << green << (char*) payload << normal << endl;
+}
+
+					free( data );
+				}
 
 			
 				if ( Same ) 	
-					cout << green << pathname << normal << endl ;
+					cout << green << request << fence << pathname << normal << endl ;
 				else 
-					cout << red << pathname << ":" << fsize << "!=" << ContentLength << normal << endl ;
+					cout << red << request << fence << pathname << fence << fsize << "!=" << ContentLength << normal << endl ;
 			
 			}
 		}
