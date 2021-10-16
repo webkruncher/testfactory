@@ -38,10 +38,12 @@ namespace RestfulClient
 		const string proto( ( options.protocol == InfoKruncher::http ) ? "http" : "https" );	
 		if ( ! sock ) return;
 		string& headertext( sock.Headers() );
-		cerr << blue << proto << ":" << yellow << headertext << normal << endl;
-		//Hyper::MimeHeaders headers( sock.Headers() );
+		
+		Hyper::MimeHeaders headers( headertext );
+		const size_t ContentLength( headers.ContentLength() );
+		const binarystring& Payload( sock.Payload( ContentLength ) );
+		ProcessPayload( Payload, headers, options);
 
-		//cerr << green << headers << endl;
 #if 0
 		KruncherTools::stringvector Headers;
 		Headers.split( headers, "\r\n" );
@@ -116,7 +118,7 @@ namespace RestfulClient
 		//cout << green << proto << "://" << blue << r.options.host << "/" << yellow << uri << normal << endl;
 	}
 
-	void Restful::ProcessPayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
+	void Restful::ProcessPayload( const binarystring& payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
 		if ( mode == Cookie )
 		{ 
@@ -137,28 +139,30 @@ namespace RestfulClient
 			{
 				const int fsize( FileSize( pathname ) );
 				if ( fsize != ContentLength ) Same=false;
+				if ( Same ) 	
+					cout << green << request << fence << pathname << normal << endl ;
+				else 
+					cout << red << request << fence << pathname << fence << fsize << "!=" << ContentLength << normal << endl ;
+if ( request=="/Home.xml" )
+{
+	cerr << teal << (char*) payload.data() << normal << endl;
+}
 
+return;
 				if ( Same )
 				{
 					const size_t fsize( FileSize( pathname ) );
 					unsigned char* data( (unsigned char*) malloc( fsize ) );
 					if ( ! data ) throw pathname;
 					LoadBinaryFile( pathname , data, fsize );
-					if ( memcmp( data, payload, fsize ) ) Same=false;
-
-if ( request=="/index.xml" )
-{
-	cerr << teal << (char*) data << endl << green << (char*) payload << normal << endl;
-}
+					if ( memcmp( data, payload.data(), fsize ) ) Same=false;
 
 					free( data );
 				}
 
 			
-				if ( Same ) 	
-					cout << green << request << fence << pathname << normal << endl ;
-				else 
-					cout << red << request << fence << pathname << fence << fsize << "!=" << ContentLength << normal << endl ;
+				if ( ! Same ) 	
+					cout << red << request << fence << pathname << "payloads differ" << endl;
 			
 			}
 		}

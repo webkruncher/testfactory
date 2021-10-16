@@ -47,7 +47,7 @@ namespace RestfulClient
 		virtual void Consume( KruncherMimes::SocketManager&, const InfoKruncher::SocketProcessOptions& ) throw(); 
 		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
 		private:
-		void ProcessPayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& );
+		void ProcessPayload( const binarystring& payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& );
 		protected:
 		Mode mode;
 		stringvector Files;
