@@ -38,32 +38,10 @@ namespace RestfulClient
 		const string proto( ( options.protocol == InfoKruncher::http ) ? "http" : "https" );	
 		if ( ! sock ) return;
 		string& headertext( sock.Headers() );
-		
 		Hyper::MimeHeaders headers( headertext );
 		const size_t ContentLength( headers.ContentLength() );
 		const binarystring& Payload( sock.Payload( ContentLength ) );
-		ProcessPayload( Payload, headers, options);
-
-#if 0
-		KruncherTools::stringvector Headers;
-		Headers.split( headers, "\r\n" );
-
-		size_t ContentLength( 0 );
-		for ( KruncherTools::stringvector::const_iterator hit=Headers.begin();hit!=Headers.end();hit++)
-		{
-			const string H( *hit );
-			if ( H.find("Content-Length:") == 0 )
-			{ 
-				const size_t coln( H.find( ":" ) );
-				if ( coln == string::npos ) throw H;
-				const string cls( H.substr( coln+1, H.size()-1 ) );
-				char *Ender( NULL );
-				ContentLength=strtol( cls.c_str(), &Ender, 10 );
-			}
-		}
-		const binarystring& payload( sock.Payload( ContentLength ) );
-		ProcessPayload( payload.data(), Headers, options);
-#endif
+		ProcessPayload( Payload, headers, options );
 	}
 
 	void Restful::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
@@ -99,9 +77,8 @@ namespace RestfulClient
 	{
 		const stringmap& metadata( r.options.metadata );
 
-		string uri;
-		if ( mode == Cookie ) uri="Home.xml";
-		else
+		string uri("Home.xml");
+		if ( mode != Cookie ) 
 		{
 			const size_t item( rand() % Files.size() );
 			uri=Files[ item ];
@@ -120,6 +97,7 @@ namespace RestfulClient
 
 	void Restful::ProcessPayload( const binarystring& payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
+		const size_t ContentLength( headers.ContentLength() );
 		if ( mode == Cookie )
 		{ 
 			stringmap& metadata( options.metadata );
@@ -131,18 +109,19 @@ namespace RestfulClient
 		if ( ( rit != headers.end() ) && ( cit != headers.end() ) )
 		{
 			bool Same( true );	
-			char *Ender( NULL );
-			const int ContentLength( strtol(cit->second.c_str(), &Ender, 10) );
+			//char *Ender( NULL );
+			//const int ContentLength( strtol(cit->second.c_str(), &Ender, 10) );
 			const string request( rit->second );
 			const string pathname( pathseparators( options.path, request ) );
 			if ( FileExists( pathname ) )
 			{
-				const int fsize( FileSize( pathname ) );
+				const size_t fsize( FileSize( pathname ) );
 				if ( fsize != ContentLength ) Same=false;
-				if ( Same ) 	
-					cout << green << request << fence << pathname << normal << endl ;
-				else 
+				if ( !Same ) 	
+				{
 					cout << red << request << fence << pathname << fence << fsize << "!=" << ContentLength << normal << endl ;
+					return;
+				}
 
 				if ( Same )
 				{
@@ -151,12 +130,21 @@ namespace RestfulClient
 					if ( ! data ) throw pathname;
 					LoadBinaryFile( pathname , data, fsize );
 					if ( memcmp( data, payload.data(), fsize ) ) Same=false;
+					string cmp( "." + request );
+					const size_t ls( cmp.find_last_of( "/" ) );
+					if ( ls!=string::npos ) cmp.erase( 0, ls+1 );
+					cerr << "writing:" << cmp << endl;
+					ofstream o(cmp.c_str());
+					o.write( (char*)payload.data(), ContentLength );
+					
 					free( data );
 				}
 
 			
 				if ( ! Same ) 	
-					cout << red << request << fence << pathname << " payloads differ" << endl;
+					cout << red << request << fence << pathname << " payloads differ" << normal << endl;
+				else
+					cout << green << request << fence << pathname << " payloads match" << normal << endl;
 			
 			}
 		}
