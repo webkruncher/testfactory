@@ -143,12 +143,7 @@ namespace RestfulClient
 					cout << green << request << fence << pathname << normal << endl ;
 				else 
 					cout << red << request << fence << pathname << fence << fsize << "!=" << ContentLength << normal << endl ;
-if ( request=="/Home.xml" )
-{
-	cerr << teal << (char*) payload.data() << normal << endl;
-}
 
-return;
 				if ( Same )
 				{
 					const size_t fsize( FileSize( pathname ) );
@@ -156,13 +151,12 @@ return;
 					if ( ! data ) throw pathname;
 					LoadBinaryFile( pathname , data, fsize );
 					if ( memcmp( data, payload.data(), fsize ) ) Same=false;
-
 					free( data );
 				}
 
 			
 				if ( ! Same ) 	
-					cout << red << request << fence << pathname << "payloads differ" << endl;
+					cout << red << request << fence << pathname << " payloads differ" << endl;
 			
 			}
 		}
