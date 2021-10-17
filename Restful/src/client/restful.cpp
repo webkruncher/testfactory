@@ -40,6 +40,10 @@ namespace RestfulClient
 		string& headertext( sock.Headers() );
 		Hyper::MimeHeaders headers( headertext );
 		const size_t ContentLength( headers.ContentLength() );
+		if ( ! ContentLength )
+		{
+			return;
+		}
 		const binarystring& Payload( sock.Payload( ContentLength ) );
 		ProcessPayload( Payload, headers, options );
 	}
@@ -57,13 +61,12 @@ namespace RestfulClient
 			uri=Files[ item ];
 		}
 
-		r.ss << "GET /" << uri << " HTTP/1.1" << endl;
-		r.ss << "Host: WebKruncher.com" << endl;
-		r.ss << "Accept: text/html; image/png;" << endl;
+		r.ss << "GET /" << uri << " HTTP/1.1" << Endl;
+		r.ss << "Host: WebKruncher.com" << Endl;
+		r.ss << "Accept: text/html; image/png;" << Endl;
 		if ( metadata.find( "cookie" ) != metadata.end() )
-			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << endl;
-		r.ss << endl;
-	
+			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << Endl;
+		r.ss << Endl;
 		const string proto( ( r.options.protocol == InfoKruncher::http ) ? "http" : "https" );	
 	}
 

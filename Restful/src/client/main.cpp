@@ -64,7 +64,8 @@ namespace InfoKruncher
 		RequestDirectory::Dir directory;
 		const string& path( svcoptions.path );	
 		regex_t rx;
-		const string exp( "^.*\\.js$|^.*\\.xml$|^.*\\.png$|^.*\\.jpg$" );
+		//const string exp( "^.*\\.js$|^.*\\.xml$|^.*\\.png$|^.*\\.jpg$" );
+		const string exp( "^.*\\.xml$" );
 		if ( regcomp( &rx, exp.c_str(), REG_EXTENDED ) ) throw exp;
 		directory( path, true, rx );
 		if ( ! directory ) throw path;
