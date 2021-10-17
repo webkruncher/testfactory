@@ -31,7 +31,7 @@
 
 namespace RestfulClient
 {
-	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+1000000 ); }
+	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+100000 ); }
 
 	void Restful::Consume( KruncherMimes::SocketManager& sock, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
@@ -40,10 +40,7 @@ namespace RestfulClient
 		string& headertext( sock.Headers() );
 		Hyper::MimeHeaders headers( headertext );
 		const size_t ContentLength( headers.ContentLength() );
-		if ( ! ContentLength )
-		{
-			return;
-		}
+		if ( ! ContentLength ) return;
 		const binarystring& Payload( sock.Payload( ContentLength ) );
 		ProcessPayload( Payload, headers, options );
 	}
@@ -102,12 +99,6 @@ namespace RestfulClient
 					if ( ! data ) throw pathname;
 					LoadBinaryFile( pathname , data, fsize );
 					if ( memcmp( data, payload.data(), fsize ) ) Same=false;
-					string cmp( "." + request );
-					const size_t ls( cmp.find_last_of( "/" ) );
-					if ( ls!=string::npos ) cmp.erase( 0, ls+1 );
-					//cerr << "writing:" << cmp << endl;
-					ofstream o(cmp.c_str());
-					o.write( (char*)payload.data(), ContentLength );
 					free( data );
 				}
 
