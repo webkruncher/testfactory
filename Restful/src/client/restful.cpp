@@ -44,33 +44,6 @@ namespace RestfulClient
 		ProcessPayload( Payload, headers, options );
 	}
 
-	void Restful::HandlePayload( const unsigned char* payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options ) throw()
-	{
-		stringstream ssexcept;
-		try
-		{
-			if ( ! payload ) return;
-			Hyper::MimeHeaders::const_iterator ctypeit( headers.find( "content-type" ) );
-			if ( ctypeit == headers.end() )
-			{
-				Log( "No content type" );
-				return;
-			}
-			const string contenttype( ctypeit->second );
-			Log( "Restful::HandlePayload",  contenttype );
-			ProcessPayload( payload, headers, options );
-		}
-		catch( const exception& e ) { ssexcept<<e.what(); }
-		catch( const string& s ) { ssexcept<<s;}
-		catch( const char* s ) { ssexcept<<s;}
-		catch( ... ) { ssexcept<<"unknown";}
-		if (!ssexcept.str().empty())
-		{
-			stringstream ssout; 
-			ssout << fence << "[EXCEPT]" << fence << ssexcept.str(); 
-			Log(VERB_ALWAYS, "Restful::HandlePayload", ssout.str());
-		}
-	} 
 
 
 	void Restful::LoadRequest( Requester& r  )
@@ -92,7 +65,6 @@ namespace RestfulClient
 		r.ss << endl;
 	
 		const string proto( ( r.options.protocol == InfoKruncher::http ) ? "http" : "https" );	
-		//cout << green << proto << "://" << blue << r.options.host << "/" << yellow << uri << normal << endl;
 	}
 
 	void Restful::ProcessPayload( const binarystring& payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
@@ -109,8 +81,6 @@ namespace RestfulClient
 		if ( ( rit != headers.end() ) && ( cit != headers.end() ) )
 		{
 			bool Same( true );	
-			//char *Ender( NULL );
-			//const int ContentLength( strtol(cit->second.c_str(), &Ender, 10) );
 			const string request( rit->second );
 			const string pathname( pathseparators( options.path, request ) );
 			if ( FileExists( pathname ) )
@@ -123,7 +93,6 @@ namespace RestfulClient
 					return;
 				}
 
-				if ( Same )
 				{
 					const size_t fsize( FileSize( pathname ) );
 					unsigned char* data( (unsigned char*) malloc( fsize ) );
@@ -133,18 +102,17 @@ namespace RestfulClient
 					string cmp( "." + request );
 					const size_t ls( cmp.find_last_of( "/" ) );
 					if ( ls!=string::npos ) cmp.erase( 0, ls+1 );
-					cerr << "writing:" << cmp << endl;
+					//cerr << "writing:" << cmp << endl;
 					ofstream o(cmp.c_str());
 					o.write( (char*)payload.data(), ContentLength );
-					
 					free( data );
 				}
 
 			
-				if ( ! Same ) 	
-					cout << red << request << fence << pathname << " payloads differ" << normal << endl;
-				else
+				if ( Same ) 	
 					cout << green << request << fence << pathname << " payloads match" << normal << endl;
+				else
+					cout << red << request << fence << pathname << " payloads differ" << normal << endl;
 			
 			}
 		}
