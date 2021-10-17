@@ -89,7 +89,7 @@ int main( int argc, char** argv )
 	try
 	{
 		srand( time(0) );
-		VERBOSITY=VERB_SIGNALS|VERB_ASOCKETS;
+		//VERBOSITY=VERB_SIGNALS|VERB_ASOCKETS;
 		cerr << green << "Restful is starting up" << normal << endl;
 		InfoKruncher::Options< InfoKruncher::ServiceList > options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );

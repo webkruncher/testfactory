@@ -101,12 +101,9 @@ namespace RestfulClient
 					if ( memcmp( data, payload.data(), fsize ) ) Same=false;
 					free( data );
 				}
-
 			
-				if ( Same ) 	
-					cout << green << request << fence << pathname << " payloads match" << normal << endl;
-				else
-					cout << red << request << fence << pathname << " payloads differ" << normal << endl;
+				if ( ! Same ) cout << red << request << fence << pathname << " payloads differ" << normal << endl;
+				else Log( VERB_ALWAYS, "Restful::ProcessPayload", request );
 			
 			}
 		}
