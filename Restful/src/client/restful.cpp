@@ -69,6 +69,7 @@ namespace RestfulClient
 
 	void Restful::ProcessPayload( const binarystring& payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
+		const string proto( ( options.protocol == InfoKruncher::http ) ? "http" : "https" );	
 		const size_t ContentLength( headers.ContentLength() );
 		if ( mode == Cookie )
 		{ 
@@ -89,7 +90,9 @@ namespace RestfulClient
 				if ( fsize != ContentLength ) Same=false;
 				if ( !Same ) 	
 				{
-					cout << red << request << fence << pathname << fence << fsize << "!=" << ContentLength << normal << endl ;
+					stringstream ssmsg;
+					ssmsg << "FAIL" << fence << proto << fence << request << fence << "ContentLength" << fence << ContentLength << fence << fsize;
+					Log( VERB_ALWAYS, "Restful::ProcessPayload", ssmsg.str() );
 					return;
 				}
 
@@ -101,9 +104,11 @@ namespace RestfulClient
 					if ( memcmp( data, payload.data(), fsize ) ) Same=false;
 					free( data );
 				}
-			
-				if ( ! Same ) cout << red << request << fence << pathname << " payloads differ" << normal << endl;
-				else Log( VERB_ALWAYS, "Restful::ProcessPayload", request );
+		
+				stringstream ssmsg;
+				if ( Same ) ssmsg << "SUCCESS" << fence << proto << fence << request ;
+				else ssmsg << "FAIL" << fence << proto << fence << request << fence << "payload mismatch";
+				Log( VERB_ALWAYS, "Restful::ProcessPayload", ssmsg.str() );
 			
 			}
 		}
