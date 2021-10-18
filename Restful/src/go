@@ -72,7 +72,7 @@ if [ "${1}" == "-run" ]; then
 	shift
 	sudo pkill restful
 	sleep 2
-	../src.build/client/restful ${1} --xml /home/jmt/websites/sites/webkruncher.st.xml  --node site --filter jackmthompson.ninja
+	../src.build/client/restful ${1} --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter jackmthompson.ninja
 	#sudo ../src.build/client/restful ${1} --http --https
 fi
 
