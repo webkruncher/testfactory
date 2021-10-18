@@ -1,5 +1,8 @@
 
 
+#TestHost="`hostname`"
+TestHost="jackmthompson.ninja"
+
 function Wip
 {
 	cd ~/Info/${1}/src
@@ -55,16 +58,24 @@ function Test
 	sudo pkill restful
 	if [ "${1}" == "-rebuild" ]; then 
 		ReBuild
+		InstallSites
 		shift
 	fi
 	sleep 1
-	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter `hostname`
-	sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --node data --filter `hostname`
+	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}
+	sudo restful --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}
+	#sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --node data --filter ${TestHost}
 
 	sleep 1
 	Status.ksh
 	sleep 1	
-	sudo tail -f /var/log/messages
+	#sudo tail -f /var/log/messages
+	while [ 1 ]; do
+		wkmem=`mem webkruncher`
+		msgtail=`tail -1 /var/log/messages`
+		echo -ne "\033[35m${wkmem}\033[30m|\033[36m${msgtail}\033[0m\r"
+	done
+	
 
 }	
 
