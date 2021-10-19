@@ -8,7 +8,7 @@ struct Edge : pair< int, int >
 	friend ostream& operator<<( ostream&, const Edge& );
 	ostream& operator<<(ostream& o ) const
 	{
-		o<< " (" << first << "," << second << ")";
+		o<< "(" << first << "," << second << ")";
 		return o;
 	}
 };
@@ -27,10 +27,10 @@ struct EdgeList : vector< Edge >
 };
 inline ostream& operator<<( ostream& o, const EdgeList& a) { return a.operator<<(o);}
 
-struct Nodes : vector<int>
+struct NodeList : vector<int>
 {
 	private:
-	friend ostream& operator<<( ostream&, const Nodes& );
+	friend ostream& operator<<( ostream&, const NodeList& );
 	ostream& operator<<(ostream& o ) const
 	{
 		for ( const_iterator it=begin();it!=end();it++)
@@ -38,9 +38,9 @@ struct Nodes : vector<int>
 		return o;
 	}
 };
-inline ostream& operator<<( ostream& o, const Nodes& a) { return a.operator<<(o);}
+inline ostream& operator<<( ostream& o, const NodeList& a) { return a.operator<<(o);}
 
-struct AdjecencyList : map<int, Nodes >
+struct AdjecencyList : map<int, NodeList >
 {
 	void operator<<(const EdgeList& edges)
 	{
@@ -49,7 +49,7 @@ struct AdjecencyList : map<int, Nodes >
 			const Edge& edge( *it );
 			const int& x( edge.first );
 			const int& y( edge.second );
-			map<int,Nodes>& me( *this );
+			map<int,NodeList>& me( *this );
 			me[x].push_back(y);
 			me[y].push_back(x);
 		}
@@ -60,7 +60,7 @@ struct AdjecencyList : map<int, Nodes >
 	{
 		for ( const_iterator it=begin();it!=end();it++)
 		{
-			const Nodes& n( it->second );
+			const NodeList& n( it->second );
 			o<<it->first<<":"<<n<<endl;
 		}
 		return o;
