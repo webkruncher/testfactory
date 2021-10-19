@@ -1,5 +1,5 @@
 
-INCLUDES=graph.h
+INCLUDES=graph.h utility.h
 
 all: graph
 
