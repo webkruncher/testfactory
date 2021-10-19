@@ -4,11 +4,28 @@
 struct Edge : pair< int, int >
 {
 	Edge( const int x, const int y ) : pair<int,int>( x,y ) {}
+	private:
+	friend ostream& operator<<( ostream&, const Edge& );
+	ostream& operator<<(ostream& o ) const
+	{
+		o<< " (" << first << "," << second << ")";
+		return o;
+	}
 };
+inline ostream& operator<<( ostream& o, const Edge& a) { return a.operator<<(o);}
 
 struct EdgeList : vector< Edge >
 {
+	private:
+	friend ostream& operator<<( ostream&, const EdgeList& );
+	ostream& operator<<(ostream& o ) const
+	{
+		for ( const_iterator it=begin();it!=end();it++)
+			o<<(*it)<<" ";
+		return o;
+	}
 };
+inline ostream& operator<<( ostream& o, const EdgeList& a) { return a.operator<<(o);}
 
 struct Nodes : vector<int>
 {
