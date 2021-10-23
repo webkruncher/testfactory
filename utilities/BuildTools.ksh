@@ -13,6 +13,7 @@ function Build
 	pushd ~/Info/${1}/src
 	sudo chown -R jmt ../*
 	rm -rf ../src.build
+	echo -ne "\033[45m\033[34m\033[1mBuilding in `pwd`\033[0m\n"
 	./go 
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` build failed\033[0m\n"
@@ -25,6 +26,8 @@ function ReBuild
 {
 	Build krunchercore
 	Install krunchercore
+	Build exexml
+	Install exexml
 	Build datakruncher
 	Install datakruncher
 	Build informationkruncher
