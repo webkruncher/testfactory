@@ -23,6 +23,8 @@ function Build
 
 function ReBuild
 {
+	Build krunchercore
+	Build datakruncher
 	Build informationkruncher
 	Install informationkruncher
 	Build webkruncher
@@ -45,6 +47,9 @@ function Install
 
 function InstallSites
 {
+	Install krunchercore
+	Install datakruncher
+	Install informationkruncher
 	Install webkruncher
 	Install TestFactory/Restful
 	#Install testsites
