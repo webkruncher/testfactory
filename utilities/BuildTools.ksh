@@ -24,7 +24,9 @@ function Build
 function ReBuild
 {
 	Build krunchercore
+	Install krunchercore
 	Build datakruncher
+	Install datakruncher
 	Build informationkruncher
 	Install informationkruncher
 	Build webkruncher
