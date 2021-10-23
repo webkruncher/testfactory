@@ -36,6 +36,8 @@ namespace RestfulClient
 	void Restful::Consume( KruncherMimes::SocketManager& sock, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
 		const string proto( ( options.protocol == InfoKruncher::http ) ? "http" : "https" );	
+
+		Log( VERB_ALWAYS, "Restful::Consume", proto );
 		if ( ! sock ) return;
 		string& headertext( sock.Headers() );
 		Hyper::MimeHeaders headers( headertext );
@@ -65,6 +67,7 @@ namespace RestfulClient
 			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << Endl;
 		r.ss << Endl;
 		const string proto( ( r.options.protocol == InfoKruncher::http ) ? "http" : "https" );	
+		cout << rvid << fence << proto << fence << uri << fence << normal << endl;
 	}
 
 	void Restful::ProcessPayload( const binarystring& payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
@@ -84,6 +87,7 @@ namespace RestfulClient
 			bool Same( true );	
 			const string request( rit->second );
 			const string pathname( pathseparators( options.path, request ) );
+			cout << green << fence << proto << fence << request << fence << normal << endl;
 			if ( FileExists( pathname ) )
 			{
 				const size_t fsize( FileSize( pathname ) );

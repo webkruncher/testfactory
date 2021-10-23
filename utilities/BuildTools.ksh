@@ -60,29 +60,9 @@ function InstallSites
 	#Install testsites
 }
 
-function mem
-{                                                                                                      
-	sudo ps ax -o rss,command | cut -d ' ' -f1,2,3,4 | grep -v grep | grep ${1} |  tr -s ' ' | awk -F' ' '{sum+=$1;}END{print sum;}'
-}
-
 function  Find
 {
 	find . \( -name "*.cpp" -o -name "*.h" \) | xargs fgrep "$@"
-}
-
-
-function Status
-{
-	while [ 1 ]; do
-		Failed=`cat /var/log/messages | grep "|FAIL|" | wc -l`
-		Succeeded=`cat /var/log/messages | grep "|SUCCESS|" | wc -l`
-		PassFail=$(printf "\033[31m%05d\033[0m|\033[32m%05d\033[0m|" ${Failed} ${Succeeded})
-		wkmem=`mem webkruncher | tr -d ' ' | tr -d '\t'`
-		msgtail=`tail -1 /var/log/messages | awk -F "|" '{ for (i=2; i<=NF; i++)   printf( "|%s", $i ); }'`
-		when=`date "+%Y-%m-%d|%H:%M:%S"`
-		echo -ne "\r\033[K${when}|${PassFail}\033[35m${wkmem}\033[0m\033[36m${msgtail}\033[0m"
-		sleep 1
-	done
 }
 
 
@@ -94,7 +74,6 @@ function Test
 	sudo pkill restful
 	if [ "${1}" == "-rebuild" ]; then 
 		ReBuild
-		InstallSites
 		shift
 	fi
 	sleep 1
