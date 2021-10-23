@@ -11,10 +11,15 @@ function Wip
 function Build
 {
 	pushd ~/Info/${1}/src
+	shift
 	sudo chown -R jmt ../*
-	rm -rf ../src.build
+	if [ "${1}" == "-clean" ]; then
+		shift
+		echo -ne "\033[41m\033[33mCleanup in `pwd`\033[0m\n"
+		rm -rf ../src.build
+	fi
 	echo -ne "\033[45m\033[34m\033[1mBuilding in `pwd`\033[0m\n"
-	./go 
+	./go  -install
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` build failed\033[0m\n"
 		exit -1 
@@ -22,21 +27,6 @@ function Build
 	popd
 }
 
-function ReBuild
-{
-	Build krunchercore
-	Install krunchercore
-	Build exexml
-	Install exexml
-	Build datakruncher
-	Install datakruncher
-	Build informationkruncher
-	Install informationkruncher
-	Build webkruncher
-	Install webkruncher
-	#Build TestFactory/Restful
-	#Build testsites
-}
 
 function Install
 {
@@ -49,6 +39,16 @@ function Install
 	popd
 }
 
+function ReBuild
+{
+	Build krunchercore -clean
+	Build exexml -clean
+	Build datakruncher -clean
+	Build informationkruncher -clean
+	Build webkruncher -clean
+	Build testfactory/Restful -clean
+	#Build testsites
+}
 
 function InstallSites
 {
