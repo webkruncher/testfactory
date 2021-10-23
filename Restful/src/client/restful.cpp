@@ -31,7 +31,7 @@
 
 namespace RestfulClient
 {
-	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+100000 ); }
+	void Restful::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions ) { usleep( (rand()%10000)+1000000 ); }
 
 	void Restful::Consume( KruncherMimes::SocketManager& sock, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
