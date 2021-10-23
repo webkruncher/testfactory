@@ -74,10 +74,13 @@ function  Find
 function Status
 {
 	while [ 1 ]; do
+		Failed=`cat /var/log/messages | grep "|FAIL|" | wc -l`
+		Succeeded=`cat /var/log/messages | grep "|SUCCESS|" | wc -l`
+		PassFail=$(printf "\033[31m%05d\033[0m|\033[32m%05d\033[0m|" ${Failed} ${Succeeded})
 		wkmem=`mem webkruncher | tr -d ' ' | tr -d '\t'`
 		msgtail=`tail -1 /var/log/messages | awk -F "|" '{ for (i=2; i<=NF; i++)   printf( "|%s", $i ); }'`
 		when=`date "+%Y-%m-%d|%H:%M:%S"`
-		echo -ne "\r\033[K${when}|\033[35m${wkmem}\033[30m|\033[36m${msgtail}\033[0m"
+		echo -ne "\r\033[K${when}|${PassFail}\033[35m${wkmem}\033[0m\033[36m${msgtail}\033[0m"
 		sleep 1
 	done
 }
