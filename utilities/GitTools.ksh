@@ -12,8 +12,9 @@ function GitCommit
 {
 	where=${1}
 	shift
-	gitCommit datakruncher/src ${where} "$@"
 	gitCommit krunchercore/src ${where} "$@"
+	gitCommit exexml/src ${where} "$@"
+	gitCommit datakruncher/src ${where} "$@"
 	gitCommit informationkruncher/src  ${where} "$@"
 	gitCommit webkruncher/src ${where} "$@"
 	gitCommit testfactory/Restful ${where} "$@"
@@ -31,8 +32,9 @@ function gitStatus
 
 function GitStatus
 {
-	gitStatus datakruncher/src ${1}
 	gitStatus krunchercore/src ${1}
+	gitStatus exexml/src ${1}
+	gitStatus datakruncher/src ${1}
 	gitStatus informationkruncher/src ${1}
 	gitStatus webkruncher/src ${1}
 	gitStatus testfactory/Restful ${1}
@@ -49,8 +51,9 @@ function gitPush
 
 function GitPush
 {
-	gitPush datakruncher
 	gitPush krunchercore
+	gitPush exexml
+	gitPush datakruncher
 	gitPush informationkruncher
 	gitPush webkruncher
 	gitPush testfactory
@@ -66,9 +69,10 @@ function gitPull
 
 function GitPull
 {
-	gitPull datakruncher
 	gitPull krunchercore
+	gitPull exexml
 	gitPull informationkruncher
+	gitPull datakruncher
 	gitPull webkruncher
 	gitPull testfactory
 }
@@ -83,8 +87,9 @@ function gitClone
 
 function GitClone
 {
-	gitClone datakruncher
 	gitClone krunchercore
+	gitClone exexml
+	gitClone datakruncher
 	gitClone informationkruncher
 	gitClone webkruncher
 	gitClone testfactory
