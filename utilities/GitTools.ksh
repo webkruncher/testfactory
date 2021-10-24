@@ -10,6 +10,7 @@ informationkruncher
 webkruncher
 testfactory
 tradekruncher
+websites
 EOF
 }
 
