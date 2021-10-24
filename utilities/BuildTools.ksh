@@ -77,8 +77,8 @@ function Test
 		shift
 	fi
 	sleep 1
-	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}
-	sudo restful --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}
+	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
+	sudo restful --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
 	#sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --node data --filter ${TestHost}
 
 	Status
