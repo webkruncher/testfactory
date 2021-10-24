@@ -19,6 +19,7 @@ export PATH=$PATH:~/Info/testfactory/utilities/
 . ~/Info/testfactory/utilities/DevTools.ksh
 . ~/Info/testfactory/utilities/BuildTools.ksh
 . ~/Info/testfactory/utilities/GitTools.ksh
+. ~/Info/testfactory/utilities/Status.ksh
 
 export PS1='\u@\h \W> '
 export KRUNCHER_DEV_LIBS=1
