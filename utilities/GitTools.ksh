@@ -73,3 +73,20 @@ function GitPull
 	gitPull testfactory
 }
 
+function gitClone
+{
+	origin=git@github.com:webkruncher
+	pushd ~/Info >> /dev/null
+	[ ! -d ${1} ] && git clone ${origin}/${1}
+	popd 2>&1 >> /dev/null
+}
+
+function GitClone
+{
+	gitClone datakruncher
+	gitClone krunchercore
+	gitClone informationkruncher
+	gitClone webkruncher
+	gitClone testfactory
+	gitClone websites
+}
