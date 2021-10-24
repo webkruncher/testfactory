@@ -1,3 +1,6 @@
+
+git config --global --edit
+
 curl https://raw.githubusercontent.com/webkruncher/testfactory/master/utilities/GitTools.ksh > infobootstrap.ksh
 . ./infobootstrap
 mkdir -p ~/Info
