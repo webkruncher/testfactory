@@ -1,5 +1,19 @@
 
 
+function Repos
+{
+cat <<EOF
+krunchercore
+exexml
+datakruncher
+informationkruncher
+webkruncher
+testfactory
+tradekruncher
+EOF
+}
+
+
 function gitCommit
 {
 	pushd ~/Info/${1} >> /dev/null
@@ -10,14 +24,9 @@ function gitCommit
 
 function GitCommit
 {
-	where=${1}
-	shift
-	gitCommit krunchercore/src ${where} "$@"
-	gitCommit exexml/src ${where} "$@"
-	gitCommit datakruncher/src ${where} "$@"
-	gitCommit informationkruncher/src  ${where} "$@"
-	gitCommit webkruncher/src ${where} "$@"
-	gitCommit testfactory/Restful ${where} "$@"
+	for item in `Repos`; do
+		gitCommit "${item}" "${1}"
+	done
 }
 
 
@@ -32,12 +41,9 @@ function gitStatus
 
 function GitStatus
 {
-	gitStatus krunchercore/src ${1}
-	gitStatus exexml/src ${1}
-	gitStatus datakruncher/src ${1}
-	gitStatus informationkruncher/src ${1}
-	gitStatus webkruncher/src ${1}
-	gitStatus testfactory/Restful ${1}
+	for item in `Repos`; do
+		gitStatus ${item}
+	done
 }
 
 
@@ -51,12 +57,9 @@ function gitPush
 
 function GitPush
 {
-	gitPush krunchercore
-	gitPush exexml
-	gitPush datakruncher
-	gitPush informationkruncher
-	gitPush webkruncher
-	gitPush testfactory
+	for item in `Repos`; do
+		gitPush ${item}
+	done
 }
 
 function gitPull
@@ -69,29 +72,22 @@ function gitPull
 
 function GitPull
 {
-	gitPull krunchercore
-	gitPull exexml
-	gitPull informationkruncher
-	gitPull datakruncher
-	gitPull webkruncher
-	gitPull testfactory
+	for item in `Repos`; do
+		gitPull ${item}
+	done
 }
 
 function gitClone
 {
 	origin=git@github.com:webkruncher
 	pushd ~/Info >> /dev/null
-	[ ! -d ${1} ] && git clone ${origin}/${1}
+	[ ! -d ${1} ] && git clone ${origin}/${1} || echo -ne "\033[33m~/Info/${1} already exists\033[0m\n"
 	popd 2>&1 >> /dev/null
 }
 
 function GitClone
 {
-	gitClone krunchercore
-	gitClone exexml
-	gitClone datakruncher
-	gitClone informationkruncher
-	gitClone webkruncher
-	gitClone testfactory
-	gitClone websites
+	for item in `Repos`; do
+		gitClone ${item}
+	done
 }
