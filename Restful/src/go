@@ -15,6 +15,10 @@ if [ "${1}" == "-rebuild" ]; then
 	shift
 	sudo rm -rf ../src.build
 	pushd ~/Info/informationkruncher/src
+	if [ "${1}" == "-clean" ]; then
+		shift
+		sudo rm -rf ../src.build
+	fi
 	#sudo rm -rf ../src.build
 	./go -install
 	popd
