@@ -28,6 +28,7 @@ function GetOpenFiles
 
 function Status
 {
+	echo -ne "\r\033[Kdate|time|Failed|Succeeded|\033[35mwkmem\033[0m|\033[36mrestfulHTTPfiles|webkruncherHTTPfiles|restfulHTTPSfiles|webkruncherHTTPSfiles\033[0m\n"
 	while [ 1 ]; do
 		when=`date "+%Y-%m-%d|%H:%M:%S"`
 		Failed=`cat /var/log/messages | grep "|FAIL|" | wc -l`

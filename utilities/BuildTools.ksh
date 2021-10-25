@@ -75,9 +75,14 @@ function Test
 	if [ "${1}" == "-rebuild" ]; then 
 		ReBuild
 		shift
+		sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
+	else
+		if [ "${1}" == "-serve" ]; then 
+			shift
+			sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
+		fi
 	fi
 	sleep 1
-	sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
 	sudo restful --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
 	#sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --node data --filter ${TestHost}
 
