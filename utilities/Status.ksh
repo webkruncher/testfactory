@@ -18,10 +18,10 @@ function GetOpenFiles
 {
 	process=${1}
 	shift
-	proto=${1}
+	schemer=${1}
 	shift
 	for pid in `PidsFor ${process} | cut -d ' ' -f1`; do 
-		files=`sudo fstat -p ${pid} 2>>/dev/null| grep "internet stream" | grep ":${proto}$" `
+		files=`sudo fstat -p ${pid} 2>>/dev/null| grep "internet stream" | grep ":${schemer}$" `
 		[ ! -z "${files}" ] && echo "${files}"
 	done;
 }

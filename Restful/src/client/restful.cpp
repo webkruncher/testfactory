@@ -35,9 +35,9 @@ namespace RestfulClient
 
 	void Restful::Consume( KruncherMimes::SocketManager& sock, const InfoKruncher::SocketProcessOptions& options ) throw()
 	{
-		const string proto( ( options.protocol == InfoKruncher::http ) ? "http" : "https" );	
+		const string schemer( ( options.scheme == InfoKruncher::http ) ? "http" : "https" );	
 
-		Log( VERB_ALWAYS, "Restful::Consume", proto );
+		Log( VERB_ALWAYS, "Restful::Consume", schemer );
 		if ( ! sock ) return;
 		string& headertext( sock.Headers() );
 		Hyper::MimeHeaders headers( headertext );
@@ -66,13 +66,13 @@ namespace RestfulClient
 		if ( metadata.find( "cookie" ) != metadata.end() )
 			r.ss << "Cookie: " << r.options.metadata[ "cookie" ] << Endl;
 		r.ss << Endl;
-		const string proto( ( r.options.protocol == InfoKruncher::http ) ? "http" : "https" );	
-		cout << rvid << fence << proto << fence << uri << fence << normal << endl;
+		const string schemer( ( r.options.scheme == InfoKruncher::http ) ? "http" : "https" );	
+		cout << rvid << fence << schemer << fence << uri << fence << normal << endl;
 	}
 
 	void Restful::ProcessPayload( const binarystring& payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& options)
 	{
-		const string proto( ( options.protocol == InfoKruncher::http ) ? "http" : "https" );	
+		const string schemer( ( options.scheme == InfoKruncher::http ) ? "http" : "https" );	
 		const size_t ContentLength( headers.ContentLength() );
 		if ( mode == Cookie )
 		{ 
@@ -87,7 +87,7 @@ namespace RestfulClient
 			bool Same( true );	
 			const string request( rit->second );
 			const string pathname( pathseparators( options.path, request ) );
-			cout << green << fence << proto << fence << request << fence << normal << endl;
+			cout << green << fence << schemer << fence << request << fence << normal << endl;
 			if ( FileExists( pathname ) )
 			{
 				const size_t fsize( FileSize( pathname ) );
@@ -95,7 +95,7 @@ namespace RestfulClient
 				if ( !Same ) 	
 				{
 					stringstream ssmsg;
-					ssmsg << "FAIL" << fence << proto << fence << request << fence << "ContentLength" << fence << ContentLength << fence << fsize;
+					ssmsg << "FAIL" << fence << schemer << fence << request << fence << "ContentLength" << fence << ContentLength << fence << fsize;
 					Log( VERB_ALWAYS, "Restful::ProcessPayload", ssmsg.str() );
 					return;
 				}
@@ -110,8 +110,8 @@ namespace RestfulClient
 				}
 		
 				stringstream ssmsg;
-				if ( Same ) ssmsg << "SUCCESS" << fence << proto << fence << request ;
-				else ssmsg << "FAIL" << fence << proto << fence << request << fence << "payload mismatch";
+				if ( Same ) ssmsg << "SUCCESS" << fence << schemer << fence << request ;
+				else ssmsg << "FAIL" << fence << schemer << fence << request << fence << "payload mismatch";
 				Log( VERB_ALWAYS, "Restful::ProcessPayload", ssmsg.str() );
 			
 			}

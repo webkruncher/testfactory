@@ -48,12 +48,12 @@ namespace InfoKruncher
 		sock.blocking( true );
 		if ( sock.open() && sock.connect() )
 		{
-			if ( svcoptions.protocol == InfoKruncher::http ) 
+			if ( svcoptions.scheme == InfoKruncher::http ) 
 			{
 				InfoKruncher::Requests< PlainInformation::Socket > client;
 				client.plain( sock.GetSock(), *this, svcoptions );
 			}
-			if ( svcoptions.protocol == InfoKruncher::https ) 
+			if ( svcoptions.scheme == InfoKruncher::https ) 
 			{
 				InfoKruncher::Requests< SecureInformation::Socket > client;
 				client.secure( sock.GetSock(), *this, svcoptions );
