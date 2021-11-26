@@ -19,7 +19,8 @@ function Build
 		rm -rf ../src.build
 	fi
 	echo -ne "\033[45m\033[34m\033[1mBuilding in `pwd`\033[0m\n"
-	./go  -install
+	./go  
+	sudo ./go  -install
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` build failed\033[0m\n"
 		exit -1 
@@ -53,6 +54,7 @@ function ReBuild
 function InstallSites
 {
 	Install krunchercore
+	Install exexml
 	Install datakruncher
 	Install informationkruncher
 	Install webkruncher

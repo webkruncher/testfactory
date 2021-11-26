@@ -7,6 +7,7 @@ krunchercore
 exexml
 datakruncher
 informationkruncher
+infodata
 webkruncher
 testfactory
 tradekruncher
