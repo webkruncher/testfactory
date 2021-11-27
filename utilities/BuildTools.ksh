@@ -3,10 +3,21 @@
 #TestHost="`hostname`"
 TestHost="jackmthompson.ninja"
 
-function Wip
+
+
+function ProjectList
 {
-	cd ~/Info/${1}/src
+cat <<EOF
+	krunchercore
+	exexml
+	datakruncher
+	informationkruncher
+	infodata
+	webkruncher
+EOF
 }
+	#testfactory/Restful
+
 
 function Build
 {
@@ -20,7 +31,7 @@ function Build
 	fi
 	echo -ne "\033[45m\033[34m\033[1mBuilding in `pwd`\033[0m\n"
 	./go  
-	sudo ./go  -install
+	sudo cmake --install ../src.build
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` build failed\033[0m\n"
 		exit -1 
@@ -32,7 +43,7 @@ function Build
 function Install
 {
 	pushd ~/Info/${1}/src
-	sudo ./go -install
+	sudo cmake --install ../src.build
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` install failed\033[0m\n"
 		exit -1 
@@ -42,25 +53,31 @@ function Install
 
 function ReBuild
 {
-	Build krunchercore -clean
-	Build exexml -clean
-	Build datakruncher -clean
-	Build informationkruncher -clean
-	Build infodata -clean
-	Build webkruncher -clean
-	Build testfactory/Restful -clean
+	for project in `ProjectList`; do
+		Build ${project} -clean
+	done
+	#Build krunchercore -clean
+	#Build exexml -clean
+	#Build datakruncher -clean
+	#Build informationkruncher -clean
+	#Build infodata -clean
+	#Build webkruncher -clean
+	#Build testfactory/Restful -clean
 	#Build testsites
 }
 
 function InstallSites
 {
-	Install krunchercore
-	Install exexml
-	Install datakruncher
-	Install informationkruncher
-	Install infodata
-	Install webkruncher
-	Install TestFactory/Restful
+	for project in `ProjectList`; do
+		Install ${project} 
+	done
+	#Install krunchercore
+	#Install exexml
+	#Install datakruncher
+	#Install informationkruncher
+	#Install infodata
+	#Install webkruncher
+	#Install testfactory/Restful
 	#Install testsites
 }
 
@@ -95,24 +112,16 @@ function Test
 
 }	
 
-function ProjectList
-{
-cat <<EOF
-	krunchercore
-	exexml
-	datakruncher
-	informationkruncher
-	infodata
-	webkruncher
-	TestFactory/Restful
-EOF
-}
 
 function Wip
 {
-	select project in `ProjectList`; do
-		cd ~/Info/${project}/src
-		break
-	done 
+	if [ ! -z ${1} ]; then
+		cd ~/Info/${1}/src
+	else
+		select project in `ProjectList`; do
+			cd ~/Info/${project}/src
+			break
+		done 
+	fi
 }
 
