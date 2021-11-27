@@ -46,6 +46,7 @@ function ReBuild
 	Build exexml -clean
 	Build datakruncher -clean
 	Build informationkruncher -clean
+	Build infodata -clean
 	Build webkruncher -clean
 	Build testfactory/Restful -clean
 	#Build testsites
@@ -57,6 +58,7 @@ function InstallSites
 	Install exexml
 	Install datakruncher
 	Install informationkruncher
+	Install infodata
 	Install webkruncher
 	Install TestFactory/Restful
 	#Install testsites
@@ -92,4 +94,25 @@ function Test
 	
 
 }	
+
+function ProjectList
+{
+cat <<EOF
+	krunchercore
+	exexml
+	datakruncher
+	informationkruncher
+	infodata
+	webkruncher
+	TestFactory/Restful
+EOF
+}
+
+function Wip
+{
+	select project in `ProjectList`; do
+		cd ~/Info/${project}/src
+		break
+	done 
+}
 
