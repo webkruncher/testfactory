@@ -53,17 +53,10 @@ function Install
 
 function ReBuild
 {
+	sudo rm -rf /usr/local/lib/infokruncher/ && sudo rm -rf /usr/local/include/infokruncher
 	for project in `ProjectList`; do
 		Build ${project} -clean
 	done
-	#Build krunchercore -clean
-	#Build exexml -clean
-	#Build datakruncher -clean
-	#Build informationkruncher -clean
-	#Build infodata -clean
-	#Build webkruncher -clean
-	#Build testfactory/Restful -clean
-	#Build testsites
 }
 
 function InstallSites
@@ -71,14 +64,6 @@ function InstallSites
 	for project in `ProjectList`; do
 		Install ${project} 
 	done
-	#Install krunchercore
-	#Install exexml
-	#Install datakruncher
-	#Install informationkruncher
-	#Install infodata
-	#Install webkruncher
-	#Install testfactory/Restful
-	#Install testsites
 }
 
 function  Find
