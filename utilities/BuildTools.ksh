@@ -14,6 +14,7 @@ cat <<EOF
 	informationkruncher
 	infodata
 	webkruncher
+	tradekruncher
 EOF
 }
 	#testfactory/Restful
@@ -109,4 +110,32 @@ function Wip
 		done 
 	fi
 }
+
+
+function VerboseCmake
+{
+	export KRUNCHER_DEV_VERBOSE=1
+}
+
+function ReleaseBuild
+{
+	unset KRUNCHER_DEV_LIBS
+}
+
+function DevBuild
+{
+	export KRUNCHER_DEV_LIBS=1
+}
+
+function Clean
+{
+	[ -d ../src.build ] && rm -rf ../src.build
+}
+
+function RecordJournal
+{
+	export KRUNCHER_JOURNAL="journal"
+}
+
+DevBuild
 
