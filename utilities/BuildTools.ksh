@@ -8,13 +8,13 @@ TestHost="jackmthompson.ninja"
 function ProjectList
 {
 cat <<EOF
-	krunchercore
-	exexml
-	datakruncher
-	informationkruncher
-	infodata
-	webkruncher
-	tradekruncher
+krunchercore
+exexml
+datakruncher
+informationkruncher
+infodata
+webkruncher
+tradekruncher
 EOF
 }
 	#testfactory/Restful
