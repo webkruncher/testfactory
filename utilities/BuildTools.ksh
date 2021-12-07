@@ -111,6 +111,13 @@ function Wip
 	fi
 }
 
+function Vim
+{
+	select vim in `ls -lt *.vim | tr -s ' ' | cut -d ' ' -f 9`; do
+		vim -S ${vim}
+		break
+	done 
+}
 
 function VerboseCmake
 {
