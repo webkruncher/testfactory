@@ -20,7 +20,7 @@ EOF
 	#testfactory/Restful
 
 
-function Build
+function OldBuild
 {
 	pushd ~/Info/${1}/src
 	shift
@@ -49,14 +49,6 @@ function Install
 		exit -1 
 	fi
 	popd
-}
-
-function ReBuild
-{
-	sudo rm -rf /usr/local/lib/infokruncher/ && sudo rm -rf /usr/local/include/infokruncher
-	for project in `ProjectList`; do
-		Build ${project} -clean
-	done
 }
 
 
@@ -138,4 +130,15 @@ function RecordJournal
 }
 
 DevBuild
+
+function ReBuild
+{
+	ReleaseBuild
+	sudo rm -rf /usr/local/lib/infokruncher/ && sudo rm -rf /usr/local/include/infokruncher
+	for project in `ProjectList`; do
+		pushd ~/Info/${project}/src
+		Build -clean -install
+		popd
+	done
+}
 
