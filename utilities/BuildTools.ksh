@@ -28,11 +28,10 @@ function Build
 	if [ "${1}" == "-clean" ]; then
 		shift
 		echo -ne "\033[41m\033[33mCleanup in `pwd`\033[0m\n"
-		rm -rf ../src.build
+		Clean
 	fi
 	echo -ne "\033[45m\033[34m\033[1mBuilding in `pwd`\033[0m\n"
-	./go  
-	sudo cmake --install ../src.build
+	Build
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` build failed\033[0m\n"
 		exit -1 
@@ -44,7 +43,7 @@ function Build
 function Install
 {
 	pushd ~/Info/${1}/src
-	sudo cmake --install ../src.build
+	Build -install
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` install failed\033[0m\n"
 		exit -1 
@@ -60,12 +59,6 @@ function ReBuild
 	done
 }
 
-function InstallSites
-{
-	for project in `ProjectList`; do
-		Install ${project} 
-	done
-}
 
 function  Find
 {
