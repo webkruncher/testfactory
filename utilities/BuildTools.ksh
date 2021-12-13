@@ -133,7 +133,6 @@ DevBuild
 
 function ReBuild
 {
-	ReleaseBuild
 	sudo rm -rf /usr/local/lib/infokruncher/ && sudo rm -rf /usr/local/include/infokruncher
 	for project in `ProjectList`; do
 		pushd ~/Info/${project}/src
