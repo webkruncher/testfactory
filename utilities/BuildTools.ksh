@@ -142,3 +142,12 @@ function ReBuild
 	done
 }
 
+function CleanAll
+{
+	sudo rm -rf /usr/local/lib/infokruncher/ && sudo rm -rf /usr/local/include/infokruncher
+	for project in `ProjectList`; do
+		pushd ~/Info/${project}/src
+		Clean
+		popd
+	done
+}
