@@ -151,3 +151,16 @@ function CleanAll
 		popd
 	done
 }
+
+
+function GitClean
+{
+	sudo rm -rf /usr/local/lib/infokruncher/ && sudo rm -rf /usr/local/include/infokruncher
+	for project in `ProjectList`; do
+		pushd ~/Info/${project}/src
+		git clean -dfx
+		popd
+	done
+}
+
+
