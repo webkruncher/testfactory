@@ -13,9 +13,9 @@ krunchercore
 exexml
 datakruncher
 informationkruncher
-webkruncher
 tradekruncher
 infodata
+webkruncher
 EOF
 }
 	#testfactory/Restful
