@@ -8,6 +8,7 @@ TestHost="jackmthompson.ninja"
 function ProjectList
 {
 cat <<EOF
+testfactory
 krunchercore
 exexml
 datakruncher
