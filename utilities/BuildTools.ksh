@@ -14,6 +14,7 @@ exexml
 datakruncher
 informationkruncher
 tradekruncher
+tradekruncher/db
 infodata
 webkruncher
 EOF
