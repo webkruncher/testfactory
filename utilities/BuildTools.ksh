@@ -15,6 +15,7 @@ datakruncher
 informationkruncher
 tradekruncher
 tradekruncher/db
+tickerkruncher
 infodata
 webkruncher
 EOF
