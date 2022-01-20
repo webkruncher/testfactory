@@ -11,6 +11,7 @@ infodata
 webkruncher
 testfactory
 tradekruncher
+tickerkruncher
 websites
 EOF
 }
