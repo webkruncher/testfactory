@@ -48,7 +48,7 @@ target_link_libraries(
 
 install(
     TARGETS
-	    restful
+	    testfactory
 		    EXPORT exports
 		    RUNTIME DESTINATION bin
 ) 

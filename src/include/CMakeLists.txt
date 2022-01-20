@@ -9,7 +9,7 @@ install(
     FILES
 	    ${includes}    
 		    OPTIONAL
-		    DESTINATION include/webkruncher
+		    DESTINATION include/testfactory
 )
 
 add_library(
