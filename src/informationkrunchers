@@ -1,8 +1,15 @@
 
 
+if [ -z ${1} ]; then
+
 cat <<EOF
-|tickerkruncher|tickerkruncher::ticker/|tickers|TickerFace|
-|tradekruncher/db::markets|tradekruncher/db::markets|markets|DataFace|
+#|tickerdata|tickerkruncher|tickerkruncher::ticker/|tickers|TickerFace|
+|tickerdata|tradekruncher/db::markets|tradekruncher/db::markets|markets|DataFace|
+#|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|DataFace|
 EOF
+
+fi
+
+
 
 
