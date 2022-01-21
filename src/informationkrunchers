@@ -4,7 +4,7 @@ if [ -z ${1} ]; then
 
 cat <<EOF
 #|tickerdata|tickerkruncher|tickerkruncher::ticker/|tickers|TickerFace|
-|tickerdata|tradekruncher/db::markets|tradekruncher/db::markets|markets|DataFace|
+|traderdata|tradekruncher/db::markets|tradekruncher/db::markets|markets|TraderFace|
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|DataFace|
 EOF
 
