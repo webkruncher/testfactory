@@ -1,0 +1,8 @@
+
+
+cat <<EOF
+|tickerkruncher|tickerkruncher::ticker/|tickers|TickerFace|
+|tradekruncher/db::markets|tradekruncher/db::markets|markets|DataFace|
+EOF
+
+
