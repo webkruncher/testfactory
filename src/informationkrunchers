@@ -8,14 +8,27 @@ cat <<EOF
 EOF
 }
 
+
+## This table is used by infodata/db/CMakeLists.txt to drive the makefiles
+
 function InfoKruncherInterfaceTable
 {
 cat <<EOF
 |traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace|
-|tickerkruncher|tickerkruncher;tradekruncher/db|tradekruncher/db::markets;tickerkruncher::ticker|tickers;markets|<algos/RestInterface.h>|TickerFace|
+|tickerkruncher|tradekruncher/db;tickerkruncher|tradekruncher/db::markets;tickerkruncher::ticker|markets;tickers|<algos/RestInterface.h>|TickerFace|
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|DataFace|
 EOF
 }
+
+[ -z ${1} ] && InfoKruncherInterfaceTable  | sed '/^#/d' && shift
+
+
+## The rest of this script is used only to display the InfoKruncherInterfaceTable
+## in human read-able format.  Only the table itself is needed for building the services.
+
+
+
+
 
 function PrintInfoKruncherInterfaceUsageLegend
 {
@@ -58,19 +71,52 @@ BEGIN { FS = "|" } ; {printf "|%-15s|%-25s|%-35s|%-15s|%-30s|%-20s|\n", \$2,\$3,
 EOF
 }
 
+
+function InfoKruncherInterfaceRows
+{
+	awkward=`PrintInfoKruncherInterfaceTableAwk`
+	while read line; do
+		nfields=`echo "${line}" | tr -cd '|' | wc -c`
+		col=1
+		lc=1
+		while [ 1 ]; do
+			outline="|"
+			for ((i=2;i<=${nfields};i++)); do
+				field=`echo "${line}" | cut -d '|' -f ${i}`
+				if [ `echo "${field}" | tr -cd ';' | wc -c | tr -d ' '` -lt 1 ]; then
+					if [ "${lc}" == 1 ]; then
+						outline="${outline}${field}|"
+					else
+						outline="${outline}|"
+					fi
+				else
+					subfield=`echo "${field}" | cut -d ';' -f ${col}`
+					outline="${outline}${subfield}|"
+				fi
+			done;
+			more=`echo "${outline}" | sed 's/\|//g' | wc -c | tr -d ' '`
+			[ "${more}" == "1" ] && break;
+			echo "${outline}" | awk "${awkward}"
+			(( col++ ))
+			(( lc++ ))
+		done
+	done
+}
+
+
+
 function PrintInfoKruncherInterfaceTable
 {
 	awkward=`PrintInfoKruncherInterfaceTableAwk`
 	echo -ne "\033[7m`InfoKruncherInterfaceTableHeader  |  awk "${awkward}"`\033[0m\n"
 
-	#for service in `InfoKruncherInterfaceTable | sed '/^#/d' | cut -d '|' -f2 | sort | uniq`; do
-	#	echo "|${service}"
-	#	InfoKruncherInterfaceTable | grep -e "^|${service}|" | awk 'BEGIN {FS="|";OFS="|"}; { $2=""; print $0; }' | awk "${awkward}"
-	#done
-	InfoKruncherInterfaceTable | sed '/^#/d' |  awk "${awkward}"
+	for service in `InfoKruncherInterfaceTable | sed '/^#/d' | cut -d '|' -f2 | sort | uniq`; do
+		echo "|${service}"
+		InfoKruncherInterfaceTable | grep -e "^|${service}|" | awk 'BEGIN {FS="|";OFS="|"}; { $2=""; print $0; }' | awk "${awkward}" | InfoKruncherInterfaceRows
+	done
+	#InfoKruncherInterfaceTable | sed '/^#/d' |  awk "${awkward}"
 }
 
-[ -z ${1} ] && InfoKruncherInterfaceTable  | sed '/^#/d' && shift
 
 [ "${1}" == "-h" ] && echo -ne "`PrintInfoKruncherInterfaceUsage`" && shift
 [ "${1}" == "-d" ] && PrintInfoKruncherInterfaceTable && shift
