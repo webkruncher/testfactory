@@ -14,9 +14,9 @@ EOF
 function InfoKruncherInterfaceTable
 {
 cat <<EOF
-|traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace|
+|traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace|development|
 |tickerkruncher|tradekruncher/db;tickerkruncher|tradekruncher/db::markets;tickerkruncher::ticker|markets;tickers|<algos/RestInterface.h>|TickerFace|
-#|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|DataFace|
+#|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|development|
 EOF
 }
 
@@ -65,6 +65,7 @@ Name Space\tKruncherSpace\t\t\t\tNamespace for objects in RestInterface **
 *\t\033[4mDB Service CMake\033[0m\t\t\tinfodata/db/CMakeLists.txt.
 **\tPre-compiler definition\t\t\tUsed in infodata/db/infoservice.cpp.  One per service.
 \n\n
+
 
 EOF
 }
