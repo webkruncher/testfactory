@@ -4,7 +4,7 @@
 function InfoKruncherInterfaceTableHeader
 {
 cat <<EOF
-|Service|Library|Library Path|Header Path|Header Name|Name Space|"
+|Service|Header Path|Library Path|Library Name|Header Name|Name Space|
 EOF
 }
 
@@ -12,18 +12,40 @@ function InfoKruncherInterfaceTable
 {
 cat <<EOF
 |traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace|
-#|tickerdata|tickerkruncher|tickerkruncher::ticker/|<tickers/RestInterface.h>|TickerFace|
+|tickerdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace|
+|tickerdata|tickerkruncher/algo|tickerkruncher/algo::ticker/|algos|<algos/RestInterface.h>|TickerFace|
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|DataFace|
+EOF
+}
+
+function PrintInfoKruncherInterfaceUsageLegend
+{
+cat <<EOF
+|Column|DB Service Cmake Variable Name|Description|
 EOF
 }
 
 function PrintInfoKruncherInterfaceUsage
 {
 cat <<EOF
-\033[33mInformation Krunchers\033[0m
+\033[3mInformation Krunchers\033[0m
+\n
 This table drives the InfoData services.
 Each entry represents a database service, and the information necessary to build the service.
 See infodata/src/db/CMakeLists.txt for more information.
+\n\n
+\033[1m\033[3m\033[4mLegend\033[0m
+\n
+\033[7m`PrintInfoKruncherInterfaceUsageLegend| awk 'BEGIN { FS = "|" } ; {printf "|%-15s|%-39s|%-80s\n", \$2,\$3,\$4,\$5} '`\033[0m
+Service\t\tKrunchDataServers\t\t\tThis is the name of the database service created by the \033[4mDB Service CMake\033[0m *
+Header Path\tDataHeaders\t\t\t\tInclude file path
+Library Path\tDataLibPath\t\t\t\tThe path to the link library
+Library Name\tDataLibs\t\t\t\tLink Library
+Header Name\tRestInterface\t\t\t\tInterface header relative pathname
+Name Space\tKruncherSpace\t\t\t\tNamespace for objects in RestInterface
+
+\n\n
+* \033[4mDB Service CMake\033[0m\t\t\tinfodata/db/CMakeLists.txt
 \n\n
 
 EOF
@@ -33,14 +55,14 @@ EOF
 function PrintInfoKruncherInterfaceTableAwk
 {
 cat <<EOF
-BEGIN { FS = "|" } ; {printf "|%-20s|%-30s|%-30s|%-35s|%-35s|%-20s|\n", \$2,\$3,\$4,\$5,\$6,\$7}
+BEGIN { FS = "|" } ; {printf "|%-15s|%-25s|%-35s|%-15s|%-30s|%-20s|\n", \$2,\$3,\$4,\$5,\$6,\$7}
 EOF
 }
 
 function PrintInfoKruncherInterfaceTable
 {
 	awkward=`PrintInfoKruncherInterfaceTableAwk`
-	InfoKruncherInterfaceTableHeader  |  awk "${awkward}"
+	echo -ne "\033[7m`InfoKruncherInterfaceTableHeader  |  awk "${awkward}"`\033[0m\n"
 	InfoKruncherInterfaceTable | sed '/^#/d' |  awk "${awkward}"
 }
 
