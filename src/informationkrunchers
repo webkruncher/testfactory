@@ -53,11 +53,12 @@ Service\t\tKrunchDataServers\t\t\tThis is the name of the database service creat
 Header Path\tDataHeaders\t\t\t\tInclude file path
 Library Path\tDataLibPath\t\t\t\tThe path to the link library
 Library Name\tDataLibs\t\t\t\tLink Library
-Header Name\tRestInterface\t\t\t\tInterface header relative pathname
-Name Space\tKruncherSpace\t\t\t\tNamespace for objects in RestInterface
+Header Name\tRestInterface\t\t\t\tInterface header relative pathname **
+Name Space\tKruncherSpace\t\t\t\tNamespace for objects in RestInterface **
 
 \n\n
-* \033[4mDB Service CMake\033[0m\t\t\tinfodata/db/CMakeLists.txt
+*\t\033[4mDB Service CMake\033[0m\t\t\tinfodata/db/CMakeLists.txt.
+**\tPre-compiler definition\t\t\tUsed in infodata/db/infoservice.cpp.  One per service.
 \n\n
 
 EOF
@@ -118,8 +119,10 @@ function PrintInfoKruncherInterfaceTable
 }
 
 
-[ "${1}" == "-h" ] && echo -ne "`PrintInfoKruncherInterfaceUsage`" && shift
-[ "${1}" == "-d" ] && PrintInfoKruncherInterfaceTable && shift
+while [ ! -z ${1} ]; do
+	[ "${1}" == "-h" ] && echo -ne "`PrintInfoKruncherInterfaceUsage`" && shift
+	[ "${1}" == "-d" ] && PrintInfoKruncherInterfaceTable && shift 
+done
 
 
 
