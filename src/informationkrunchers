@@ -40,10 +40,15 @@ EOF
 function PrintInfoKruncherInterfaceUsage
 {
 cat <<EOF
-\033[3mInformation Krunchers\033[0m
+\033[1m\033[7mInformation Krunchers\033[0m
 \n
-This table drives the InfoData services.
+This table drives the Information Kruncher InfoData services.
 Each entry represents a database service, and the information necessary to build the service.
+Each service name must be unique.
+\n
+Header Path, Library Path and Library Name fields may be semi-colon dilimeted lists;
+Header Name and Name Space must be exactly one per service.
+\n
 See infodata/src/db/CMakeLists.txt for more information.
 \n\n
 \033[1m\033[3m\033[4mLegend\033[0m
