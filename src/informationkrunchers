@@ -4,7 +4,7 @@
 function InfoKruncherInterfaceTableHeader
 {
 cat <<EOF
-|Service|Header Path|Library Path|Library Name|Header Name|Name Space|
+|Service|Header Path|Library Path|Library Name|Header Name|Name Space|Development|
 EOF
 }
 
@@ -14,8 +14,8 @@ EOF
 function InfoKruncherInterfaceTable
 {
 cat <<EOF
-|traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace|development|
-|tickerkruncher|tradekruncher/db;tickerkruncher|tradekruncher/db::markets;tickerkruncher::ticker|markets;tickers|<algos/RestInterface.h>|TickerFace|
+|traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace||
+|tickerkruncher|tradekruncher/db;tickerkruncher|tradekruncher/db::markets;tickerkruncher::ticker|markets;tickers|<algos/RestInterface.h>|TickerFace|development|
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|development|
 EOF
 }
@@ -61,6 +61,10 @@ Library Name\tDataLibs\t\t\t\tLink Library
 Header Name\tRestInterface\t\t\t\tInterface header relative pathname **
 Name Space\tKruncherSpace\t\t\t\tNamespace for objects in RestInterface **
 
+
+\033[1m\033[3m\033[4mSupplemental Fields\033[0m
+Development\t\t\t\t\t\tTag to trigger active develompent script(s) (kruncher)
+
 \n\n
 *\t\033[4mDB Service CMake\033[0m\t\t\tinfodata/db/CMakeLists.txt.
 **\tPre-compiler definition\t\t\tUsed in infodata/db/infoservice.cpp.  One per service.
@@ -74,7 +78,7 @@ EOF
 function PrintInfoKruncherInterfaceTableAwk
 {
 cat <<EOF
-BEGIN { FS = "|" } ; {printf "|%-15s|%-25s|%-35s|%-15s|%-30s|%-20s|\n", \$2,\$3,\$4,\$5,\$6,\$7}
+BEGIN { FS = "|" } ; {printf "|%-15s|%-25s|%-35s|%-15s|%-30s|%-20s|%-10s|\n", \$2,\$3,\$4,\$5,\$6,\$7,\$8}
 EOF
 }
 
