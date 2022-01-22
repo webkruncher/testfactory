@@ -63,6 +63,10 @@ function PrintInfoKruncherInterfaceTable
 {
 	awkward=`PrintInfoKruncherInterfaceTableAwk`
 	echo -ne "\033[7m`InfoKruncherInterfaceTableHeader  |  awk "${awkward}"`\033[0m\n"
+
+	for service in `InfoKruncherInterfaceTable | cut -d '|' -f2 | sort | uniq`;
+		echo ">>${service}"
+	done
 	InfoKruncherInterfaceTable | sed '/^#/d' |  awk "${awkward}"
 }
 
