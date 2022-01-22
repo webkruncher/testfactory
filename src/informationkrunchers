@@ -1,14 +1,53 @@
 
 
-if [ -z ${1} ]; then
 
+function InfoKruncherInterfaceTableHeader
+{
 cat <<EOF
-#|tickerdata|tickerkruncher|tickerkruncher::ticker/|tickers|TickerFace|
+|Service|Library|Library Path|Header Path|Header Name|Name Space|"
+EOF
+}
+
+function InfoKruncherInterfaceTable
+{
+cat <<EOF
 |traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace|
+#|tickerdata|tickerkruncher|tickerkruncher::ticker/|<tickers/RestInterface.h>|TickerFace|
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|DataFace|
 EOF
+}
 
-fi
+function PrintInfoKruncherInterfaceUsage
+{
+cat <<EOF
+\033[33mInformation Krunchers\033[0m
+This table drives the InfoData services.
+Each entry represents a database service, and the information necessary to build the service.
+See infodata/src/db/CMakeLists.txt for more information.
+\n\n
+
+EOF
+}
+
+
+function PrintInfoKruncherInterfaceTableAwk
+{
+cat <<EOF
+BEGIN { FS = "|" } ; {printf "|%-20s|%-30s|%-30s|%-35s|%-35s|%-20s|\n", \$2,\$3,\$4,\$5,\$6,\$7}
+EOF
+}
+
+function PrintInfoKruncherInterfaceTable
+{
+	awkward=`PrintInfoKruncherInterfaceTableAwk`
+	InfoKruncherInterfaceTableHeader  |  awk "${awkward}"
+	InfoKruncherInterfaceTable | sed '/^#/d' |  awk "${awkward}"
+}
+
+[ -z ${1} ] && InfoKruncherInterfaceTable  | sed '/^#/d' && shift
+
+[ "${1}" == "-h" ] && echo -ne "`PrintInfoKruncherInterfaceUsage`" && shift
+[ "${1}" == "-d" ] && PrintInfoKruncherInterfaceTable && shift
 
 
 
