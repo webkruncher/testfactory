@@ -109,7 +109,12 @@ function Vim
 
 function VerboseCmake
 {
-	export KRUNCHER_DEV_VERBOSE=1
+	export KRUNCHER_DEV_VERBOSE=${1-1}
+}
+
+function QuietCmake
+{
+	unset KRUNCHER_DEV_VERBOSE
 }
 
 function ReleaseBuild
