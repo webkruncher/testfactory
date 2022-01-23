@@ -153,7 +153,7 @@ function BuildAll
 {
 	for project in `ProjectList`; do
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
-		echo -ne "\r${project}\033[K"
+		echo -ne "\r\033[3m\033[36m${project}\033[0m\033[K"
 		#Build -install 2>&1>> /dev/null
 		Build -install 1>> /dev/null
 		if [ "$?" != "0" ] ; then
@@ -161,7 +161,7 @@ function BuildAll
 		fi
 		popd 2>&1 >> /dev/null
 	done
-	echo
+	echo -ne "\r\033[3m\033[36mfinished\033[0m\033[K\n"
 }
 
 function CleanAll
