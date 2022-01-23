@@ -157,11 +157,12 @@ function BuildAll
 		#Build -install 2>&1>> /dev/null
 		Build -install 1>> /dev/null
 		if [ "$?" != "0" ] ; then
-			echo -ne "\033[31m\t${project} Failed\033[K\033[0m\n" && break
+			echo -ne "\033[31m\t${project} Failed\033[K\033[0m\n" && return 1
 		fi
 		popd 2>&1 >> /dev/null
 	done
 	echo -ne "\r\033[3m\033[36mfinished\033[0m\033[K\n"
+	return 0
 }
 
 function CleanAll
