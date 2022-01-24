@@ -135,7 +135,7 @@ function GetLibMidFix
 
 function GetLibPath
 {
-	export LibPath=`cmake --trace-expand 2>&1 | grep LIBPATH | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f2`
+	cmake --trace-expand 2>&1 | grep LIBPATH | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f2
 }
 
 function GetCmakeLinkage
@@ -145,6 +145,7 @@ function GetCmakeLinkage
 
 function RecordLibTimes
 {
+#echo "RecordLibTimes:$1"
 	target=${1}
 	shift
 OFS=$IFS
@@ -155,9 +156,11 @@ IFS=$' '
 		dota=`find ${LibPath} -name "lib${lib}.a" ` 2>>/dev/null
 		if [ ! -z ${dota} ]; then
 			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
-			echo -ne "\033[45m\033[37m${target} ${dota} ${mtime}\033[K\033[0m\r"
 			list="${list}${dota};${mtime}|"
-			export Libs_${target}=${list}
+			logger "export Libs_${target}_${lib}=${mtime}"
+			export Libs_${target}_${lib}=${mtime}
+		else
+			echo -ne "\033[31m${lib} was not found in ~/Info\033[0m\n"
 		fi
 	done
 IFS=$OFS
@@ -166,14 +169,25 @@ IFS=$OFS
 function TargetLinkage
 {
 	depencencies=`GetCmakeLinkage`
-	for depline in ${depencencies}; do
-		target=`echo "${depline}" | cut -d ' ' -f1` 
-		liblist=`echo "${depline}" | cut -d ' ' -f2-` 
-		if [[ ${liblist:0:1} != "/" ]] ; then
-			logger "Scanning ${target}"
-			RecordLibTimes ${target} ${liblist}
-		fi
-	done
+
+	if [ "${depencencies}" != "" ]; then
+		#logger "In `pwd`, depencencies:..."
+		echo -ne "\033[35m`pwd` Cmake Depends:\n${depencencies}\033[0m\n" >> /dev/stderr
+		target=`echo "${depencencies}" | cut -d ' ' -f1` 
+		depline=`echo "${depencencies}" | cut -d ' ' -f2-` 
+		echo -ne "Targets\n${target}\n" | cat -n >> /dev/stderr
+		echo -ne "\t\tDepends on\n"  >> /dev/stderr
+		deplist=`echo "${depline}" | tr ' ' '\n' | sort | uniq | tr '\n' ' '`
+		echo "${deplist}" >> /dev/stderr
+		for depline in ${deplist}; do
+			if [[ ${liblist:0:1} != "/" ]] ; then
+				echo "find ${LibPath} -name lib${depline}.a"  >> /dev/stderr
+				dota=`find ${LibPath} -name "lib${depline}.a" ` 2>>/dev/null
+				mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+				[ "${dota}" != "" ] && echo -ne "${dota};${mtime}|" 
+			fi
+		done
+	fi
 }
 
 
@@ -181,40 +195,97 @@ function CollectProjectDependencies
 {
 	echo -ne "\033[43m\033[34mScanning project libraries\033[0m\n"
 	CurrentProject=`pwd`
+	liblist="|"
 	for project in `ProjectList | tr '\n' ' ' `; do
 		logger "Collecting ${project}"
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
-			if [ -z ${LibPath} ]; then
-				GetLibMidFix
-				GetLibPath
-			fi
-			TargetLinkage
+			liblist="${liblist}`TargetLinkage`"
 			ThisProject=`pwd`
 		popd 2>&1 >> /dev/null
-		[ "${ThisProject}" == "${CurrentProject}" ] && break;
+
+		envname=`echo "${project}" | tr '/' '_' `
+		export LibList_${envname}=`echo "${liblist}" | tr '|' '\n' | sort | uniq | tr '\n' '|'`
+		#[ "${ThisProject}" == "${CurrentProject}" ] && break;
 	done
-	echo -ne "\033[K\033[0m\r"
+	
 }
 
+
+function CleanTrigger
+{
+	#echo -ne "\033[37m\033[43mChecking triggers:$@\033[0m\n" >> /dev/stderr
+	echo "1"
+}
+
+function CheckAndUpdateLinkLibraryDate 
+{
+	dota=`echo "${1}" | cut -d ';' -f1`
+	logger "Getting lastupdate for ${2}, ${dota}" 
+	lastupdate=`echo "${1}" | cut -d ';' -f2 | cut -d '|' -f1`
+	mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+	if [ "${mtime}" != "${lastupdate}" ]; then
+		logger "${dota} was last updated at ${lastupdate}, and the current timestamp is ${mtime}"
+		echo "${2}"
+	fi
+
+}
+
+function CheckLibs 
+{
+	needsupdate="0"
+	while read liblin; do
+		if [ "${liblin}" != "" ]; then
+			dota=`echo "${liblin}" | cut -d ';' -f1`
+			when=`echo "${liblin}" | cut -d ';' -f2`
+		
+			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+			#echo "Checking ${dota}, ${when} == ${mtime}"  >> /dev/stderr
+			if [ "${mtime}" != "${when}" ]; then
+				logger "${dota} was last updated at ${when}, and the current timestamp is ${mtime}"
+				echo "${dota}"
+			fi
+		fi
+	done
+}
 
 
 function BuildAll
 {
-	[ -z `env | grep -e "^Libs_" | head -1` ] && CollectProjectDependencies
+	ReLinkedFor=""
 	CurrentProject=`pwd`
 	for project in `ProjectList`; do
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
+		#echo "Project:${project}" >> /dev/stderr
+		[ "${LibPath}" == "" ] && export LibPath=`GetLibPath`
+		envname=`echo "${project}" | tr '/' '_' `
+		needsscanner=`env | grep -e "^LibList_${envname}"`
+		if [ "${needsscanner}" == "" ]; then
+			echo -ne "Loading ${envname}"
+			CollectProjectDependencies
+		fi
 
-		depencencies=`GetCmakeLinkage`
-		echo -ne "\033[32mDependencies in `pwd`:\033[43m\033[37m\n${depencencies}\033[0m\n"
 
-		Libs=`env | grep -e "^Libs_${project}"`
-		for lib in ${Libs}; do
-			echo -ne "Liblist:\033[3m\033[36m${project}->\033[35m${lib}\033[0m\n"
-		done
-		logger "Build -install in `pwd`"
+		#echo -ne "\033[45mBuilding in `pwd`\033[0m\n"
+		
+		Libs=`env | grep -e "^LibList_${envname}" | cut -d '|' -f2- | tr '|' '\n'`
+
+		needsUpdate=`echo "${Libs}" | sort | uniq | CheckLibs `
+
+		if [ "${needsUpdate}" != "" ]; then
+			pwdd="^`pwd`.*"
+			exes=`cmake --trace-expand 2>&1 | grep -e ${pwdd} | grep -e "add_executable(" | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f1`
+			if [ "${exes}" != "" ]; then
+				echo "Updating ${exes}"
+				for exe in ${exes}; do
+					find ../src.build -name "${exe}" -exec rm {} \;
+				done
+			fi
+		fi
+
+
+		logger "Build -install"
 		Build -install 2>&1>> /dev/null
-		#Build -install #1>> /dev/null
+
 		if [ "$?" != "0" ] ; then
 			echo -ne "\033[31m\t${project} Failed\033[K\033[0m\n" && return 1
 		fi
@@ -223,6 +294,13 @@ function BuildAll
 		[ "${ThisProject}" == "${CurrentProject}" ] && break;
 	done
 	echo -ne "\r\033[3m\033[36mfinished\033[0m\033[K\n"
+
+	UpdateList=`echo "${ReLinkedFor}" | tr '|' '\n' | sort | uniq | tr '\n' ' '`
+	#echo -ne "\033[31m\033[44mReLinkedFor:${UpdateList}\033[0m\n"
+	for updaterecord in ${ReLinkedFor}; do
+		#echo "UpdateRecord:${updaterecord}"
+		RecordLibTimes ${updaterecord} ${updaterecord}
+	done
 	return 0
 }
 
