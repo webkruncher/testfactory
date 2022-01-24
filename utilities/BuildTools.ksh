@@ -177,6 +177,7 @@ IFS=$' '
 		dota=`find ${LibPath} -name "lib${lib}.a" ` 2>>/dev/null
 		if [ ! -z ${dota} ]; then
 			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+			echo -ne "\033[45m\033[37m${target} ${dota} ${mtime}\033[K\033[0m\r"
 			list="${list}${dota};${mtime}|"
 			export Libs_${target}=${list}
 		fi
@@ -200,6 +201,7 @@ function TargetLinkage
 
 function CollectProjectDependencies
 {
+	echo -ne "\033[43m\033[34mScanning project libraries\033[0m\n"
 	CurrentProject=`pwd`
 	for project in `ProjectList | tr '\n' ' ' `; do
 		logger "Collecting ${project}"
@@ -213,6 +215,7 @@ function CollectProjectDependencies
 		popd 2>&1 >> /dev/null
 		[ "${ThisProject}" == "${CurrentProject}" ] && break;
 	done
+	echo -ne "\033[K\033[0m\r"
 }
 
 
