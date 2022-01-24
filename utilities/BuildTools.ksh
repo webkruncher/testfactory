@@ -149,13 +149,75 @@ function ReBuild
 	done
 }
 
+
+function GetLibMidFix
+{
+	export LibMidFix=`cmake --trace-expand 2>&1 | grep LIBMIDFIX | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f2`
+}
+
+function GetLibPath
+{
+	export LibPath=`cmake --trace-expand 2>&1 | grep LIBPATH | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f2`
+}
+
+function GetCmakeLinkage
+{
+	cmake --trace-expand 2>&1 | grep -e "^`pwd`.*" | grep "target_link_libraries("  | cut -d '(' -f3 | cut -d ')' -f1 | tr ';' ' ' | grep -v INTERFACE | cut -d ' ' -f1,3-
+}
+
+function RecordLibTimes
+{
+	target=${1}
+	shift
+OFS=$IFS
+IFS=$' '
+	list="|"
+	for lib in $@; do
+		dota=`find ${LibPath} -name "lib${lib}.a"` 2>>/dev/null
+		if [ ! -z ${dota} ]; then
+			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+			list="${list}${dota};${mtime}|"
+		fi
+		
+		export Libs_${target}=${list}
+	done
+IFS=$OFS
+}
+
+function TargetLinkage
+{
+	depencencies=`GetCmakeLinkage`
+	for depline in ${depencencies}; do
+		target=`echo "${depline}" | cut -d ' ' -f1` 
+		liblist=`echo "${depline}" | cut -d ' ' -f2-` 
+		RecordLibTimes ${target} ${liblist}
+	done
+}
+
+
+function CollectProjectDependencies
+{
+	GetLibMidFix
+	GetLibPath
+	CurrentProject=`pwd`
+	for project in `ProjectList`; do
+		pushd ~/Info/${project}/src 2>&1 >> /dev/null
+			TargetLinkage
+			ThisProject=`pwd`
+		popd 2>&1 >> /dev/null
+		[ "${ThisProject}" == "${CurrentProject}" ] && break;
+	done
+}
+
+
+
 function BuildAll
 {
 	for project in `ProjectList`; do
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
 		echo -ne "\r\033[3m\033[36m${project}\033[0m\033[K"
 		#Build -install 2>&1>> /dev/null
-		Build -install 1>> /dev/null
+		Build -install #1>> /dev/null
 		if [ "$?" != "0" ] ; then
 			echo -ne "\033[31m\t${project} Failed\033[K\033[0m\n" && return 1
 		fi
@@ -164,6 +226,9 @@ function BuildAll
 	echo -ne "\r\033[3m\033[36mfinished\033[0m\033[K\n"
 	return 0
 }
+
+
+
 
 function CleanAll
 {
