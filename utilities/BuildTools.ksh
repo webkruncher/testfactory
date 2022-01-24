@@ -20,28 +20,6 @@ infodata
 webkruncher
 EOF
 }
-	#testfactory/Restful
-
-
-function OldBuild
-{
-	pushd ~/Info/${1}/src
-	shift
-	sudo chown -R jmt ../*
-	if [ "${1}" == "-clean" ]; then
-		shift
-		echo -ne "\033[41m\033[33mCleanup in `pwd`\033[0m\n"
-		Clean
-	fi
-	echo -ne "\033[45m\033[34m\033[1mBuilding in `pwd`\033[0m\n"
-	Build
-	if [ $? != 0 ]; then
-		echo -ne "\033[41m\033[33m`pwd` build failed\033[0m\n"
-		exit -1 
-	fi
-	popd
-}
-
 
 function Install
 {
@@ -223,15 +201,26 @@ function CollectProjectDependencies
 function BuildAll
 {
 	[ -z `env | grep -e "^Libs_" | head -1` ] && CollectProjectDependencies
+	CurrentProject=`pwd`
 	for project in `ProjectList`; do
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
-		echo -ne "\r\033[3m\033[36m${project}\033[0m\033[K"
-		#Build -install 2>&1>> /dev/null
-		Build -install #1>> /dev/null
+
+		depencencies=`GetCmakeLinkage`
+		echo -ne "\033[32mDependencies in `pwd`:\033[43m\033[37m\n${depencencies}\033[0m\n"
+
+		Libs=`env | grep -e "^Libs_${project}"`
+		for lib in ${Libs}; do
+			echo -ne "Liblist:\033[3m\033[36m${project}->\033[35m${lib}\033[0m\n"
+		done
+		logger "Build -install in `pwd`"
+		Build -install 2>&1>> /dev/null
+		#Build -install #1>> /dev/null
 		if [ "$?" != "0" ] ; then
 			echo -ne "\033[31m\t${project} Failed\033[K\033[0m\n" && return 1
 		fi
+		ThisProject=`pwd`
 		popd 2>&1 >> /dev/null
+		[ "${ThisProject}" == "${CurrentProject}" ] && break;
 	done
 	echo -ne "\r\033[3m\033[36mfinished\033[0m\033[K\n"
 	return 0
