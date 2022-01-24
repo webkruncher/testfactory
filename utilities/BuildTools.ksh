@@ -248,6 +248,45 @@ function CheckLibs
 	done
 }
 
+function UpdateTimestamps
+{
+	envname=`echo "${1}" | tr '/' '_' `
+	#echo -ne "\033[31m"
+	#echo `env | grep -e "^LibList_${envname}" `
+	#echo -ne "\033[0m"
+
+	Libs=`env | grep -e "^LibList_${envname}" | cut -d '|' -f2- | tr '|' '\n'` 
+
+	#echo "Updating timestamps for ${1}"
+	#echo "Current List:"
+	#echo -ne "${Libs}"
+	#echo
+
+
+	while read liblin; do
+		#echo "Removing:${liblin};" 
+		Libs=`echo "${Libs}" | grep -v "${liblin}"`
+
+		mtime=`stat -s ${liblin} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+		Libs=`echo -ne "${Libs}\n${liblin};${mtime}\n"`
+	done
+
+
+	#echo "Updated List:"
+	#echo -ne "${Libs}"
+	#echo
+
+	NewEnv=`echo "${Libs}" | tr '\n' '|'`
+	
+	#echo -ne "\033[32mLibList_${envname}=|"
+	#echo -ne "${NewEnv}"
+	#echo -ne "\033[0m"
+
+	#export LibList_${envname}="|${NewEnv}"
+	#export LibList_${envname}="empty"
+	echo "|${NewEnv}"
+}
+
 
 function BuildAll
 {
@@ -275,7 +314,7 @@ function BuildAll
 			pwdd="^`pwd`.*"
 			exes=`cmake --trace-expand 2>&1 | grep -e ${pwdd} | grep -e "add_executable(" | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f1`
 			if [ "${exes}" != "" ]; then
-				echo "Updating ${exes}"
+				#echo "Updating ${exes}"
 				for exe in ${exes}; do
 					find ../src.build -name "${exe}" -exec rm {} \;
 				done
@@ -290,17 +329,28 @@ function BuildAll
 			echo -ne "\033[31m\t${project} Failed\033[K\033[0m\n" && return 1
 		fi
 		ThisProject=`pwd`
+
+
+		if [ "${needsUpdate}" != "" ]; then
+			echo -ne "\nUpdating records for ${project}:\n"
+			echo "${needsUpdate}" | cat -n
+
+			NewList=`echo "${needsUpdate}" | UpdateTimestamps ${project}`
+			echo -ne "Updated List:\n${NewList}\n"
+			export LibList_${envname}=${NewList}
+		fi
+
+
 		popd 2>&1 >> /dev/null
+
+
+
+
 		[ "${ThisProject}" == "${CurrentProject}" ] && break;
 	done
 	echo -ne "\r\033[3m\033[36mfinished\033[0m\033[K\n"
 
-	UpdateList=`echo "${ReLinkedFor}" | tr '|' '\n' | sort | uniq | tr '\n' ' '`
-	#echo -ne "\033[31m\033[44mReLinkedFor:${UpdateList}\033[0m\n"
-	for updaterecord in ${ReLinkedFor}; do
-		#echo "UpdateRecord:${updaterecord}"
-		RecordLibTimes ${updaterecord} ${updaterecord}
-	done
+
 	return 0
 }
 
