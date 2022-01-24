@@ -173,13 +173,13 @@ OFS=$IFS
 IFS=$' '
 	list="|"
 	for lib in $@; do
-		dota=`find ${LibPath} -name "lib${lib}.a"` 2>>/dev/null
+		#echo -ne "\033[33mfind ${LibPath} -name lib${lib}.a \033[0m\n" 2>>/dev/stderr
+		dota=`find ${LibPath} -name "lib${lib}.a" ` 2>>/dev/null
 		if [ ! -z ${dota} ]; then
 			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
 			list="${list}${dota};${mtime}|"
+			export Libs_${target}=${list}
 		fi
-		
-		export Libs_${target}=${list}
 	done
 IFS=$OFS
 }
@@ -190,18 +190,24 @@ function TargetLinkage
 	for depline in ${depencencies}; do
 		target=`echo "${depline}" | cut -d ' ' -f1` 
 		liblist=`echo "${depline}" | cut -d ' ' -f2-` 
-		RecordLibTimes ${target} ${liblist}
+		if [[ ${liblist:0:1} != "/" ]] ; then
+			logger "Scanning ${target}"
+			RecordLibTimes ${target} ${liblist}
+		fi
 	done
 }
 
 
 function CollectProjectDependencies
 {
-	GetLibMidFix
-	GetLibPath
 	CurrentProject=`pwd`
-	for project in `ProjectList`; do
+	for project in `ProjectList | tr '\n' ' ' `; do
+		logger "Collecting ${project}"
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
+			if [ -z ${LibPath} ]; then
+				GetLibMidFix
+				GetLibPath
+			fi
 			TargetLinkage
 			ThisProject=`pwd`
 		popd 2>&1 >> /dev/null
@@ -213,6 +219,7 @@ function CollectProjectDependencies
 
 function BuildAll
 {
+	[ -z `env | grep -e "^Libs_" | head -1` ] && CollectProjectDependencies
 	for project in `ProjectList`; do
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
 		echo -ne "\r\033[3m\033[36m${project}\033[0m\033[K"
