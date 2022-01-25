@@ -157,7 +157,7 @@ IFS=$' '
 		if [ ! -z ${dota} ]; then
 			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
 			list="${list}${dota};${mtime}|"
-			logger "export Libs_${target}_${lib}=${mtime}"
+			#logger "export Libs_${target}_${lib}=${mtime}"
 			export Libs_${target}_${lib}=${mtime}
 		else
 			echo -ne "\033[31m${lib} was not found in ~/Info\033[0m\n"
@@ -197,7 +197,7 @@ function CollectProjectDependencies
 	CurrentProject=`pwd`
 	liblist="|"
 	for project in `ProjectList | tr '\n' ' ' `; do
-		logger "Collecting ${project}"
+		#logger "Collecting ${project}"
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
 			liblist="${liblist}`TargetLinkage`"
 			ThisProject=`pwd`
@@ -220,11 +220,11 @@ function CleanTrigger
 function CheckAndUpdateLinkLibraryDate 
 {
 	dota=`echo "${1}" | cut -d ';' -f1`
-	logger "Getting lastupdate for ${2}, ${dota}" 
+	#logger "Getting lastupdate for ${2}, ${dota}" 
 	lastupdate=`echo "${1}" | cut -d ';' -f2 | cut -d '|' -f1`
 	mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
 	if [ "${mtime}" != "${lastupdate}" ]; then
-		logger "${dota} was last updated at ${lastupdate}, and the current timestamp is ${mtime}"
+		#logger "${dota} was last updated at ${lastupdate}, and the current timestamp is ${mtime}"
 		echo "${2}"
 	fi
 
@@ -241,7 +241,7 @@ function CheckLibs
 			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
 			#echo "Checking ${dota}, ${when} == ${mtime}"  >> /dev/stderr
 			if [ "${mtime}" != "${when}" ]; then
-				logger "${dota} was last updated at ${when}, and the current timestamp is ${mtime}"
+				#logger "${dota} was last updated at ${when}, and the current timestamp is ${mtime}"
 				echo "${dota}"
 			fi
 		fi
@@ -322,7 +322,7 @@ function BuildAll
 		fi
 
 
-		logger "`pwd` Build -install"
+		#logger "`pwd` Build -install"
 		Build -install 2>&1>> /dev/null
 
 		if [ "$?" != "0" ] ; then
