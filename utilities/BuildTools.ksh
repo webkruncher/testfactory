@@ -332,11 +332,11 @@ function BuildAll
 
 
 		if [ "${needsUpdate}" != "" ]; then
-			echo -ne "\nUpdating records for ${project}:\n"
-			echo "${needsUpdate}" | cat -n
+			#echo -ne "\nUpdating records for ${project}:\n"
+			#echo "${needsUpdate}" | cat -n
 
 			NewList=`echo "${needsUpdate}" | UpdateTimestamps ${project}`
-			echo -ne "Updated List:\n${NewList}\n"
+			#echo -ne "Updated List:\n${NewList}\n"
 			export LibList_${envname}=${NewList}
 		fi
 
