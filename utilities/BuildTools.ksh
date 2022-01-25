@@ -322,7 +322,7 @@ function BuildAll
 		fi
 
 
-		logger "Build -install"
+		logger "`pwd` Build -install"
 		Build -install 2>&1>> /dev/null
 
 		if [ "$?" != "0" ] ; then
