@@ -172,16 +172,16 @@ function TargetLinkage
 
 	if [ "${depencencies}" != "" ]; then
 		#logger "In `pwd`, depencencies:..."
-		echo -ne "\033[35m`pwd` Cmake Depends:\n${depencencies}\033[0m\n" >> /dev/stderr
+		#echo -ne "\033[35m`pwd` Cmake Depends:\n${depencencies}\033[0m\n" >> /dev/stderr
 		target=`echo "${depencencies}" | cut -d ' ' -f1` 
 		depline=`echo "${depencencies}" | cut -d ' ' -f2-` 
-		echo -ne "Targets\n${target}\n" | cat -n >> /dev/stderr
-		echo -ne "\t\tDepends on\n"  >> /dev/stderr
+		#echo -ne "Targets\n${target}\n" | cat -n >> /dev/stderr
+		#echo -ne "\t\tDepends on\n"  >> /dev/stderr
 		deplist=`echo "${depline}" | tr ' ' '\n' | sort | uniq | tr '\n' ' '`
-		echo "${deplist}" >> /dev/stderr
+		#echo "${deplist}" >> /dev/stderr
 		for depline in ${deplist}; do
 			if [[ ${liblist:0:1} != "/" ]] ; then
-				echo "find ${LibPath} -name lib${depline}.a"  >> /dev/stderr
+				#echo "find ${LibPath} -name lib${depline}.a"  >> /dev/stderr
 				dota=`find ${LibPath} -name "lib${depline}.a" ` 2>>/dev/null
 				mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
 				[ "${dota}" != "" ] && echo -ne "${dota};${mtime}|" 
@@ -193,7 +193,7 @@ function TargetLinkage
 
 function CollectProjectDependencies
 {
-	echo -ne "\033[43m\033[34mScanning project libraries\033[0m\n"
+	#echo -ne "\033[43m\033[34mScanning project libraries\033[0m\n"
 	CurrentProject=`pwd`
 	liblist="|"
 	for project in `ProjectList | tr '\n' ' ' `; do
@@ -299,7 +299,7 @@ function BuildAll
 		envname=`echo "${project}" | tr '/' '_' `
 		needsscanner=`env | grep -e "^LibList_${envname}"`
 		if [ "${needsscanner}" == "" ]; then
-			echo -ne "Loading ${envname}"
+			#echo -ne "Loading ${envname}"
 			CollectProjectDependencies
 		fi
 
