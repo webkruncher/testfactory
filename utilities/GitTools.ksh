@@ -33,14 +33,31 @@ function GitCommit
 }
 
 
+function GitStatusPretty
+{
+IFS=$'\n'
+	status=$(</dev/stdin)
+			lc=`echo "${status}" | wc -l`;
+			pwd=`pwd` 
+			pwd=`echo "${pwd}" | tr '/' '\n' | tail -n -1 | head -1| tr '\n' '/' `
+			echo -ne "\033[37m\033[45m|${pwd}|"
+			echo -ne "${status}" | head -2 | tr '\n' '|';
+			echo -ne "\033[0m\n"
+			if [ ${lc} -gt 4 ]; then 	
+				echo -ne "\033[41m\033[32m\033[1m";
+				echo -ne "${status}\n" | tail -n +6  | sed  '$ d'  | grep -v -e "\s*("
+				echo -ne "\033[0m";
+			fi;
+}
 
 function gitStatus
 {
 	pushd ~/Info/${1} >> /dev/null
-	echo -ne "\033[33m`pwd`\n\033[0m"
-	git status
+	#echo -ne "\033[33m`pwd`\n\033[0m"
+	git status | GitStatusPretty
 	popd 2>&1 >> /dev/null
 }
+
 
 function GitStatus
 {

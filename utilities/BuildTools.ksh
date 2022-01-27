@@ -1,6 +1,6 @@
 
 
-#TestHost="`hostname`"
+
 TestHost="jackmthompson.ninja"
 
 
