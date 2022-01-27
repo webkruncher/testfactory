@@ -40,13 +40,14 @@ IFS=$'\n'
 	lc=`echo "${status}" | wc -l`;
 	pwd=`pwd` 
 	pwd=`echo "${pwd}" | tr '/' '\n' | tail -n -1 | head -1| tr '\n' '/' `
-	echo -ne "\033[37m\033[45m|${pwd}\033[7m|"
-	echo -ne "${status}" | head -2 | tr '\n' '|';
+	#echo -ne "\033[37m\033[45m|${pwd}\033[7m|"
+	printf "\033[37m\033[45m|%22s\033[7m|" "${pwd}"
+	echo -ne "${status}" | head -2 | tr '\n' ' ';
 	echo -ne "\033[0m\n"
 	if [ ${lc} -gt 4 ]; then 	
-		echo -ne "\033[41m\033[32m\033[1m";
-		echo -ne "${status}\n" | tail -n +6  | sed  '$ d'  | grep -v -e "\s*("
-		echo -ne "\033[0m";
+		for stline in `echo -ne "${status}\n" | tail -n +6  | sed  '$ d'  | grep -v -e "\s*("`; do
+			echo -ne "\033[41m\033[32m\033[1m${stline}\033[0m\n";
+		done
 	fi;
 }
 
