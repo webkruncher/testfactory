@@ -237,11 +237,12 @@ function CheckLibs
 		if [ "${liblin}" != "" ]; then
 			dota=`echo "${liblin}" | cut -d ';' -f1`
 			when=`echo "${liblin}" | cut -d ';' -f2`
+			#logger "CheckLibs ${liblin} ${dota} ${when}"
 		
 			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
 			#echo "Checking ${dota}, ${when} == ${mtime}"  >> /dev/stderr
 			if [ "${mtime}" != "${when}" ]; then
-				#logger "${dota} was last updated at ${when}, and the current timestamp is ${mtime}"
+				logger "${dota} was last updated at ${when}, and the current timestamp is ${mtime}"
 				echo "${dota}"
 			fi
 		fi
@@ -300,6 +301,7 @@ function BuildAll
 		needsscanner=`env | grep -e "^LibList_${envname}"`
 		if [ "${needsscanner}" == "" ]; then
 			#echo -ne "Loading ${envname}"
+			logger "Scanning ${envname}"
 			CollectProjectDependencies
 		fi
 
@@ -311,19 +313,23 @@ function BuildAll
 		needsUpdate=`echo "${Libs}" | sort | uniq | CheckLibs `
 
 		if [ "${needsUpdate}" != "" ]; then
-			pwdd="^`pwd`.*"
-			exes=`cmake --trace-expand 2>&1 | grep -e ${pwdd} | grep -e "add_executable(" | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f1`
-			if [ "${exes}" != "" ]; then
-				#echo "Updating ${exes}"
-				for exe in ${exes}; do
-					find ../src.build -name "${exe}" -exec rm {} \;
-				done
-			fi
+			#pwdd="^`pwd`.*"
+			#exes=`cmake --trace-expand 2>&1 | grep -e ${pwdd} | grep -e "add_executable(" | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f1`
+			#if [ "${exes}" != "" ]; then
+			#	#echo "Updating ${exes}"
+			#	for exe in ${exes}; do
+			#		logger "removing ${exe}"
+			#		find ../src.build -name "${exe}" -exec rm {} \;
+			#	done
+			#fi
+			logger "`pwd`|Build -clean -install"
+			Build -clean -install 2>&1>> /dev/null
+		else
+			logger "`pwd`|Build -install"
+			Build -install 2>&1>> /dev/null
 		fi
 
 
-		#logger "`pwd` Build -install"
-		Build -install 2>&1>> /dev/null
 
 		if [ "$?" != "0" ] ; then
 			echo -ne "\033[31m\t${project} Failed\033[K\033[0m\n" && return 1
