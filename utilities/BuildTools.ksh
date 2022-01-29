@@ -171,14 +171,9 @@ function TargetLinkage
 	depencencies=`GetCmakeLinkage`
 
 	if [ "${depencencies}" != "" ]; then
-		#logger "In `pwd`, depencencies:..."
-		#echo -ne "\033[35m`pwd` Cmake Depends:\n${depencencies}\033[0m\n" >> /dev/stderr
 		target=`echo "${depencencies}" | cut -d ' ' -f1` 
 		depline=`echo "${depencencies}" | cut -d ' ' -f2-` 
-		#echo -ne "Targets\n${target}\n" | cat -n >> /dev/stderr
-		#echo -ne "\t\tDepends on\n"  >> /dev/stderr
 		deplist=`echo "${depline}" | tr ' ' '\n' | sort | uniq | tr '\n' ' '`
-		#echo "${deplist}" >> /dev/stderr
 		for depline in ${deplist}; do
 			if [[ ${liblist:0:1} != "/" ]] ; then
 				#echo "find ${LibPath} -name lib${depline}.a"  >> /dev/stderr
@@ -197,7 +192,6 @@ function CollectProjectDependencies
 	CurrentProject=`pwd`
 	liblist="|"
 	for project in `ProjectList | tr '\n' ' ' `; do
-		#logger "Collecting ${project}"
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
 			liblist="${liblist}`TargetLinkage`"
 			ThisProject=`pwd`
@@ -210,26 +204,6 @@ function CollectProjectDependencies
 	
 }
 
-
-function CleanTrigger
-{
-	#echo -ne "\033[37m\033[43mChecking triggers:$@\033[0m\n" >> /dev/stderr
-	echo "1"
-}
-
-function CheckAndUpdateLinkLibraryDate 
-{
-	dota=`echo "${1}" | cut -d ';' -f1`
-	#logger "Getting lastupdate for ${2}, ${dota}" 
-	lastupdate=`echo "${1}" | cut -d ';' -f2 | cut -d '|' -f1`
-	mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
-	if [ "${mtime}" != "${lastupdate}" ]; then
-		#logger "${dota} was last updated at ${lastupdate}, and the current timestamp is ${mtime}"
-		echo "${2}"
-	fi
-
-}
-
 function CheckLibs 
 {
 	needsupdate="0"
@@ -237,10 +211,6 @@ function CheckLibs
 		if [ "${liblin}" != "" ]; then
 			dota=`echo "${liblin}" | cut -d ';' -f1`
 			when=`echo "${liblin}" | cut -d ';' -f2`
-			#logger "CheckLibs ${liblin} ${dota} ${when}"
-		
-			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
-			#echo "Checking ${dota}, ${when} == ${mtime}"  >> /dev/stderr
 			if [ "${mtime}" != "${when}" ]; then
 				logger "${dota} was last updated at ${when}, and the current timestamp is ${mtime}"
 				echo "${dota}"
@@ -252,17 +222,7 @@ function CheckLibs
 function UpdateTimestamps
 {
 	envname=`echo "${1}" | tr '/' '_' `
-	#echo -ne "\033[31m"
-	#echo `env | grep -e "^LibList_${envname}" `
-	#echo -ne "\033[0m"
-
 	Libs=`env | grep -e "^LibList_${envname}" | cut -d '|' -f2- | tr '|' '\n'` 
-
-	#echo "Updating timestamps for ${1}"
-	#echo "Current List:"
-	#echo -ne "${Libs}"
-	#echo
-
 
 	while read liblin; do
 		#echo "Removing:${liblin};" 
@@ -272,27 +232,42 @@ function UpdateTimestamps
 		Libs=`echo -ne "${Libs}\n${liblin};${mtime}\n"`
 	done
 
-
-	#echo "Updated List:"
-	#echo -ne "${Libs}"
-	#echo
-
 	NewEnv=`echo "${Libs}" | tr '\n' '|'`
 	
-	#echo -ne "\033[32mLibList_${envname}=|"
-	#echo -ne "${NewEnv}"
-	#echo -ne "\033[0m"
-
-	#export LibList_${envname}="|${NewEnv}"
-	#export LibList_${envname}="empty"
 	echo "|${NewEnv}"
 }
+
+function ReScanKrunchLibs
+{
+	echo -ne "\033[45m\033[34mScanKrunchLibs in `pwd`\033[0m\n"
+
+
+	for project in `ProjectList`; do
+		pushd ~/Info/${project}/src 2>&1 >> /dev/null
+		[ "${LibPath}" == "" ] && export LibPath=`GetLibPath`
+		envname=`echo "${project}" | tr '/' '_' `
+		unset LibList_${envname}
+	done
+
+
+
+	for project in `ProjectList`; do
+		pushd ~/Info/${project}/src 2>&1 >> /dev/null
+		#echo "Project:${project}" >> /dev/stderr
+		[ "${LibPath}" == "" ] && export LibPath=`GetLibPath`
+		envname=`echo "${project}" | tr '/' '_' `
+		unset ${envname}
+		logger "Scanning ${envname}"
+		CollectProjectDependencies
+	done
+	#env | grep "LibList_"
+}
+
 
 
 function BuildAll
 {
 	echo -ne "\033[45m\033[34mBuildAll in `pwd`\033[0m\n"
-	ReLinkedFor=""
 	CurrentProject=`pwd`
 	for project in `ProjectList`; do
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
@@ -314,15 +289,6 @@ function BuildAll
 		needsUpdate=`echo "${Libs}" | sort | uniq | CheckLibs `
 
 		if [ "${needsUpdate}" != "" ]; then
-			#pwdd="^`pwd`.*"
-			#exes=`cmake --trace-expand 2>&1 | grep -e ${pwdd} | grep -e "add_executable(" | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f1`
-			#if [ "${exes}" != "" ]; then
-			#	#echo "Updating ${exes}"
-			#	for exe in ${exes}; do
-			#		logger "removing ${exe}"
-			#		find ../src.build -name "${exe}" -exec rm {} \;
-			#	done
-			#fi
 			logger "`pwd`|Build -clean -install"
 			Build -clean -install 2>&1>> /dev/null
 		else
@@ -339,19 +305,12 @@ function BuildAll
 
 
 		if [ "${needsUpdate}" != "" ]; then
-			#echo -ne "\nUpdating records for ${project}:\n"
-			#echo "${needsUpdate}" | cat -n
-
 			NewList=`echo "${needsUpdate}" | UpdateTimestamps ${project}`
-			#echo -ne "Updated List:\n${NewList}\n"
 			export LibList_${envname}=${NewList}
 		fi
 
 
 		popd 2>&1 >> /dev/null
-
-
-
 
 		[ "${ThisProject}" == "${CurrentProject}" ] && break;
 	done
