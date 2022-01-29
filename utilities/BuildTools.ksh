@@ -208,9 +208,12 @@ function CheckLibs
 {
 	needsupdate="0"
 	while read liblin; do
+		#echo -ne "\033[35m${liblin}\033[0m\n" >> /dev/stderr
 		if [ "${liblin}" != "" ]; then
 			dota=`echo "${liblin}" | cut -d ';' -f1`
 			when=`echo "${liblin}" | cut -d ';' -f2`
+			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+			#echo -ne "\t\033[36m${dota} = ${when}\033[0m\n" >> /dev/stderr
 			if [ "${mtime}" != "${when}" ]; then
 				logger "${dota} was last updated at ${when}, and the current timestamp is ${mtime}"
 				echo "${dota}"
@@ -281,7 +284,6 @@ function BuildAll
 			CollectProjectDependencies
 		fi
 
-
 		#echo -ne "\033[45mBuilding in `pwd`\033[0m\n"
 		
 		Libs=`env | grep -e "^LibList_${envname}" | cut -d '|' -f2- | tr '|' '\n'`
@@ -295,8 +297,6 @@ function BuildAll
 			logger "`pwd`|Build -install"
 			Build -install 2>&1>> /dev/null
 		fi
-
-
 
 		if [ "$?" != "0" ] ; then
 			echo -ne "\033[31m\t${project} Failed\033[K\033[0m\n" && return 1
