@@ -291,6 +291,7 @@ function UpdateTimestamps
 
 function BuildAll
 {
+	echo -ne "\033[45m\033[34mBuildAll in `pwd`\033[0m\n"
 	ReLinkedFor=""
 	CurrentProject=`pwd`
 	for project in `ProjectList`; do
@@ -354,7 +355,7 @@ function BuildAll
 
 		[ "${ThisProject}" == "${CurrentProject}" ] && break;
 	done
-	echo -ne "\r\033[3m\033[36mfinished\033[0m\033[K\n"
+	echo -ne "\r\033[3m\033[36mfinished in `pwd`\033[0m\033[K\n"
 
 
 	return 0
