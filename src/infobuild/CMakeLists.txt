@@ -35,5 +35,5 @@ target_link_directories(
 
 
 
-install(TARGETS libinfo DESTINATION lib/infokruncher/tradekruncher/db/libinfo )
+install(TARGETS libinfo DESTINATION lib/infokruncher/testfactory/libinfo )
 
