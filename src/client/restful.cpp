@@ -47,8 +47,6 @@ namespace RestfulClient
 		ProcessPayload( Payload, headers, options );
 	}
 
-
-
 	void Restful::LoadRequest( Requester& r  )
 	{
 		const stringmap& metadata( r.options.metadata );
