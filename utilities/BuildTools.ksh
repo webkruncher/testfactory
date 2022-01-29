@@ -8,7 +8,6 @@ TestHost="jackmthompson.ninja"
 function ProjectList
 {
 cat <<EOF
-testfactory
 krunchercore
 exexml
 datakruncher
@@ -16,6 +15,7 @@ informationkruncher
 tradekruncher
 tradekruncher/db
 tickerkruncher
+testfactory
 infodata
 webkruncher
 EOF
@@ -372,6 +372,20 @@ function CleanAll
 		Clean
 		popd
 	done
+
+	bins=/usr/local/bin
+	sudo rm -rf ${bins}/datafactory
+	sudo rm -rf ${bins}/datatester
+	sudo rm -rf ${bins}/krestdb
+	sudo rm -rf ${bins}/informationkrunchers
+	sudo rm -rf ${bins}/kruncher
+	sudo rm -rf ${bins}/exeut
+	sudo rm -rf ${bins}/tradekruncher
+	sudo rm -rf ${bins}/ingest
+	sudo rm -rf ${bins}/traderdata
+	sudo rm -rf ${bins}/tickerkruncher
+	#sudo rm -rf webkruncher
+
 }
 
 
