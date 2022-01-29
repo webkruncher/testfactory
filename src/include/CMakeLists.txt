@@ -1,5 +1,4 @@
 
-
 Banner()
 
 
@@ -7,28 +6,29 @@ file(GLOB includes ${CMAKE_CURRENT_LIST_DIR}/*.h)
 
 install(
     FILES
-	    ${includes}    
-		    OPTIONAL
-                    DESTINATION include/infokruncher
+            ${includes}    
+                    OPTIONAL
+                    DESTINATION include/infokruncher/testfactory/infobuild
 )
 
 add_library(
-    headers
-	    INTERFACE
+    krunchbuildheaders
+            INTERFACE
 )
 
-add_library( kruncher::headers ALIAS headers )
+add_library( infobuild::krunchbuildheaders ALIAS krunchbuildheaders )
 
 target_include_directories(
-    headers
-	    INTERFACE
-		    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
-		    $<INSTALL_INTERFACE:include>
+    krunchbuildheaders
+            INTERFACE
+                    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+                    $<INSTALL_INTERFACE:include>
+			../include
 )
 
 target_link_libraries(
-    headers
-	    INTERFACE
+    krunchbuildheaders
+            INTERFACE
 )
 
 

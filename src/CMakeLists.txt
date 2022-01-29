@@ -5,6 +5,7 @@ project("testfactory")
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../krunchercore/cmake/CMakeLists.txt)
 
 add_subdirectory( include )
+add_subdirectory( infobuild )
 
 file(READ ${CMAKE_CURRENT_LIST_DIR}/Utilities.txt utilities)
 STRING(REGEX REPLACE "\n" ";" utilities "${utilities}")

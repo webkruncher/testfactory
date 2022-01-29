@@ -25,35 +25,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <time.h>
+#include <string>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+using namespace std;
 
-#ifndef WEBKRUNCHER_CONSUMER_H
-#define WEBKRUNCHER_CONSUMER_H
+#include <recordset.h>
+#include <markets/Ticker.h>
+#include <markets/TickerDetails.h>
 
-#include <RequestDirectory.h>
-
-namespace RestfulClient
+namespace StockMarket
 {
-	struct ClientList : vector< InfoKruncher::SocketProcessOptions >
-	{
-		virtual bool operator ()( const KruncherTools::Args& );
-	};
-
-	enum Mode{ None, Cookie, Oauth };
-	struct Restful : InfoKruncher::Client
-	{
-		Restful() : mode( None ) {}
-		virtual void LoadRequest( Requester& );
-		virtual void Consume( KruncherMimes::SocketManager&, const InfoKruncher::SocketProcessOptions& ) throw(); 
-		virtual void Throttle( const InfoKruncher::SocketProcessOptions& );
-		private:
-		void ProcessPayload( const binarystring& payload, const Hyper::MimeHeaders& headers, const InfoKruncher::SocketProcessOptions& );
-		protected:
-		Mode mode;
-		stringvector Files;
-		stringvector::iterator fit;
-	};
-} //RestfulClient
-#endif //WEBKRUNCHER_CONSUMER_H
-
-
+	unique_ptr< TickerDb > 			TickerData;
+	unique_ptr< TickerDetailsDb > 		TickerDetailsData;
+} // StockMarket
 

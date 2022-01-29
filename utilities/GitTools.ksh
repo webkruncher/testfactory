@@ -45,6 +45,9 @@ IFS=$'\n'
 	echo -ne "${status}" | head -2 | tr '\n' ' ';
 	echo -ne "\033[0m\n"
 	if [ ${lc} -gt 4 ]; then 	
+		for stline in `echo -ne "${status}\n" | grep "new file:"`; do
+			echo -ne "\033[41m\033[31m\033[40m\033[1m${stline}\033[0m\n";
+		done
 		for stline in `echo -ne "${status}\n" | tail -n +6  | sed  '$ d'  | grep -v -e "\s*("`; do
 			echo -ne "\033[41m\033[32m\033[1m${stline}\033[0m\n";
 		done
