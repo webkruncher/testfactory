@@ -23,7 +23,7 @@ EOF
 
 function Install
 {
-	pushd ~/Info/${1}/src
+	pushd ~/Info/${1}/src 2>&1 >> /dev/null
 	Build -install
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` install failed\033[0m\n"
@@ -121,9 +121,9 @@ function ReBuild
 {
 	sudo rm -rf /usr/local/lib/infokruncher/ && sudo rm -rf /usr/local/include/infokruncher
 	for project in `ProjectList`; do
-		pushd ~/Info/${project}/src
+		pushd ~/Info/${project}/src 2>&1 >> /dev/null
 		Build -clean -install
-		popd
+		popd 2>&1 >> /dev/null
 	done
 }
 
@@ -250,6 +250,7 @@ function ReScanKrunchLibs
 		[ "${LibPath}" == "" ] && export LibPath=`GetLibPath`
 		envname=`echo "${project}" | tr '/' '_' `
 		unset LibList_${envname}
+		popd 2>&1 >> /dev/null
 	done
 
 
@@ -261,6 +262,7 @@ function ReScanKrunchLibs
 		envname=`echo "${project}" | tr '/' '_' `
 		unset ${envname}
 		logger "Scanning ${envname}"
+		popd 2>&1 >> /dev/null
 		CollectProjectDependencies
 	done
 	#env | grep "LibList_"
@@ -341,9 +343,13 @@ function CleanAll
 	sudo rm -rf ${bins}/exeut
 	sudo rm -rf ${bins}/tradekruncher
 	sudo rm -rf ${bins}/ingest
-	sudo rm -rf ${bins}/traderdata
 	sudo rm -rf ${bins}/tickerkruncher
 	#sudo rm -rf webkruncher
+
+
+	sudo rm -rf ${bins}/traderdata
+	sudo rm -rf ${bins}/tickerdata
+	sudo rm -rf ${bins}/testdata
 
 }
 
