@@ -38,7 +38,7 @@ using namespace std;
 
 namespace StockMarket
 {
-	unique_ptr< TickerDb > 			TickerData;
+	unique_ptr< LibraryDb > 			LibraryData;
 	unique_ptr< TickerDetailsDb > 		TickerDetailsData;
 } // StockMarket
 

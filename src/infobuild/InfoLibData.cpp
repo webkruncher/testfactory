@@ -37,6 +37,6 @@ using namespace std;
 
 namespace InfoBuilder
 {
-	unique_ptr< TickerDb > 			TickerData;
+	unique_ptr< LibraryDb > 			LibraryData;
 } // InfoBuilder
 

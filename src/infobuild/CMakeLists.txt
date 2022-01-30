@@ -5,7 +5,7 @@ Headers(
 	datakruncher
 	informationkruncher
 	tradekruncher/db
-#	tickerkruncher
+#	librarykruncher
 )
 
 add_library(

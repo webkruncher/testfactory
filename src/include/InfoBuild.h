@@ -36,45 +36,45 @@
 namespace InfoBuilder
 {
 	struct LibTimes;
-	typedef DbRecords::RecordSet<LibTimes> TickerDb;
-	extern unique_ptr< TickerDb > TickerData;
+	typedef DbRecords::RecordSet<LibTimes> LibraryDb;
+	extern unique_ptr< LibraryDb > LibraryData;
 
-	struct TickerKey  : std::string
+	struct LibraryKey  : std::string
 	{
-		TickerKey();
-		TickerKey( const string& that ); 
-		TickerKey( const char* that) ;
-		TickerKey( const char* thatptr, size_t thatsz) ;
-		TickerKey( const TickerKey& that ) ;
+		LibraryKey();
+		LibraryKey( const string& that ); 
+		LibraryKey( const char* that) ;
+		LibraryKey( const char* thatptr, size_t thatsz) ;
+		LibraryKey( const LibraryKey& that ) ;
 		operator const char* () ;
-		TickerKey& operator=( const string& that ) ;
-		TickerKey& operator=( const TickerKey& that ) ;
+		LibraryKey& operator=( const string& that ) ;
+		LibraryKey& operator=( const LibraryKey& that ) ;
 		private:
 		void assgn( const string& k, const string e="" );
-		friend size_t EndKeySize(const TickerKey &s) ;
-		friend void* EndKeyStr(const TickerKey &s) ;
-		friend bool isEmpty(const TickerKey &s) ;
-		friend string EndKeyOf(const TickerKey &s) ;
-		friend int KeyLimiter(const TickerKey &s);
-		friend int KeySkipper(const TickerKey &s) ;
+		friend size_t EndKeySize(const LibraryKey &s) ;
+		friend void* EndKeyStr(const LibraryKey &s) ;
+		friend bool isEmpty(const LibraryKey &s) ;
+		friend string EndKeyOf(const LibraryKey &s) ;
+		friend int KeyLimiter(const LibraryKey &s);
+		friend int KeySkipper(const LibraryKey &s) ;
 		string EndKey;
 		int Limitter;
 		int Skip;
 	};
 
-	bool isEmpty(const TickerKey &s) ;
-	size_t StartKeySize(const TickerKey &s) ;
-	void* StartKeyDataPtr(const TickerKey &s) ; 
-	size_t EndKeySize(const TickerKey &s) ;
-	void* EndKeyStr(const TickerKey &s) ;
-	string StringOf(const TickerKey &s) ;
+	bool isEmpty(const LibraryKey &s) ;
+	size_t StartKeySize(const LibraryKey &s) ;
+	void* StartKeyDataPtr(const LibraryKey &s) ; 
+	size_t EndKeySize(const LibraryKey &s) ;
+	void* EndKeyStr(const LibraryKey &s) ;
+	string StringOf(const LibraryKey &s) ;
 	string StringOfPtr(const void* start, const size_t sz) ;
-	int KeyLimiter(const TickerKey &s);
-	int KeySkipper(const TickerKey &s);
+	int KeyLimiter(const LibraryKey &s);
+	int KeySkipper(const LibraryKey &s);
 
-	struct TickerBase : DataFig
+	struct LibraryBase : DataFig
 	{
-		struct TickerBaseRec
+		struct LibraryBaseRec
 		{
 			char name[256];
 			char market[8];
@@ -92,13 +92,13 @@ namespace InfoBuilder
 	public:
 		std::string TableName() const { return "markets/stocks"; }
 
-		typedef TickerBaseRec		ValueType ;
-		typedef TickerKey 		KeyType ;
-		friend std::ostream& operator<<(std::ostream& o,const TickerBase::TickerBaseRec& m); 
+		typedef LibraryBaseRec		ValueType ;
+		typedef LibraryKey 		KeyType ;
+		friend std::ostream& operator<<(std::ostream& o,const LibraryBase::LibraryBaseRec& m); 
 	};
-	std::ostream& operator<<(std::ostream& o,const TickerBase::TickerBaseRec& m) ;
+	std::ostream& operator<<(std::ostream& o,const LibraryBase::LibraryBaseRec& m) ;
 
-	struct LibTimes : TickerBase
+	struct LibTimes : LibraryBase
 	{
 		LibTimes(){ reset(); }
 		void reset(){ memset( &record, 0, sizeof( record ) ); }
@@ -109,13 +109,13 @@ namespace InfoBuilder
 
 		static bool Integrity( const ValueType& a, const ValueType& b, ostream& ss );
 		void operator=( const stringvector& sv );
-		const KeyType& Key() const { return ticker; }
+		const KeyType& Key() const { return library; }
 		ValueType& Value() { return record; }
 	private:
-		friend std::ostream& operator<<( std::ostream& o, const LibTimes::TickerBase& ticker );
+		friend std::ostream& operator<<( std::ostream& o, const LibTimes::LibraryBase& library );
 	protected:
 		ValueType		record;
-		const KeyType ticker;
+		const KeyType library;
 		void SetName( const std::string value );
 		void SetMarket( const std::string value );
 		void SetLocale( const std::string value );

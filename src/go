@@ -17,16 +17,16 @@ fi
 
 if [ "${1}" == "-h" ]; then
 cat <<EOF
-. ./go "/ticker/details?AA"
-. ./go "/ticker/details?AA"
-. ./go "/ticker/details"
-. ./go "/ticker/details/list"
-. ./go "/tickers/list"
-. ./go "/tickers?[AAAU,AAP]"
-. ./go "/tickers?[AAAU,AAP,3]"
-. ./go "/tickers?[AA,-,10]"
-. ./go "/tickers?[A,-,10]"
-. ./go "/tickers?[A,-,10,9]"
+. ./go "/library/details?AA"
+. ./go "/library/details?AA"
+. ./go "/library/details"
+. ./go "/library/details/list"
+. ./go "/librarys/list"
+. ./go "/librarys?[AAAU,AAP]"
+. ./go "/librarys?[AAAU,AAP,3]"
+. ./go "/librarys?[AA,-,10]"
+. ./go "/librarys?[A,-,10]"
+. ./go "/librarys?[A,-,10,9]"
 echo "|Key|Description||"  | Scrub
 EOF
 fi
@@ -60,18 +60,18 @@ function Scrub
 
 function TestQueries
 {
-	q="/tickers?A" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
-	q="/ticker/details?A" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
-	q="/tickers/list" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
-	q="/ticker/details/list" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
-	q="/ticker/details" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
-	q="/tickers?[AAAU,AAP]" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
-	q="/tickers?[AAAU,-,3]" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/librarys?A" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/library/details?A" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/librarys/list" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/library/details/list" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/library/details" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/librarys?[AAAU,AAP]" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/librarys?[AAAU,-,3]" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
 }
 
 function VerbQueries
 {
-	TestScrubber "/ticker/details?AA"
+	TestScrubber "/library/details?AA"
 	TestScrubber "/yyz"
 }
 
@@ -96,7 +96,7 @@ if [ "${1}" == "-b" ]; then
 	Wip infodata
 	BuildAll
 	BuildResult=$?
-	Wip tickerkruncher
+	Wip librarykruncher
 	if [ "${BuildResult}" != "0" ]; then
 		echo -ne "\033[31mBuild failed\033[0m\n"
 	else

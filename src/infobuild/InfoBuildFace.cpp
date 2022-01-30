@@ -35,22 +35,22 @@ namespace InfoBuildFace
 	using namespace RestData;
 	using namespace DbRecords;
 	using namespace InfoBuilder;
-	void TickerMethods( Bindings& b, const InfoKruncher::SocketProcessOptions& options )  
+	void LibTimesMethods( Bindings& b, const InfoKruncher::SocketProcessOptions& options )  
 	{
-		typedef LibTimes ticker ;
-		b[ "POST|/tickers" ] = 			new Binding< RecordUpdateCreator< ticker > >	( options );
-		b[ "POST|/tickers/*" ] = 		new Binding< RecordUpdateCreator< ticker > >	( options );
-		b[ "POST|/tickers/integrity" ] = 	new Binding< RecordIntegrity< ticker > >	( options );
-		b[ "GET|/tickers/*/list" ] = 		new Binding< KeyLister< ticker > >		( options );
-		b[ "GET|/tickers/list" ] = 		new Binding< KeyLister< ticker > >		( options );
-		b[ "GET|/tickers" ] = 			new Binding< RecordPrinter< ticker > >		( options );
+		typedef LibTimes library ;
+		b[ "POST|/libs" ] = 			new Binding< RecordUpdateCreator< library > >	( options );
+		b[ "POST|/libs/*" ] = 			new Binding< RecordUpdateCreator< library > >	( options );
+		b[ "POST|/libs/integrity" ] = 		new Binding< RecordIntegrity< library > >	( options );
+		b[ "GET|/libs/*/list" ] = 		new Binding< KeyLister< library > >		( options );
+		b[ "GET|/libs/list" ] = 		new Binding< KeyLister< library > >		( options );
+		b[ "GET|/libs" ] = 			new Binding< RecordPrinter< library > >		( options );
 	}
 
 
 	bool ThreadLocal::operator()( const InfoKruncher::SocketProcessOptions& options ) 
 	{
 		//Log( VERB_ALWAYS, "TraderFace", "Loading" );
-		TickerMethods( binders, options );
+		LibTimesMethods( binders, options );
 		return true;
 	}
 

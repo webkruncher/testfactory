@@ -37,7 +37,7 @@ using namespace std;
 
 namespace InfoBuilder
 {
-	ostream& operator<<(ostream& o,const LibTimes::TickerBaseRec& m) 
+	ostream& operator<<(ostream& o,const LibTimes::LibraryBaseRec& m) 
 	{
 		if ( true )
 		{
@@ -185,10 +185,10 @@ namespace InfoBuilder
 
 		DbRecords::RecordSet<LibTimes>& LibTimes::Get( const string datapath )
 		{
-			DbRecords::RecordSet<LibTimes>* d( TickerData.get() );
+			DbRecords::RecordSet<LibTimes>* d( LibraryData.get() );
 			if ( d ) return *d;
-			TickerData.reset( new DbRecords::RecordSet<LibTimes>( datapath ) ); 
-			d=TickerData.get();
+			LibraryData.reset( new DbRecords::RecordSet<LibTimes>( datapath ) ); 
+			d=LibraryData.get();
 			if ( ! d ) throw string( datapath );
 			d->OpenThang();
 			return *d;
@@ -196,12 +196,12 @@ namespace InfoBuilder
 
 		void LibTimes::Release()
 		{
-			TickerData.reset( nullptr );
+			LibraryData.reset( nullptr );
 		}
 
 		DbRecords::DbThang< LibTimes >& LibTimes::Thang() 
 		{ 
-			DbRecords::RecordSet<LibTimes>* d( TickerData.get() );
+			DbRecords::RecordSet<LibTimes>* d( LibraryData.get() );
 			if ( ! d ) throw string( "Thang is not allocated" );
 			return *d;
 		}
@@ -247,35 +247,35 @@ namespace InfoBuilder
 			SetLastUpdatedUTC( sv[ J++ ] );
 		}
 
-	bool isEmpty(const TickerKey &s) 
+	bool isEmpty(const LibraryKey &s) 
 	{
 		return s.empty(); 
 	}
 
-	string StartKeyOf(const TickerKey &s) { return s; }
-	string EndKeyOf(const TickerKey &s) { return s.EndKey; }
-	size_t StartKeySize(const TickerKey &s) 
+	string StartKeyOf(const LibraryKey &s) { return s; }
+	string EndKeyOf(const LibraryKey &s) { return s.EndKey; }
+	size_t StartKeySize(const LibraryKey &s) 
 	{ 
 		return s.size(); 
 	}
 
-	void* StartKeyDataPtr(const TickerKey &s) 
+	void* StartKeyDataPtr(const LibraryKey &s) 
 	{ 
 		return (void*) s.c_str(); 
 	}
 
 
-	size_t EndKeySize(const TickerKey &s) 
+	size_t EndKeySize(const LibraryKey &s) 
 	{ 
 		return s.EndKey.size();
 	} 
 
-	void* EndKeyStr(const TickerKey &s) 
+	void* EndKeyStr(const LibraryKey &s) 
 	{
 		return (void*) s.EndKey.c_str(); 
 	}
 
-	string StringOf(const TickerKey &s)
+	string StringOf(const LibraryKey &s)
 	{
 		return s;
 	}
@@ -287,9 +287,9 @@ namespace InfoBuilder
 		return ret;
 	}
 
-	int KeyLimiter(const TickerKey &s) { return s.Limitter; }
+	int KeyLimiter(const LibraryKey &s) { return s.Limitter; }
 
-	int KeySkipper(const TickerKey &s) { return s.Skip; }
+	int KeySkipper(const LibraryKey &s) { return s.Skip; }
 
 
 	const char opposite( const char what )
@@ -304,14 +304,14 @@ namespace InfoBuilder
 	}
 
 
-	TickerKey::TickerKey() : Limitter( 0 ), Skip( 0 ) {}
-	TickerKey::TickerKey( const string& that ) : std::string( that ) ,
+	LibraryKey::LibraryKey() : Limitter( 0 ), Skip( 0 ) {}
+	LibraryKey::LibraryKey( const string& that ) : std::string( that ) ,
 		Limitter( 0 ), Skip( 0 )
 	{
 		assgn( that );
 	}
 
-	void TickerKey::assgn( const string& a, const string b ) 
+	void LibraryKey::assgn( const string& a, const string b ) 
 	{
 		assign( a );
 		if ( ! b.empty() ) { EndKey.assign( b ); return; }
@@ -345,28 +345,28 @@ namespace InfoBuilder
 		}
 	}
 
-	TickerKey::TickerKey( const char* that) : std::string( that ) ,
+	LibraryKey::LibraryKey( const char* that) : std::string( that ) ,
 		Limitter( 0 ), Skip( 0 )
 	{
 	}
 
-	TickerKey::TickerKey( const char* thatptr, size_t thatsz) : std::string( thatptr, thatsz ),
+	LibraryKey::LibraryKey( const char* thatptr, size_t thatsz) : std::string( thatptr, thatsz ),
 		Limitter( 0 ), Skip( 0 )
  
 	{
 	}
 
-	TickerKey::TickerKey( const TickerKey& that ) : 
+	LibraryKey::LibraryKey( const LibraryKey& that ) : 
 		std::string( that ), EndKey( that.EndKey ), Limitter( that.Limitter ) , Skip( that.Skip )
 	{
 	}
 
-	TickerKey::operator const char* () 
+	LibraryKey::operator const char* () 
 	{
 		return c_str(); 
 	}
 
-	TickerKey& TickerKey::operator=( const TickerKey& that ) 
+	LibraryKey& LibraryKey::operator=( const LibraryKey& that ) 
 	{
 		EndKey=that.EndKey;
 		Limitter=that.Limitter;
@@ -375,7 +375,7 @@ namespace InfoBuilder
 	}
 
 
-	TickerKey& TickerKey::operator=( const string& that ) 
+	LibraryKey& LibraryKey::operator=( const string& that ) 
 	{
 		assgn( that, EndKey );
 		return *this; 
