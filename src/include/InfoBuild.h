@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//#include <db_cxx.h>
-//#include <kruncherbdb.h>
+
+
 #include <iomanip>
 #include <infotools.h>
 
@@ -76,21 +76,11 @@ namespace InfoBuilder
 	{
 		struct LibraryBaseRec
 		{
-			char name[256];
-			char market[8];
-			char locale[8];
-			char primary_exchange[8];	
-			char type[16];
-			bool active; 
-			char currency_name[48];
-			unsigned long cik;
-			char composite_figi[16];
-			char share_class_figi[16];
+			char name[64];
 			time_t last_updated;
-			time_t locally_updated;
 		};
 	public:
-		std::string TableName() const { return "markets/stocks"; }
+		std::string TableName() const { return "builder/libtimes"; }
 
 		typedef LibraryBaseRec		ValueType ;
 		typedef LibraryKey 		KeyType ;

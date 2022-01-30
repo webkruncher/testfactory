@@ -43,34 +43,14 @@ namespace InfoBuilder
 		{
 			o << 
 				fence << m.name << 
-				fence << m.market <<  
-				fence << m.locale <<
-				fence << m.primary_exchange <<  
-				fence << m.type <<  
-				fence << boolalpha << m.active <<  
-				fence << m.currency_name <<  
-				fence << m.cik <<  
-				fence << m.composite_figi <<  
-				fence << m.share_class_figi <<  
-				fence << KruncherTools::TimeFormat(localtime( &m.last_updated)) <<
-				fence << KruncherTools::TimeFormat(localtime( &m.locally_updated));
+				fence << KruncherTools::TimeFormat(localtime( &m.last_updated)) 
 			;
 			return o;
 		}
 
 		o << 
 			fence << "name:" <<  m.name << 
-			fence << "market:" << m.market <<  
-			fence << "locale:" << m.locale <<
-			fence << "primary_exchange:" << m.primary_exchange <<  
-			fence << "type:" << m.type <<  
-			fence << "active:" << boolalpha << m.active <<  
-			fence << "currency_name:" << m.currency_name <<  
-			fence << "cik:" << m.cik <<  
-			fence << "composite_figi:" << m.composite_figi <<  
-			fence << "share_class_figi:" << m.share_class_figi <<  
-			fence << "last_updated:" << KruncherTools::TimeFormat(localtime( &m.last_updated)) <<
-			fence << "locally_updated:"<< KruncherTools::TimeFormat(localtime( &m.locally_updated));
+			fence << "last_updated:" << KruncherTools::TimeFormat(localtime( &m.last_updated)) ;
 		;
 		return o;
 	}
@@ -88,85 +68,6 @@ namespace InfoBuilder
 			#undef target
 		}
 
-		void LibTimes::SetMarket( const std::string value )
-		{
-			#define target record.market
-			const size_t valuesize( value.size()+1 );
-			if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Market too long, truncating", value ); }
-			const size_t len( min( sizeof( target ), valuesize ) );
-			snprintf( target, len, "%s", value.c_str() );
-			#undef target
-		}
-
-		void LibTimes::SetLocale( const std::string value )
-		{
-			#define target record.locale
-			const size_t valuesize( value.size()+1 );
-			if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Locale too long, truncating", value ); }
-			const size_t len( min( sizeof( target ), valuesize ) );
-			snprintf( target, len, "%s", value.c_str() );
-			#undef target
-		}
-
-		void LibTimes::SetPrimaryExchange( const std::string value )
-		{
-			#define target record.primary_exchange
-			const size_t valuesize( value.size()+1 );
-			if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Primary Exchange too long, truncating", value ); }
-			const size_t len( min( sizeof( target ), valuesize ) );
-			snprintf( target, len, "%s", value.c_str() );
-			#undef target
-		}
-
-		void LibTimes::SetType( const std::string value )
-		{
-			#define target record.type
-			const size_t valuesize( value.size()+1 );
-			if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Type too long, truncating", value ); }
-			const size_t len( min( sizeof( target ), valuesize ) );
-			snprintf( target, len, "%s", value.c_str() );
-			#undef target
-		}
-
-		void LibTimes::SetActive( const std::string value )
-		{
-			record.active=( value == "true" ); 
-		}
-
-		void LibTimes::SetCurrencyName( const std::string value )
-		{
-			#define target record.currency_name
-			const size_t valuesize( value.size()+1 );
-			if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Currency Name too long, truncating", value ); }
-			const size_t len( min( sizeof( target ), valuesize ) );
-			snprintf( target, len, "%s", value.c_str() );
-			#undef target
-		}
-
-		void LibTimes::SetPrimaryCIK( const std::string value )
-		{
-			record.cik=atol( value.c_str() );
-		}
-
-		void LibTimes::SetCompositeFigi( const std::string value )
-		{
-			#define target record.composite_figi
-			const size_t valuesize( value.size()+1 );
-			if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Composite Figi too long, truncating", value );  }
-			const size_t len( min( sizeof( target ), valuesize ) );
-			snprintf( target, len, "%s", value.c_str() );
-			#undef target
-		}
-
-		void LibTimes::SetShareClassFigi( const std::string value )
-		{
-			#define target record.share_class_figi
-			const size_t valuesize( value.size()+1 );
-			if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Share Class Figi too long, truncating", value ); }
-			const size_t len( min( sizeof( target ), valuesize ) );
-			snprintf( target, len, "%s", value.c_str() );
-			#undef target
-		}
 
 		void LibTimes::SetLastUpdatedUTC( const std::string value )
 		{
@@ -174,12 +75,11 @@ namespace InfoBuilder
 			if (strptime(value.c_str(), "%Y-%m-%dT%H:%M:%S%z", &tm) == NULL)
 				{ Log(VERB_ALWAYS, "Cannot convert time", value ); return; }
 			record.last_updated=mktime(&tm);
-			record.locally_updated=time( 0 );
 		}
 
 		void LibTimes::SetLastUpdatedUTC( const time_t when )
 		{
-			record.locally_updated=when;
+			record.last_updated=when;
 		}
 
 
@@ -221,13 +121,6 @@ namespace InfoBuilder
 			};
 
 			Test( ok, "name", o, a.name, b.name );
-			Test( ok, "market", o, a.market, b.market );
-			Test( ok, "locale", o, a.locale, b.locale );
-			Test( ok, "primary_exchange", o, a.primary_exchange, b.primary_exchange );
-			Test( ok, "type", o, a.type, b.type );
-			Test( ok, "currency_name", o, a.currency_name, b.currency_name );
-			Test( ok, "composite_figi", o, a.composite_figi, b.composite_figi );
-			Test( ok, "share_class_figi", o, a.share_class_figi, b.share_class_figi );
 			return ok;
 		}
 		void LibTimes::operator=( const stringvector& sv )
@@ -235,15 +128,6 @@ namespace InfoBuilder
 			reset();
 			int J( 2 );
 			SetName( sv[ J++ ] );
-			SetMarket( sv[ J++ ] );
-			SetLocale( sv[ J++ ] );
-			SetPrimaryExchange( sv[ J++ ] );
-			SetType( sv[ J++ ] );
-			SetActive( sv[ J++ ] );
-			SetCurrencyName( sv[ J++ ] );
-			SetPrimaryCIK( sv[ J++ ] );
-			SetCompositeFigi( sv[ J++ ] );
-			SetShareClassFigi( sv[ J++ ] );
 			SetLastUpdatedUTC( sv[ J++ ] );
 		}
 

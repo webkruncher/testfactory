@@ -15,8 +15,11 @@ function InfoKruncherInterfaceTable
 {
 cat <<EOF
 |traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace||
-|testdata|testfactory|testfactory::infobuild|libinfo|<RestInterface.h>|InfoBuildFace|development|
-|librarydata|tradekruncher/db;librarykruncher|tradekruncher/db::markets;librarykruncher::library|markets;librarys|<algos/RestInterface.h>|TickerFace|development|
+|tickerkruncher|tradekruncher/db;tickerkruncher|tradekruncher/db::markets;tickerkruncher::ticker|markets;tickers|<algos/RestInterface.h>|TickerFace|development|
+#|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|development|
+
+
+|infobuild|testfactory|testfactory::infobuild|libinfo|<RestInterface.h>|InfoBuildFace|development|
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|development|
 EOF
 }

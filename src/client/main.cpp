@@ -83,6 +83,43 @@ namespace InfoKruncher
 } // InfoKruncher
 
 
+#if 0
+#include <unistd.h>
+#include <sys/wait.h>
+#include <iostream>
+#include <sys/types.h>
+using namespace std;
+int forkmain(){
+ char str[1024], *cp;
+ int pipefd[2];
+ pid_t pid;
+ int status, died;
+
+  pipe (pipefd);
+  switch(pid=fork()){
+   case -1: cout << "can't fork\n";
+            exit(-1);
+   
+   case 0 : // this is the code the child runs 
+            close(1);      // close stdout
+            dup (pipefd[1]); // points pipefd at file descriptor
+            close (pipefd[0]);
+   default: // this is the code the parent runs 
+
+            close(0); // close stdin
+            // Set file descriptor 0 (stdin) to read from the pipe
+            dup (pipefd[0]);
+            // the parent isn't going to write to the pipe
+            close (pipefd[1]);
+            // Now read from the pipe
+            cin.getline(str, 1023);
+            cout << "The date is " << str << endl;
+            died= wait(&status);
+   }
+}
+
+#endif
+
 int main( int argc, char** argv )
 {
 	stringstream ssexcept;
