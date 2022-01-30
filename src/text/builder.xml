@@ -1,0 +1,22 @@
+
+<root>
+	<domain 
+		name="jackmthompson.ninja"
+		host="localhost"
+		forks="1"
+		threads="1"
+	>
+		<filter
+			hostname="jackmthompson.ninja"
+		>
+			<site
+				path="/home/jmt/Info/tradekruncher/src/text/"
+				scheme="https"
+				port="443"
+			>
+			</site>
+		</filter>
+
+	</domain>
+</root>
+

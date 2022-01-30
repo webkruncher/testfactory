@@ -1,91 +1,119 @@
 
+. ../../testfactory/utilities/BuildTools.ksh
+. ../../krunchercore/Builder.ksh
 
-. ../../../krunchercore/Builder.ksh
-OStag=`uname -a | cut -d ' ' -f1`
-[ ${OStag} == "Linux" ] && export OS=LINUX
-[ ${OStag} == "OpenBSD" ] && export OS=UNIX
+fig="/home/jmt/Info/testfactory/src/text"
+xml="${fig}/builder.xml"
 
+#Verbose="-v REST1|DBCURSOR1"
+Verbose="-v SERVICE"
 
-if [ "${1}" == "-clean" ]; then
+if [ "${1}" == "-v" ]; then
 	shift
-	sudo rm -rf ../src.build
+	Verbose=" -v ${1} "
+	shift
 fi
 
-if [ "${1}" == "-rebuild" ]; then
-	shift
-	sudo rm -rf ../src.build
-	pushd ~/Info/informationkruncher/src
-	if [ "${1}" == "-clean" ]; then
+
+if [ "${1}" == "-h" ]; then
+cat <<EOF
+. ./go "/ticker/details?AA"
+. ./go "/ticker/details?AA"
+. ./go "/ticker/details"
+. ./go "/ticker/details/list"
+. ./go "/tickers/list"
+. ./go "/tickers?[AAAU,AAP]"
+. ./go "/tickers?[AAAU,AAP,3]"
+. ./go "/tickers?[AA,-,10]"
+. ./go "/tickers?[A,-,10]"
+. ./go "/tickers?[A,-,10,9]"
+echo "|Key|Description||"  | Scrub
+EOF
+fi
+
+
+function TestScrubber
+{
+	PORT=" -P 83 "
+	if [ "${1}" == "-P" ]; then
 		shift
-		sudo rm -rf ../src.build
+		PORT=" -P ${1} "
+		shift
 	fi
-	#sudo rm -rf ../src.build
-	./go -install
-	popd
-fi
+	Query="${1}"
+	krestclient ${Verbose} ${PORT} -o inform --xml ${xml} -q ${Query} $@ 
+}
 
-if [ "${1}" == "-testrun" ]; then
+
+function ScrubPortTest
+{
+	echo "|KeyOne2|Even More|Nothing|" | krestclient  -o inform --xml ${xml} -q ${q} -m POST -P 83
+}
+
+
+function Scrub
+{
+	q="/Scrub" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" 
+	#echo "|Jmt|Ninja|WebKruncher|Wip|  | krestclient -o inform --xml ${xml} -q ${q} -m POST $@"
+	cat  | krestclient  -o inform --xml ${xml} -q ${q} -m POST $@ 
+}
+
+function TestQueries
+{
+	q="/tickers?A" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/ticker/details?A" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/tickers/list" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/ticker/details/list" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/ticker/details" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/tickers?[AAAU,AAP]" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+	q="/tickers?[AAAU,-,3]" && echo -ne "\033[35m${q}\033[0m\n" && logger "Testing ${q}" && TestScrubber "${q}" && echo && logger ""
+}
+
+function VerbQueries
+{
+	TestScrubber "/ticker/details?AA"
+	TestScrubber "/yyz"
+}
+
+function VerbTester
+{
+	echo -ne "\033[37m\033[35mVerb Tester Start\033[0m\n"
+	logger "Verb Tester Start"
+	l="REST3" && kruncher -v "${l}" && sleep 1 && logger "${l}" && VerbQueries
+	l="REST2" && kruncher -v "${l}" && sleep 1 && logger "${l}" && VerbQueries
+	l="REST1" && kruncher -v "${l}" && sleep 1 && logger "${l}" && VerbQueries
+	l="DBCURSOR1" && kruncher -v "${l}" && sleep 1 && logger "${l}" && VerbQueries
+	l="REST1|DBCURSOR3" && kruncher -v "${l}" && sleep 1 && logger "${l}" && VerbQueries
+	echo -ne "\033[37m\033[35mVerb Tester Finish\033[0m\n"
+	logger "Verb Tester Finish"
+}
+
+
+if [ "${1}" == "-b" ]; then
 	shift
-	cd $1
-	shift
-	#export INFO_TEST_IP=73.201.184.88 
-	echo "../src.build/client/restful -d --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter jackmthompson.ninja"
-	../src.build/client/restful -d --xml /home/jmt/websites/sites/webkruncher.st.xml  --node site --filter jackmthompson.ninja
-	exit
-fi
+	( kruncher -stop 2>&1 >> /dev/null ) 2>&1 >> /dev/null
 
-if [ "${1}" == "-gdb" ]; then
-	shift
-	sudo pkill restful
-	sleep 2
-	sudo ./go -testrun `pwd` $@ &
-	sudo ps aux | grep  restful
-
-	sleep 2
-	sudo ps xo stat,pid,comm | grep restful | tr -s ' ' 
-	child=`sudo ps xo stat,pid,comm | grep restful | tr -s ' ' | cut -d ' ' -f2`
-	echo "child:${child}"
-	echo "press enter to dbg"
-	read ok
-echo "InfoKruncher::ServiceBase::ServeHttps"
-echo "PlainInformation::Socket::getline"
-	sudo gdb ../src.build/client/restful ${child}
-	
-	
-	exit
+	Wip infodata
+	BuildAll
+	BuildResult=$?
+	Wip tickerkruncher
+	if [ "${BuildResult}" != "0" ]; then
+		echo -ne "\033[31mBuild failed\033[0m\n"
+	else
+		echo -ne "\033[36mkruncher ${Verbose}\033[0m\n"
+		kruncher "${Verbose}"
+		sleep 1
+		TestScrubber $@
+	fi
+else
+	if [ "${1}" == "-r" ]; then
+		kruncher "${Verbose}"
+	fi
 fi
 
 
-echo -ne "\033[32mBuilding Restful for ${OS}\033[0m\n"
-if [ ! -d ../src.build ]; then
-	mkdir -p ../src.build
-	cmake  -S . -B ../src.build/  
-	[ $? != 0 ] && ShowBuild && exit -1
+if [ ! -z ${1} ]; then
+	TestScrubber $@
 fi
-cmake  --build ../src.build/ 
-[ $? != 0 ] && ShowBuild && exit -1
-
-if [ "${1}" == "-test" ]; then
-	shift
-	../src.build/client/restful -d --node site --xml /home/jmt/websites/sites/webkruncher.xml --check-config --filter jackmthompson.ninja
-	#../src.build/client/restful -d --node site --xml /home/jmt/websites/sites/webkruncher.xml --check-config --filter "webkruncher.com"
-	#../src.build/client/restful -d --node site --xml /home/jmt/websites/sites/webkruncher.xml --check-config --filter noname
-fi
-
-if [ "${1}" == "-run" ]; then
-	shift
-	sudo pkill restful
-	sleep 2
-	../src.build/client/restful ${1} --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter jackmthompson.ninja
-	#sudo ../src.build/client/restful ${1} --http --https
-fi
-
-if [ "${1}" == "-install" ]; then 
-	shift
-	sudo pkill restful
-	sleep 1
-	sudo cmake --install ../src.build
-fi
-
 
 
