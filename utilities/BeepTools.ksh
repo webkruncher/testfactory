@@ -17,9 +17,6 @@ function Pause
 
 function Beep
 {
-	#for (( ii=1; ii<=10; ii++ )); do
-	#	Pause 10 
-	#done
 	logger "buildbeeper  $(( ( RANDOM % 10000 ) + 1 )) $@"  
 
 }
@@ -31,15 +28,27 @@ function BeepTailer
 }
 
 
+
 if [ "${1}" == "-beep" ]; then
+	startedbeeper=`date +%s`
+	(( startedbeeper++ ))
+	(( startedbeeper++ ))
+OFS=$IFS
+IFS=$'\r'
 	shift
         while read beeper; do
 		much=`echo "${beeper}" | cut -d ' ' -f4`
 		what=`echo "${beeper}" | cut -d ' ' -f5-`
-                echo -ne "Beeped \033[7m${much} - \033[0m\033[35m${what}\033[0m\r\n"
-                echo "Beeped ${much} ${what}" | wall
-		echo -ne "\007"
+		nowbeep=`date +%s`
+		if [ ${nowbeep} -gt ${startedbeeper} ]; then
+			echo "${what}" | /usr/bin/wall
+			for (( ii=1; ii<=${much}; ii++ )); do
+				Pause 1 
+				echo -ne "\007"
+			done
+		fi
         done
+IFS=$OFS
 fi
 
 
