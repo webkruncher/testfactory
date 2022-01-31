@@ -53,9 +53,14 @@ fi
 
 
 if [ "${1}" == "-homebeeper" ]; then
+	echo "HomeBeeper" | wall
 OFS=$IFS
 IFS=$'\n'
-	ssh tk -t ". /home/jmt/.bashrc && BeepTailer "  | /home/jmt/Info/testfactory/utilities/BeepTools.ksh -beep
+	while [ 1 ]; do
+		echo "at `date`, HomeBeeper, as `id` " >> /home/jmt/log.txt
+		ssh -t tk  ". /home/jmt/.bashrc && BeepTailer "  | /home/jmt/Info/testfactory/utilities/BeepTools.ksh -beep
+		sleep 1
+	done;
 IFS=$OFS
 fi
 
