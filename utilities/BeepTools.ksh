@@ -33,8 +33,6 @@ function BeepTailer
 
 if [ "${1}" == "-beep" ]; then
 	shift
-OFS=$IFS
-IFS=$'\n'
         while read beeper; do
 		much=`echo "${beeper}" | cut -d ' ' -f4`
 		what=`echo "${beeper}" | cut -d ' ' -f5-`
@@ -42,12 +40,14 @@ IFS=$'\n'
                 echo "Beeped ${much} ${what}" | wall
 		echo -ne "\007"
         done
-IFS=$OFS
 fi
 
 
 if [ "${1}" == "-homebeeper" ]; then
+OFS=$IFS
+IFS=$'\n'
 	ssh tk -t ". /home/jmt/.bashrc && BeepTailer "  | /home/jmt/Info/testfactory/utilities/BeepTools.ksh -beep
+IFS=$OFS
 fi
 
 
