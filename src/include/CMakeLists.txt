@@ -1,6 +1,6 @@
 
 
-add_subdirectory( client )
+
 Banner()
 
 
