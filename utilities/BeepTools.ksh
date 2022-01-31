@@ -36,7 +36,7 @@ if [ "${1}" == "-beep" ]; then
 		much=`echo "${beeper}" | cut -d ' ' -f4`
 		what=`echo "${beeper}" | cut -d ' ' -f5-`
                 echo -ne "Beeped \033[7m${much} - \033[0m\033[35m${what}\033[0m\r\n"
-                wall "Beeped ${much} ${what}"
+                echo "Beeped ${much} ${what}" | /usr/bin/wall
 		echo -ne "\007"
 		#for (( ii=1; ii<=10; ii++ )); do
 		#	Pause 10 
@@ -57,7 +57,7 @@ cat <<EOF
 # ssh localhost -t ". ~/.bashrc && BeepTailer "  | ~/Info/testfactory/utilities/BeepTools.ksh -beep
 # while [ 1 ]; do ssh tk -t ". ~/.bashrc && BeepTailer " | ./BeepTools.ksh -beep; done;
 
-su -m jmt -c "ksh /home/jmt/Info/testfactory/utilties/BeepTools.ksh -homebeeper"
+# sudo -u jmt /home/jmt/Info/testfactory/utilities/BeepTools.ksh -homebeeper
 
 #ssh tk -t ". ~/.bashrc && BeepTailer "  | ./BeepTools.ksh -beep
 
