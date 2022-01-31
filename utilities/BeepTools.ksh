@@ -1,3 +1,4 @@
+#!/usr/local/bin/bash
 
 function usleep
 {
@@ -36,7 +37,7 @@ if [ "${1}" == "-beep" ]; then
 		much=`echo "${beeper}" | cut -d ' ' -f4`
 		what=`echo "${beeper}" | cut -d ' ' -f5-`
                 echo -ne "Beeped \033[7m${much} - \033[0m\033[35m${what}\033[0m\r\n"
-                echo "Beeped ${much} ${what}" | /usr/bin/wall
+                echo "Beeped ${much} ${what}" | wall
 		echo -ne "\007"
 		#for (( ii=1; ii<=10; ii++ )); do
 		#	Pause 10 
@@ -47,7 +48,7 @@ fi
 
 
 if [ "${1}" == "-homebeeper" ]; then
-	ssh tk -t ". ~/.bashrc && BeepTailer "  | /home/jmt/Info/testfactory/utilties/BeepTools.ksh -beep
+	ssh tk -t ". /home/jmt/.bashrc && BeepTailer "  | /home/jmt/Info/testfactory/utilities/BeepTools.ksh -beep
 fi
 
 
@@ -57,7 +58,7 @@ cat <<EOF
 # ssh localhost -t ". ~/.bashrc && BeepTailer "  | ~/Info/testfactory/utilities/BeepTools.ksh -beep
 # while [ 1 ]; do ssh tk -t ". ~/.bashrc && BeepTailer " | ./BeepTools.ksh -beep; done;
 
-# sudo -u jmt /home/jmt/Info/testfactory/utilities/BeepTools.ksh -homebeeper
+su -m jmt -c "ksh /home/jmt/Info/testfactory/utilties/BeepTools.ksh -homebeeper"
 
 #ssh tk -t ". ~/.bashrc && BeepTailer "  | ./BeepTools.ksh -beep
 
@@ -69,6 +70,7 @@ cat <<EOF
 #        done
 EOF
 }
+
 
 
 
