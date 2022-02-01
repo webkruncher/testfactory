@@ -10,7 +10,7 @@ install(
     FILES
             ${includes}    
                     OPTIONAL
-                    DESTINATION include/infokruncher/testfactory/infobuild
+                    DESTINATION include/infokruncher/testfactory/
 )
 
 add_library(
