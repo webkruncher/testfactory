@@ -44,7 +44,7 @@ namespace InfoBuilder
 			o << 
 				fence << m.name << 
 				fence << KruncherTools::TimeFormat(localtime( &m.last_updated)) 
-			;
+				;
 			return o;
 		}
 
@@ -58,78 +58,78 @@ namespace InfoBuilder
 
 
 
-		void LibTimes::SetName( const std::string value )
+	void LibTimes::SetName( const std::string value )
+	{
+		#define target record.name
+		const size_t valuesize( value.size()+1 );
+		if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Name too long, truncating", value ); }
+		const size_t len( min( sizeof( target ), valuesize ) );
+		snprintf( target, len, "%s", value.c_str() );
+		#undef target
+	}
+
+
+	void LibTimes::SetLastUpdatedUTC( const std::string value )
+	{
+		struct tm tm;
+		if (strptime(value.c_str(), "%Y-%m-%dT%H:%M:%S%z", &tm) == NULL)
+		{ Log(VERB_ALWAYS, "Cannot convert time", value ); return; }
+		record.last_updated=mktime(&tm);
+	}
+
+	void LibTimes::SetLastUpdatedUTC( const time_t when )
+	{
+		record.last_updated=when;
+	}
+
+
+	DbRecords::RecordSet<LibTimes>& LibTimes::Get( const string datapath )
+	{
+		DbRecords::RecordSet<LibTimes>* d( LibraryData.get() );
+		if ( d ) return *d;
+		LibraryData.reset( new DbRecords::RecordSet<LibTimes>( datapath ) ); 
+		d=LibraryData.get();
+		if ( ! d ) throw string( datapath );
+		d->OpenThang();
+		return *d;
+	}
+
+	void LibTimes::Release()
+	{
+		LibraryData.reset( nullptr );
+	}
+
+	DbRecords::DbThang< LibTimes >& LibTimes::Thang() 
+	{ 
+		DbRecords::RecordSet<LibTimes>* d( LibraryData.get() );
+		if ( ! d ) throw string( "Thang is not allocated" );
+		return *d;
+	}
+
+	bool LibTimes::Integrity( const ValueType& a, const ValueType& b, ostream& o )
+	{
+		bool ok( true );
+
+		auto Test = []( bool& ok, const string& name, ostream& o, const char* a, const char* b )
 		{
-			#define target record.name
-			const size_t valuesize( value.size()+1 );
-			if ( valuesize >= sizeof( target ) ) { Log(VERB_ALWAYS, "Name too long, truncating", value ); }
-			const size_t len( min( sizeof( target ), valuesize ) );
-			snprintf( target, len, "%s", value.c_str() );
-			#undef target
-		}
-
-
-		void LibTimes::SetLastUpdatedUTC( const std::string value )
-		{
-			struct tm tm;
-			if (strptime(value.c_str(), "%Y-%m-%dT%H:%M:%S%z", &tm) == NULL)
-				{ Log(VERB_ALWAYS, "Cannot convert time", value ); return; }
-			record.last_updated=mktime(&tm);
-		}
-
-		void LibTimes::SetLastUpdatedUTC( const time_t when )
-		{
-			record.last_updated=when;
-		}
-
-
-		DbRecords::RecordSet<LibTimes>& LibTimes::Get( const string datapath )
-		{
-			DbRecords::RecordSet<LibTimes>* d( LibraryData.get() );
-			if ( d ) return *d;
-			LibraryData.reset( new DbRecords::RecordSet<LibTimes>( datapath ) ); 
-			d=LibraryData.get();
-			if ( ! d ) throw string( datapath );
-			d->OpenThang();
-			return *d;
-		}
-
-		void LibTimes::Release()
-		{
-			LibraryData.reset( nullptr );
-		}
-
-		DbRecords::DbThang< LibTimes >& LibTimes::Thang() 
-		{ 
-			DbRecords::RecordSet<LibTimes>* d( LibraryData.get() );
-			if ( ! d ) throw string( "Thang is not allocated" );
-			return *d;
-		}
-
-		bool LibTimes::Integrity( const ValueType& a, const ValueType& b, ostream& o )
-		{
-			bool ok( true );
-
-			auto Test = []( bool& ok, const string& name, ostream& o, const char* a, const char* b )
+			if ( strcmp( a, b ) )
 			{
-				if ( strcmp( a, b ) )
-				{
-					ok=false;
-					o << name << fence;
-				}
-				return ok;
-			};
-
-			Test( ok, "name", o, a.name, b.name );
+				ok=false;
+				o << name << fence;
+			}
 			return ok;
-		}
-		void LibTimes::operator=( const stringvector& sv )
-		{
-			reset();
-			int J( 2 );
-			SetName( sv[ J++ ] );
-			SetLastUpdatedUTC( sv[ J++ ] );
-		}
+		};
+
+		Test( ok, "name", o, a.name, b.name );
+		return ok;
+	}
+	void LibTimes::operator=( const stringvector& sv )
+	{
+		reset();
+		int J( 2 );
+		SetName( sv[ J++ ] );
+		SetLastUpdatedUTC( sv[ J++ ] );
+	}
 
 	bool isEmpty(const LibraryKey &s) 
 	{
@@ -190,7 +190,7 @@ namespace InfoBuilder
 
 	LibraryKey::LibraryKey() : Limitter( 0 ), Skip( 0 ) {}
 	LibraryKey::LibraryKey( const string& that ) : std::string( that ) ,
-		Limitter( 0 ), Skip( 0 )
+	Limitter( 0 ), Skip( 0 )
 	{
 		assgn( that );
 	}
@@ -230,13 +230,13 @@ namespace InfoBuilder
 	}
 
 	LibraryKey::LibraryKey( const char* that) : std::string( that ) ,
-		Limitter( 0 ), Skip( 0 )
+	Limitter( 0 ), Skip( 0 )
 	{
 	}
 
 	LibraryKey::LibraryKey( const char* thatptr, size_t thatsz) : std::string( thatptr, thatsz ),
-		Limitter( 0 ), Skip( 0 )
- 
+	Limitter( 0 ), Skip( 0 )
+
 	{
 	}
 
