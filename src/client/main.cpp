@@ -92,9 +92,29 @@ namespace InfoKruncher
 
 
 
-
 int main( int argc, char** argv )
 {
+	#if 0
+
+		{
+
+			KruncherTools::CharVector parameters{ (char*) "find", (char*) "..", nullptr };
+			KruncherTools::forkpipe( "/usr/bin/find", parameters, "", cout );
+		}
+
+
+
+		{
+
+			KruncherTools::CharVector parameters{ (char*) "tr", (char*) "C", (char*) "X", nullptr };
+			KruncherTools::forkpipe( "/usr/bin/tr", parameters, "ABCD", cout );
+		}
+
+
+		return 0;
+	#endif
+
+
 	stringstream ssexcept;
 	try
 	{

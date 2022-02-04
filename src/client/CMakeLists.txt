@@ -34,20 +34,20 @@ Libraries(
 
 
 add_executable(
-	krunchbuild
+	krbuild
 		main.cpp
 )
 
 
 
 target_link_directories(
-	krunchbuild
+	krbuild
 		PUBLIC
 			${LIBRARY_PATHS}
 )
 
 target_include_directories(
-    krunchbuild
+    krbuild
 	    PRIVATE
 		../include/
 		/home/jmt/libdb/build_unix/
@@ -57,7 +57,7 @@ target_include_directories(
 )
 
 target_link_libraries(
-    krunchbuild
+    krbuild
 	    PUBLIC
 		${LIBRARIES}
 		ssl
@@ -67,7 +67,7 @@ target_link_libraries(
 
 install(
     TARGETS
-	    krunchbuild
+	    krbuild
 		    EXPORT exports
 		    RUNTIME DESTINATION bin
 ) 
