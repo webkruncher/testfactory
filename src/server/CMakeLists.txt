@@ -25,6 +25,7 @@ LibraryPaths(
 	infodata::db/auth/
 	infodata::db/site/
 	datakruncher::data/
+	kruncher::krbuilder/
 )
 
 
@@ -35,6 +36,7 @@ Libraries(
 	informationkruncher
 	auth
 	site
+	krbuilder
 )
 
 

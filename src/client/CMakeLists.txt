@@ -9,6 +9,7 @@ Headers(
 	datakruncher
 	informationkruncher
 	informationkruncher::client
+	kruncher::krbuilder/
 )
 
 
@@ -20,6 +21,7 @@ LibraryPaths(
 	datakruncher::data/
 	informationkruncher::socks/
 	informationkruncher::client/
+	kruncher::krbuilder/
 )
 
 
@@ -29,6 +31,7 @@ Libraries(
 	datafactory
 	informationkruncher
 	infoclient
+	krbuilder
 )
 
 

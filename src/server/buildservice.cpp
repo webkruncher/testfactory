@@ -34,6 +34,7 @@
 #include <exexml.h>
 #include <db/site/PostProcessor.h>
 #include <infofigur.h>
+#include <krbuilder.h>
 
 namespace WebKruncherService
 {
@@ -50,6 +51,18 @@ namespace WebKruncherService
 		DbRecords::RecordSet<InfoDataService::Visitor> records( r.options.datapath );
 		//records+=r;
 
+		if ( ipaddr != "127.0.0.1" )
+		{
+			//cerr << red << r.ipaddr << fence << r.method << fence << r.resource << normal << endl;
+			const string uauth( "UnAuthorized" );
+			Responder( 401, "text/plain", ServiceName, false, "", "", uauth );
+			return;
+		}
+
+
+
+		Responder( 200, "text/plain", ServiceName, false, "", "", krbuildertest() );
+		return;
 
 		InfoDataService::DataResource Payload( r, records );
 		const int payloadstatus( Payload );

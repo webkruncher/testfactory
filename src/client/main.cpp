@@ -27,6 +27,7 @@
 
 
 #include <clientkruncher.h>
+#include <krbuilder.h>
 
 
 namespace InfoKruncher
@@ -113,6 +114,8 @@ int main( int argc, char** argv )
 
 		return 0;
 	#endif
+
+	cerr << krbuildertest() << endl;
 
 
 	stringstream ssexcept;
