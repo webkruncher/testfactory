@@ -117,3 +117,11 @@ if [ ! -z ${1} ]; then
 fi
 
 
+if [ "${1}" == "-run" ]; then
+	shift
+	sudo pkill infobuilder
+	sleep 2
+	sudo pkill infobuilder
+	sleep 2
+	sudo ../src.build/server/infobuilder ${1} --xml /home/jmt/Info/testfactory/src/text/infobuilder.xml  --node site --filter jackmthompson.ninja
+fi

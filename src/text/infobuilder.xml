@@ -1,0 +1,23 @@
+
+
+<root>
+	<domain 
+		name="jackmthompson.ninja"
+		host="localhost"
+		forks="10"
+		threads="10"
+	>
+		<filter
+			hostname="jackmthompson.ninja"
+		>
+			<site
+				path="/home/jmt/Info/testfactory/src/text/"
+				scheme="http"
+				port="84"
+			>
+			</site>
+		</filter>
+
+	</domain>
+</root>
+
