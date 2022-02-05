@@ -12,11 +12,13 @@
 		>
 			<site
 				path="/home/jmt/Info/testfactory/src/text/"
+				datapath="/home/jmt/Info/testfactory/db"
 				scheme="http"
 				port="85"
 			>
 			</site>
 			<site
+				datapath="/home/jmt/Info/testfactory/db"
 				path="/home/jmt/Info/testfactory/src/text/"
 				scheme="http"
 				port="84"

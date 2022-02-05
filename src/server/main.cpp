@@ -37,6 +37,30 @@
 
 namespace InfoKruncher
 {
+	struct BuilderProcessOptions : InfoKruncher::SocketProcessOptions
+	{
+		BuilderProcessOptions() : SocketProcessOptions(), purpose( "worker" ) {}
+		virtual void operator()( const string name, const string  value )
+		{
+			SocketProcessOptions::operator()( name, value );
+			if ( name == "purpose" ) purpose=value;
+		}
+		string purpose;
+		private:
+		virtual ostream& operator<<(ostream& o) const
+		{
+			SocketProcessOptions::operator<<( o );
+			if ( ! purpose.empty() ) o << "purpose:" << purpose << endl;
+			return o;
+		}
+	};
+
+	struct BuilderServiceList : InfoKruncher::ServiceList
+	{
+		virtual InfoKruncher::SocketProcessOptions* NewOptions()
+			{ return new BuilderProcessOptions ; }
+	};
+
 	struct DbSite : InfoSite
 	{
 		bool ProcessForm( const string formpath, stringmap& formdata )
@@ -53,7 +77,8 @@ namespace InfoKruncher
 	template<> 
 		void InfoKruncher::Service< WebKruncherService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
 	{
-		cerr << "Serving:" << svcoptions << endl;	
+		const BuilderProcessOptions& builder( static_cast< const BuilderProcessOptions& >( svcoptions ) );
+		cerr << "Purpose:" << builder.purpose << endl;
 		RunService( svcoptions );
 	}
 	template<> void InfoKruncher::Service< WebKruncherService::InfoSite >::Terminate() { subprocesses.Terminate(); }
@@ -69,7 +94,7 @@ int main( int argc, char** argv )
 	stringstream ssexcept;
 	try
 	{
-		InfoKruncher::Options< InfoKruncher::ServiceList > options( argc, argv );
+		InfoKruncher::Options< InfoKruncher::BuilderServiceList > options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );
 		if ( options.find( "-d" ) == options.end() ) Initialize();
 
