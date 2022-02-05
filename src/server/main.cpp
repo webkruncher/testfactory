@@ -53,6 +53,7 @@ namespace InfoKruncher
 	template<> 
 		void InfoKruncher::Service< WebKruncherService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
 	{
+		cerr << "Serving:" << svcoptions << endl;	
 		RunService( svcoptions );
 	}
 	template<> void InfoKruncher::Service< WebKruncherService::InfoSite >::Terminate() { subprocesses.Terminate(); }
@@ -60,9 +61,11 @@ namespace InfoKruncher
 
 
 
+
 int main( int argc, char** argv )
 {
 	//VERBOSITY=VERB_SIGNALS|VERB_SSOCKETS|VERB_PSOCKETS;
+	VERBOSITY=VERB_SERVICE;
 	stringstream ssexcept;
 	try
 	{
@@ -80,8 +83,8 @@ int main( int argc, char** argv )
 			return 0;
 		}
 		
-		cerr << yellow << "webkruncher is starting up" << normal << endl;
-		KruncherTools::Daemonizer daemon( options.daemonize, "WebKruncher" );
+		cerr << yellow << "krbuilder is starting up with " << nSites << " sites " << normal << endl;
+		KruncherTools::Daemonizer daemon( options.daemonize, "KrBuilder" );
 
 		InfoKruncher::Service<WebKruncherService::InfoSite> sites[ nSites ];
 
@@ -92,7 +95,7 @@ int main( int argc, char** argv )
 			site.ForkAndServe( svcoptions);
 		}
 		while ( !TERMINATE ) sleep( 1 );
-		Log( "webkruncher is exiting" );
+		Log( "krbuilder is exiting" );
 		for ( size_t t=0; t < nSites; t++ ) sites[ t ].Terminate();
 	}
 	catch( const exception& e ) { ssexcept<<e.what(); }

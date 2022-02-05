@@ -13,7 +13,14 @@
 			<site
 				path="/home/jmt/Info/testfactory/src/text/"
 				scheme="http"
+				port="85"
+			>
+			</site>
+			<site
+				path="/home/jmt/Info/testfactory/src/text/"
+				scheme="http"
 				port="84"
+				purpose="builder"
 			>
 			</site>
 		</filter>

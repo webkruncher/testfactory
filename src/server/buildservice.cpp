@@ -38,7 +38,7 @@
 
 namespace WebKruncherService
 {
-	const string ServiceName( "WebKruncher" );
+	const string ServiceName( "BuildService" );
 
 	void InfoSite::LoadResponse( InfoKruncher::Responder& r, InfoKruncher::RestResponse& Responder, InfoKruncher::ThreadLocalBase& threadlocal )
 	{
@@ -53,9 +53,15 @@ namespace WebKruncherService
 
 		if ( ipaddr != "127.0.0.1" )
 		{
-			//cerr << red << r.ipaddr << fence << r.method << fence << r.resource << normal << endl;
-			const string uauth( "UnAuthorized" );
-			Responder( 401, "text/plain", ServiceName, false, "", "", uauth );
+			if ( ipaddr == "73.201.184.88" )
+			{
+				Log( VERB_ALWAYS, "LoadResponse", "Ok for myself" );
+				Responder( 200, "text/plain", ServiceName, false, "", "", "Hi me" );
+			} else {
+				//cerr << red << r.ipaddr << fence << r.method << fence << r.resource << normal << endl;
+				const string uauth( "UnAuthorized" );
+				Responder( 401, "text/plain", ServiceName, false, "", "", uauth );
+			}
 			return;
 		}
 
