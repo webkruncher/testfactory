@@ -354,6 +354,9 @@ function CleanAll
 	sudo rm -rf ${bins}/tickerdata
 	sudo rm -rf ${bins}/testdata
 
+	cd ~/Info
+	find . -name "src.build" -exec rm -rf {} \;
+
 }
 
 
