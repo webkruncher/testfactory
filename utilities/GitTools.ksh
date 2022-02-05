@@ -111,8 +111,12 @@ function gitClone
 
 function GitClone
 {
+	[ ! -d ~/Info ] && mkdir ~/Info
 	for item in `Repos`; do
 		gitClone ${item}
+		pushd ${item}
+		git checkout master
+		popd
 	done
 }
 
