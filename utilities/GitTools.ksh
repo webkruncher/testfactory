@@ -114,7 +114,7 @@ function GitClone
 	[ ! -d ~/Info ] && mkdir ~/Info
 	for item in `Repos`; do
 		gitClone ${item}
-		pushd ${item}
+		pushd ~/Info/${item}
 		git checkout master
 		popd
 	done
