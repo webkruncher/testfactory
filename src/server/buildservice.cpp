@@ -67,7 +67,7 @@ namespace WebKruncherService
 
 
 
-		Responder( 200, "text/plain", ServiceName, false, "", "", krbuildertest() );
+		Responder( 200, "text/plain", ServiceName, false, "", "", "BRIDGE OUT" );
 		return;
 
 		InfoDataService::DataResource Payload( r, records );

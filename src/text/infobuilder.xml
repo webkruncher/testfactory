@@ -21,8 +21,9 @@
 				datapath="/home/jmt/Info/testfactory/db"
 				path="/home/jmt/Info/testfactory/src/text/"
 				scheme="http"
-				port="84"
-				purpose="builder"
+				service="infobuild"
+				port="83"
+				purpose="scanner"
 			>
 			</site>
 		</filter>

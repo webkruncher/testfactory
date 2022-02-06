@@ -39,6 +39,30 @@ namespace WebKruncherService
 		private:
 		virtual InfoKruncher::ThreadLocalBase* AllocateThreadLocal( const InfoKruncher::SocketProcessOptions& options );
 	};
+
+	struct BuilderProcessOptions : InfoKruncher::SocketProcessOptions
+	{
+		BuilderProcessOptions() : SocketProcessOptions(), purpose( "worker" ) {}
+		virtual void operator()( const string name, const string  value )
+		{
+			SocketProcessOptions::operator()( name, value );
+			if ( name == "purpose" ) purpose=value;
+		}
+		string purpose;
+		private:
+		virtual ostream& operator<<(ostream& o) const
+		{
+			SocketProcessOptions::operator<<( o );
+			if ( ! purpose.empty() ) o << "purpose:" << purpose << endl;
+			return o;
+		}
+	};
+
+	struct BuilderServiceList : InfoKruncher::ServiceList
+	{
+		virtual InfoKruncher::SocketProcessOptions* NewOptions()
+			{ return new BuilderProcessOptions ; }
+	};
 } // WebKruncherService
 #endif //WEBKRUNCHER_WEBSITE_H
 

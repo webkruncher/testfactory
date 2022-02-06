@@ -115,7 +115,7 @@ int main( int argc, char** argv )
 		return 0;
 	#endif
 
-	cerr << krbuildertest() << endl;
+	//cerr << krbuildertest() << endl;
 
 
 	stringstream ssexcept;
