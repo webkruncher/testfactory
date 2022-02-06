@@ -39,51 +39,18 @@ namespace InfoBuilder
 	typedef DbRecords::RecordSet<LibTimes> LibraryDb;
 	extern unique_ptr< LibraryDb > LibraryData;
 
-	struct LibraryKey  : std::string
-	{
-		LibraryKey();
-		LibraryKey( const string& that ); 
-		LibraryKey( const char* that) ;
-		LibraryKey( const char* thatptr, size_t thatsz) ;
-		LibraryKey( const LibraryKey& that ) ;
-		operator const char* () ;
-		LibraryKey& operator=( const string& that ) ;
-		LibraryKey& operator=( const LibraryKey& that ) ;
-		private:
-		void assgn( const string& k, const string e="" );
-		friend size_t EndKeySize(const LibraryKey &s) ;
-		friend void* EndKeyStr(const LibraryKey &s) ;
-		friend bool isEmpty(const LibraryKey &s) ;
-		friend string EndKeyOf(const LibraryKey &s) ;
-		friend int KeyLimiter(const LibraryKey &s);
-		friend int KeySkipper(const LibraryKey &s) ;
-		string EndKey;
-		int Limitter;
-		int Skip;
-	};
-
-	bool isEmpty(const LibraryKey &s) ;
-	size_t StartKeySize(const LibraryKey &s) ;
-	void* StartKeyDataPtr(const LibraryKey &s) ; 
-	size_t EndKeySize(const LibraryKey &s) ;
-	void* EndKeyStr(const LibraryKey &s) ;
-	string StringOf(const LibraryKey &s) ;
-	string StringOfPtr(const void* start, const size_t sz) ;
-	int KeyLimiter(const LibraryKey &s);
-	int KeySkipper(const LibraryKey &s);
 
 	struct LibraryBase : DataFig
 	{
 		struct LibraryBaseRec
 		{
-			char name[64];
 			time_t last_updated;
 		};
 	public:
 		std::string TableName() const { return "builder/libtimes"; }
 
 		typedef LibraryBaseRec		ValueType ;
-		typedef LibraryKey 		KeyType ;
+		typedef std::string 		KeyType ;
 		friend std::ostream& operator<<(std::ostream& o,const LibraryBase::LibraryBaseRec& m); 
 	};
 	std::ostream& operator<<(std::ostream& o,const LibraryBase::LibraryBaseRec& m) ;
@@ -106,16 +73,6 @@ namespace InfoBuilder
 	protected:
 		ValueType		record;
 		const KeyType library;
-		void SetName( const std::string value );
-		void SetMarket( const std::string value );
-		void SetLocale( const std::string value );
-		void SetPrimaryExchange( const std::string value );
-		void SetType( const std::string value );
-		void SetActive( const std::string value );
-		void SetCurrencyName( const std::string value );
-		void SetPrimaryCIK( const std::string value );
-		void SetCompositeFigi( const std::string value );
-		void SetShareClassFigi( const std::string value );
 		void SetLastUpdatedUTC( const std::string value );
 		void SetLastUpdatedUTC( const time_t when );
 	};

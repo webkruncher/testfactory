@@ -53,8 +53,9 @@ namespace WebKruncherService
 			SocketProcessOptions::operator()( name, value );
 			if ( name == "purpose" ) purpose=value;
 			if ( name == "buildtools" ) buildtools=value;
+			if ( name == "builddefines" ) builddefines=value;
 		}
-		string purpose, buildtools;
+		string purpose, buildtools, builddefines;
 		private:
 		virtual ostream& operator<<(ostream& o) const
 		{

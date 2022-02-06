@@ -14,8 +14,8 @@ EOF
 function InfoKruncherInterfaceTable
 {
 cat <<EOF
-|traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace|development|
-|tickerkruncher|tradekruncher/db;tickerkruncher|tradekruncher/db::markets;tickerkruncher::ticker|markets;tickers|<algos/RestInterface.h>|TickerFace|development|
+|traderdata|tradekruncher/db|tradekruncher/db::markets|markets|<markets/RestInterface.h>|TraderFace||
+|tickerkruncher|tradekruncher/db;tickerkruncher|tradekruncher/db::markets;tickerkruncher::ticker|markets;tickers|<algos/RestInterface.h>|TickerFace||
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|development|
 
 

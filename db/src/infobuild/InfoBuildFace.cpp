@@ -29,6 +29,43 @@
 #include <recordset.h>
 #include <RestInterface.h>
 
+namespace Manifest
+{
+
+	template <typename DataType>
+		struct RecordUpdateCreator : DbRecords::RecordActions
+	{
+		typedef DataType datatype ;
+		RecordUpdateCreator( const string& _datapath ) : records( _datapath ) {}
+		virtual ~RecordUpdateCreator( ) {} 
+		const unsigned long operator()( ostream& o, const typename DataType::KeyType& key, const typename DataType::ValueType& value )
+		{
+Log( VERB_ALWAYS, "Manifest", "Update Creator" );
+			{
+				BdbSpace::UpdateMethod<DataType> method( key, value );
+				records( DataType::Thang(),method );
+				const unsigned long m( method );
+				if ( m == 1 ) o << fence << key << fence << "200" << fence << endl;
+				if ( m == 1 ) return 200;
+			}
+			{
+				BdbSpace::CreateMethod<DataType> method( key, value );
+				records( DataType::Thang(),method );
+				const unsigned long c( method );
+				if ( c == 1 ) o << fence << key << fence << "201" << fence << endl;
+				if ( c == 1 ) return 201;
+			}
+			o << fence << key << fence << "409" << fence << endl;
+			return 409;
+		}
+		const int PostField() const { return 1; }
+		private:
+		DbRecords::RecordSet<DataType> records;
+	};
+
+
+} // Manifest
+
 
 namespace InfoBuildFace
 {
@@ -38,12 +75,13 @@ namespace InfoBuildFace
 	void LibTimesMethods( Bindings& b, const InfoKruncher::SocketProcessOptions& options )  
 	{
 		typedef LibTimes library ;
-		b[ "POST|/libs" ] = 			new Binding< RecordUpdateCreator< library > >	( options );
-		b[ "POST|/libs/*" ] = 			new Binding< RecordUpdateCreator< library > >	( options );
-		b[ "POST|/libs/integrity" ] = 		new Binding< RecordIntegrity< library > >	( options );
-		b[ "GET|/libs/*/list" ] = 		new Binding< KeyLister< library > >		( options );
-		b[ "GET|/libs/list" ] = 		new Binding< KeyLister< library > >		( options );
-		b[ "GET|/libs" ] = 			new Binding< RecordPrinter< library > >		( options );
+		b[ "POST|/manifest" ] = 		new Binding< Manifest::RecordUpdateCreator< library > >	( options );
+		//b[ "POST|/libs" ] = 			new Binding< RecordUpdateCreator< library > >	( options );
+		//b[ "POST|/libs/*" ] = 			new Binding< RecordUpdateCreator< library > >	( options );
+		//b[ "POST|/libs/integrity" ] = 		new Binding< RecordIntegrity< library > >	( options );
+		//b[ "GET|/libs/*/list" ] = 		new Binding< KeyLister< library > >		( options );
+		//b[ "GET|/libs/list" ] = 		new Binding< KeyLister< library > >		( options );
+		b[ "GET|/manifest" ] = 			new Binding< RecordPrinter< library > >		( options );
 	}
 
 

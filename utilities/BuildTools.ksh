@@ -19,8 +19,8 @@ tradekruncher
 tradekruncher/db
 tickerkruncher
 testfactory/db
-infodata
 testfactory
+infodata
 webkruncher
 EOF
 }
@@ -384,5 +384,14 @@ if [ "${1}" == "-GetCmakeLists" ]; then
 			echo "${item}"
 		fi
 	done
+fi
+
+if [ "${1}" == "-GetBuildDefines" ]; then
+	shift
+	cd ${1}
+	midfix=`cmake --trace-expand 2>&1 | grep LIBMIDFIX | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f2`
+	libpath=`cmake --trace-expand 2>&1 | grep LIBPATH | cut -d '(' -f3 | cut -d ')' -f1 | cut -d ' ' -f2`
+	echo "|LIBMIDFIX|${midfix}|"
+	echo "|LIBPATH|${libpath}|"
 fi
 

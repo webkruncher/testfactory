@@ -51,8 +51,21 @@ namespace InfoKruncher
 
 } // InfoKruncher
 
-	struct Ingestive : ClientKruncher::Objective { virtual int operator()( int argc, char** argv ) { cerr << "Ingesting" << endl; return ClientKruncher::Main< Ingest::Ingester >( argc, argv );} };
-	struct Informative : ClientKruncher::Objective { virtual int operator()( int argc, char** argv ) { cerr << "Informing" << endl; return ClientKruncher::Query( argc, argv );} };
+	struct Ingestive : ClientKruncher::Objective 
+	{ 
+		virtual int operator()( int argc, char** argv )
+		{
+			return ClientKruncher::Main< Ingest::Ingester >( argc, argv );
+		} 
+	};
+
+	struct Informative : ClientKruncher::Objective 
+	{
+		virtual int operator()( int argc, char** argv ) 
+		{
+			return ClientKruncher::Query( argc, argv );
+		} 
+	};
 
 
 	struct Objects : ClientKruncher::Objects
@@ -95,6 +108,7 @@ namespace InfoKruncher
 
 int main( int argc, char** argv )
 {
+
 	#if 0
 
 		{

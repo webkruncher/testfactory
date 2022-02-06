@@ -30,6 +30,14 @@
 #include <infobuilder.h>
 void KrScanner( const WebKruncherService::BuilderProcessOptions& options);
 
+struct KrBuildDefinitions : stringmap
+{
+	KrBuildDefinitions( const WebKruncherService::BuilderProcessOptions& _options) : options( _options ) {}
+	operator bool ();
+	private:
+	const WebKruncherService::BuilderProcessOptions& options;
+};
+
 
 struct KrProjects : map< string, stringvector >
 {
@@ -83,14 +91,12 @@ struct KrBuildSpecs : KrBuilder
 			for ( KrProjects::const_iterator kit=p.begin();kit!=p.end();kit++ ) 
 			{
 				const string targetname( kit->first );
-				o << fence << it->first << fence << targetname << fence;
 				const stringvector& sv( kit->second );
 				for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
 				{
 					const string& lib( *sit );
-					o << lib << fence; 
+					o << fence << it->first << scope << targetname << scope << lib << fence << endl; 
 				}
-				o << endl;
 			}
 		}
 		return o;
