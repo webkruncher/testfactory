@@ -24,6 +24,7 @@
 				service="infobuild"
 				port="83"
 				purpose="scanner"
+				buildtools="/home/jmt/Info/testfactory/utilities/BuildTools.ksh"
 			>
 			</site>
 		</filter>

@@ -28,6 +28,11 @@
 
 #ifndef WEBKRUNCHER_WEBSITE_H
 #define WEBKRUNCHER_WEBSITE_H
+#include <infotools.h>
+#include <infofigur.h>
+#include <infosite.h>
+#include <infokruncher.h>
+using namespace KruncherTools;
 namespace WebKruncherService
 {
 	struct InfoSite : InfoKruncher::Site
@@ -47,8 +52,9 @@ namespace WebKruncherService
 		{
 			SocketProcessOptions::operator()( name, value );
 			if ( name == "purpose" ) purpose=value;
+			if ( name == "buildtools" ) buildtools=value;
 		}
-		string purpose;
+		string purpose, buildtools;
 		private:
 		virtual ostream& operator<<(ostream& o) const
 		{

@@ -25,5 +25,43 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-void KrScanner();
+#ifndef KRBUILDER_H
+#define KRBUILDER_H
+#include <infobuilder.h>
+void KrScanner( const WebKruncherService::BuilderProcessOptions& options);
 
+
+struct KrProjects : map< string, stringvector >
+{
+	friend ostream& operator<<( ostream&, const KrProjects& );
+	ostream& operator<<( ostream& o ) const
+	{
+		for ( const_iterator it=begin();it!=end();it++ ) 
+		{
+			o << tab << it->first << endl; 
+			const stringvector& sv( it->second );
+			for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+			{
+				const string& lib( *sit );
+				o << tab << tab << lib << endl; 
+			}
+		}
+		return o;
+	}
+};
+inline ostream& operator<<( ostream& o, const KrProjects& k ) { return k.operator<<( o ); }
+
+struct KrBuilder : map< string, KrProjects >
+{
+	private:
+	friend ostream& operator<<( ostream&, const KrBuilder& );
+	ostream& operator<<( ostream& o ) const
+	{
+		for ( const_iterator it=begin();it!=end();it++ ) o << it->first << endl << it->second << endl;
+		return o;
+	}
+};
+
+inline ostream& operator<<( ostream& o, const KrBuilder& k ) { return k.operator<<( o ); }
+
+#endif //KRBUILDER_H

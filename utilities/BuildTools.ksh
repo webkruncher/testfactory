@@ -1,5 +1,6 @@
+#!/usr/local/bin/bash
 
-
+#echo "Testing: $@"
 
 TestHost="jackmthompson.ninja"
 
@@ -297,10 +298,10 @@ function BuildAll
 
 		if [ "${needsUpdate}" != "" ]; then
 			logger "`pwd`|Build -clean -install"
-			Build -clean -install 2>&1>> /dev/null
+			Build -clean -install 2>&1 >> /dev/null
 		else
 			logger "`pwd`|Build -install"
-			Build -install 2>&1>> /dev/null
+			Build -install 2>&1 >> /dev/null
 		fi
 
 		if [ "$?" != "0" ] ; then
@@ -370,4 +371,18 @@ function GitClean
 	done
 }
 
+if [ "${1}" == "-GetCmakeLinkage" ]; then
+	shift
+	cd ${1}
+	cmake --trace-expand 2>&1 | grep -e "^`pwd`.*" | grep "target_link_libraries("  | cut -d '(' -f3 | cut -d ')' -f1 | tr ';' ' ' | grep -v INTERFACE | cut -d ' ' -f1,3-
+fi
+
+if [ "${1}" == "-GetCmakeLists" ]; then
+	for item in `find /home/jmt/Info/ -name CMakeLists.txt | xargs fgrep cmake_minimum_required  | cut -d ':' -f1 | sort | uniq`; do
+		iskruncher=`cat ${item} | grep krunchercore | wc -l | tr -d ' '`
+		if [ "${iskruncher}" != "0" ]; then
+			echo "${item}"
+		fi
+	done
+fi
 

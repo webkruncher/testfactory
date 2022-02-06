@@ -55,10 +55,9 @@ namespace InfoKruncher
 		void InfoKruncher::Service< WebKruncherService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
 	{
 		const WebKruncherService::BuilderProcessOptions& builder( static_cast< const WebKruncherService::BuilderProcessOptions& >( svcoptions ) );
-		cerr << "Purpose:" << builder.purpose << endl;
 		if ( builder.purpose == "scanner" )
 		{
-			KrScanner();
+			KrScanner( builder );
 			cerr << "Done scanning, exiting" << endl;
 			return;
 		}
