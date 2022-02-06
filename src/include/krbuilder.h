@@ -36,16 +36,6 @@ struct KrProjects : map< string, stringvector >
 	friend ostream& operator<<( ostream&, const KrProjects& );
 	ostream& operator<<( ostream& o ) const
 	{
-		for ( const_iterator it=begin();it!=end();it++ ) 
-		{
-			o << tab << it->first << endl; 
-			const stringvector& sv( it->second );
-			for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
-			{
-				const string& lib( *sit );
-				o << tab << tab << lib << endl; 
-			}
-		}
 		return o;
 	}
 };
@@ -57,11 +47,55 @@ struct KrBuilder : map< string, KrProjects >
 	friend ostream& operator<<( ostream&, const KrBuilder& );
 	ostream& operator<<( ostream& o ) const
 	{
-		for ( const_iterator it=begin();it!=end();it++ ) o << it->first << endl << it->second << endl;
+		for ( const_iterator it=begin();it!=end();it++ ) 
+		{
+			o << it->first << endl ;
+
+			const KrProjects& p( it->second );
+			for ( KrProjects::const_iterator kit=p.begin();kit!=p.end();kit++ ) 
+			{
+				const string targetname( kit->first );
+				o << tab << targetname << endl;
+				const stringvector& sv( kit->second );
+				for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+				{
+					const string& lib( *sit );
+					o << tab << tab << lib << endl; 
+				}
+			}
+		}
 		return o;
 	}
 };
 
 inline ostream& operator<<( ostream& o, const KrBuilder& k ) { return k.operator<<( o ); }
 
+struct KrBuildSpecs : KrBuilder 
+{
+	private:
+	friend ostream& operator<<( ostream&, const KrBuildSpecs& );
+	ostream& operator<<( ostream& o ) const
+	{
+		for ( const_iterator it=begin();it!=end();it++ ) 
+		{
+
+			const KrProjects& p( it->second );
+			for ( KrProjects::const_iterator kit=p.begin();kit!=p.end();kit++ ) 
+			{
+				const string targetname( kit->first );
+				o << fence << it->first << fence << targetname << fence;
+				const stringvector& sv( kit->second );
+				for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+				{
+					const string& lib( *sit );
+					o << lib << fence; 
+				}
+				o << endl;
+			}
+		}
+		return o;
+	}
+};
+
+inline ostream& operator<<( ostream& o, const KrBuildSpecs& k ) { return k.operator<<( o ); }
 #endif //KRBUILDER_H
