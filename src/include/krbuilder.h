@@ -34,6 +34,12 @@ struct KrBuildDefinitions : stringmap
 {
 	KrBuildDefinitions( const WebKruncherService::BuilderProcessOptions& _options) : options( _options ) {}
 	operator bool ();
+	string operator []( const string& what ) const
+	{
+		const_iterator it( find( what ) );
+		if ( it == end() ) throw what;
+		return it->second;
+	}
 	private:
 	const WebKruncherService::BuilderProcessOptions& options;
 };
@@ -95,7 +101,7 @@ struct KrBuildSpecs : KrBuilder
 				for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
 				{
 					const string& lib( *sit );
-					o << fence << it->first << scope << targetname << scope << lib << fence << endl; 
+					o << fence << it->first << fence << targetname << fence << lib << fence << endl; 
 				}
 			}
 		}
