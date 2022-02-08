@@ -371,6 +371,38 @@ function GitClean
 	done
 }
 
+
+function TargetIncludeLines
+{
+	cmake --trace-expand 2>&1 | grep -e "^`pwd`.*" | grep "target_include_directories("  | cut -d '(' -f3 | cut -d ')' -f1 | tr ';' ' ' | grep -e PRIVATE | cut -d ' ' -f1,3-
+}
+
+function PrintNoVars
+{
+OFS=$IFS
+IFS=' '
+	while read line; do
+		for word in ${line}; do
+			if [[ ${word} != \$* ]]; then
+				echo -ne "${word} "
+			fi
+		done
+	done
+OFS=$IFS
+}
+
+if [ "${1}" == "-GetCmakeIncludes" ]; then
+	shift
+	cd ${1}
+OFS=$IFS
+IFS=$'\n'
+	for line in `TargetIncludeLines`; do
+		echo "${line}" | PrintNoVars 
+		echo
+	done
+IFS=$OFS
+fi
+
 if [ "${1}" == "-GetCmakeLinkage" ]; then
 	shift
 	cd ${1}
