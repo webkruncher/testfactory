@@ -99,12 +99,13 @@ namespace KrDirectories
 				const ftime& n( *sit );
 				switch ( n.crud )
 				{
-					case Update: o << green << n << normal << endl; break;
+					case Update: o << fence << "U" << fence << n << normal << fence << endl; break;
 					case Delete: 
-						o << red << n << normal << endl; 
+						o << fence << "D" << fence << n << fence << endl; 
 						n.kil=true;
+						break;
 					break;
-					case Create: o << yellow << n << normal << endl; break;
+					case Create: o << fence << "C" << fence << n << fence << endl; break;
 					case Retreive: break;
 				}
 			}
@@ -130,15 +131,20 @@ namespace KrDirectories
 		void operator()( const string name, const time_t mtime )
 		{
 			const_iterator found( find( name ) );
-			if ( found == end() ) insert( name );
-			else 
+			if ( found == end() )
 			{
+				insert( name );
+				const_iterator cfound( find( name ) );
+				if ( cfound == end() ) throw name;
+				cfound->mtime=mtime;
+			} else {
 				if ( found->mtime != mtime )
 				{
 					found->mtime=mtime;
 					found->crud=Update;
-				} else 
+				} else {
 					found->crud=Retreive;
+				}
 			}
 		}
 	}; 
