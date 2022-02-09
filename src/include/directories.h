@@ -96,16 +96,17 @@ namespace KrDirectories
 		{
 			for ( const_iterator sit=begin();sit!=end(); sit++ )
 			{
-				const ftime& n( *sit );
+				ftime n( *sit );
+				//KruncherTools::trim( n );
 				switch ( n.crud )
 				{
-					case Update: o << fence << "U" << fence << n << normal << fence << endl; break;
+					case Update: o << "U" << fence << n << endl; break;
 					case Delete: 
-						o << fence << "D" << fence << n << fence << endl; 
+						o << "D" << fence << n << endl; 
 						n.kil=true;
 						break;
 					break;
-					case Create: o << fence << "C" << fence << n << fence << endl; break;
+					case Create: o << "C" << fence << n << endl; break;
 					case Retreive: break;
 				}
 			}
