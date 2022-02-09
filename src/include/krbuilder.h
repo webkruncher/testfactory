@@ -28,6 +28,11 @@
 #ifndef KRBUILDER_H
 #define KRBUILDER_H
 #include <infobuilder.h>
+#include <directory.h>
+#include <regex.h>
+
+
+
 void KrScanner( const WebKruncherService::BuilderProcessOptions& options);
 
 struct KrBuildDefinitions : stringmap
@@ -45,7 +50,23 @@ struct KrBuildDefinitions : stringmap
 };
 
 
-struct KrProjects : map< string, stringvector >
+struct crudstring : string
+{
+	crudstring() : crud( Create ) {}
+	crudstring(const string& s) : string( s ), crud( Create ) {}
+	private:
+	KruncherTools::Crud crud;
+};
+
+struct crudstringset : set< crudstring >
+{
+	void operator()( const crudstring& s )
+	{
+		insert( s );
+	}
+};
+
+struct KrProjects : map< string, crudstringset >
 {
 	friend ostream& operator<<( ostream&, const KrProjects& );
 	ostream& operator<<( ostream& o ) const
@@ -70,8 +91,8 @@ struct KrBuilder : map< string, KrProjects >
 			{
 				const string targetname( kit->first );
 				o << tab << targetname << endl;
-				const stringvector& sv( kit->second );
-				for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+				const crudstringset& sv( kit->second );
+				for ( crudstringset::const_iterator sit=sv.begin();sit!=sv.end();sit++)
 				{
 					const string& lib( *sit );
 					o << tab << tab << lib << endl; 
@@ -97,8 +118,8 @@ struct KrBuildSpecs : KrBuilder
 			for ( KrProjects::const_iterator kit=p.begin();kit!=p.end();kit++ ) 
 			{
 				const string targetname( kit->first );
-				const stringvector& sv( kit->second );
-				for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+				const crudstringset& sv( kit->second );
+				for ( crudstringset::const_iterator sit=sv.begin();sit!=sv.end();sit++)
 				{
 					const string& lib( *sit );
 					o << fence << it->first << fence << targetname << fence << lib << fence << endl; 
