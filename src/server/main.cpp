@@ -71,6 +71,7 @@ namespace InfoKruncher
 
 int main( int argc, char** argv )
 {
+
 	//VERBOSITY=VERB_SIGNALS|VERB_SSOCKETS|VERB_PSOCKETS;
 	VERBOSITY=VERB_SERVICE;
 	stringstream ssexcept;

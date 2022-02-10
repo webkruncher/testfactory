@@ -108,7 +108,6 @@ namespace InfoKruncher
 
 int main( int argc, char** argv )
 {
-
 	#if 0
 
 		{

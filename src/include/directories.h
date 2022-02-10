@@ -33,53 +33,6 @@
 
 namespace KrDirectories
 {
-	struct CmakeDirectory : KruncherDirectory::Directory
-	{
-		CmakeDirectory( const string& _where, const bool _recurse, const regex_t _ex ) 
-			: Directory( _where, _recurse ), ex( _ex )
-		{}
-		const CmakeDirectory& operator = (const CmakeDirectory& that )
-		{
-			if ( this == &that ) return *this;
-			where=that.where;
-			recurse=that.recurse;
-			ex=that.ex;
-			return *this;
-		}
-		Directory& NewSub( const string _where, const bool _recurse );
-		private:
-		mutable regex_t ex;
-		bool Filter( const dirent& ent ) const 
-		{
-			if ( ent.d_type == DT_DIR ) return false;
-			if ( ent.d_type != DT_REG ) return true;
-			return !!regexec( &ex, ent.d_name, 0, 0, 0 );
-		}
-		vector< CmakeDirectory > subs;
-		friend ostream& operator<<(ostream&,const CmakeDirectory&);
-		ostream& operator<<(ostream& o) const
-		{
-			for ( const_iterator it=begin();it!=end();it++ )
-				o << where << separator << *it << endl;
-			for ( vector< CmakeDirectory >::const_iterator sit=subs.begin();sit!=subs.end(); sit++ )
-			{
-				const CmakeDirectory& sub( *sit );
-				o << sub;
-			}
-			return o;
-		}
-	}; 
-
-	inline ostream& operator<<(ostream& o,const CmakeDirectory& m) { return m.operator<<(o); }
-
-	inline KruncherDirectory::Directory& CmakeDirectory::NewSub( const string _where, const bool _recurse )
-	{
-		CmakeDirectory tmp( _where, recurse, ex );
-		subs.push_back( tmp );
-		return subs.back();
-	}
-
-
 	struct ftime : string
 	{
 		ftime() {}
@@ -97,7 +50,6 @@ namespace KrDirectories
 			for ( const_iterator sit=begin();sit!=end(); sit++ )
 			{
 				ftime n( *sit );
-				//KruncherTools::trim( n );
 				switch ( n.crud )
 				{
 					case Update: o << "U" << fence << n << endl; break;
@@ -131,6 +83,7 @@ namespace KrDirectories
 
 		void operator()( const string name, const time_t mtime )
 		{
+			if ( ! ( ( throttle ++ ) % 10 ) ) usleep( 1 );
 			const_iterator found( find( name ) );
 			if ( found == end() )
 			{
@@ -148,6 +101,7 @@ namespace KrDirectories
 				}
 			}
 		}
+		int throttle;
 	}; 
 
 	inline ostream& operator<<(ostream& o,const FileTimeTracker& m) { return m.operator<<(o); }
@@ -172,22 +126,27 @@ namespace KrDirectories
 		FileTimeTracker& tracker;
 		bool Filter( const dirent& ent ) const 
 		{
-			const ftime n( ent.d_name );
-			if ( n == "src.build" ) return true;
-			if ( n == ".git" ) return true;
-			if ( n == "CMakeFiles" ) return true;
+			const string fname( ent.d_name );
+			if ( fname == "CMakeFiles" ) return true;
 			if ( ent.d_type == DT_DIR ) return false;
+			if ( fname == ".git" ) return true;
 			if ( ent.d_type != DT_REG ) return true;
-			const bool r( !!regexec( &ex, ent.d_name, 0, 0, 0 ) );
-			if ( ! r )
+
+			const size_t dot( fname.find_last_of( "." ) );
+			if ( dot == string::npos ) return true;
+			const string suffix( fname.substr( dot, fname.size()-dot ) );
+
+			const bool R( !!regexec( &ex, ent.d_name, 0, 0, 0 ) );
+			if ( ! R )
 			{
-				ftime N( where + string("/") + n );	
+				ftime N( where + string("/") + fname );	
 				struct stat sb;
 				if ( stat( N.c_str(), &sb ) ) throw N;
 				const time_t mtime( sb.st_mtim.tv_sec );
 				tracker( N, mtime );
 			}
-			return r;
+
+			return true;
 		}
 		vector< FileTimes > subs;
 		friend ostream& operator<<(ostream&,const FileTimes&);
@@ -212,11 +171,6 @@ namespace KrDirectories
 		subs.push_back( tmp );
 		return subs.back();
 	}
-
-
-
-
-
 
 } // KrDirectories
 
