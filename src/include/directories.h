@@ -36,34 +36,24 @@ namespace KrDirectories
 	struct ftime : string
 	{
 		ftime() {}
-		ftime( const string& n ) : string( n ), crud( Create ), kil( false ) {}
+		ftime( const string& n, const Crud& c ) : string( n ), crud( c ), kil( false ) {}
+		ftime( const ftime& n ) : string( n ), crud( n.crud ), kil( n.kil ) {}
+		ftime& operator=(const ftime& that )
+		{
+			cout << red << "=" << endl;
+			return *this;
+		}
 		mutable Crud crud;
 		mutable bool kil;
 		mutable time_t mtime;
 	};
 
+	struct ftimevector : vector< ftime > {};
+
 	struct FileTimeTracker : set< ftime >
 	{
 		friend ostream& operator<<(ostream&,const FileTimeTracker&);
-		ostream& operator<<(ostream& o) const
-		{
-			for ( const_iterator sit=begin();sit!=end(); sit++ )
-			{
-				ftime n( *sit );
-				switch ( n.crud )
-				{
-					case Update: o << "U" << fence << n << endl; break;
-					case Delete: 
-						o << "D" << fence << n << endl; 
-						n.kil=true;
-						break;
-					break;
-					case Create: o << "C" << fence << n << endl; break;
-					case Retreive: break;
-				}
-			}
-			return o;
-		}
+
 		operator bool () 
 		{
 			vector< ftime > kil;
@@ -71,7 +61,6 @@ namespace KrDirectories
 			{
 				const ftime& n( *sit );
 				if ( n.kil ) kil.push_back( n );
-				n.crud=Delete;
 			}
 			for ( vector< ftime >::const_iterator kit=kil.begin();kit!=kil.end();kit++)
 			{
@@ -84,11 +73,12 @@ namespace KrDirectories
 		void operator()( const string name, const time_t mtime )
 		{
 			if ( ! ( ( throttle ++ ) % 10 ) ) usleep( 1 );
-			const_iterator found( find( name ) );
+			ftime what( name, Create );
+			const_iterator found( find( what ) );
 			if ( found == end() )
 			{
-				insert( name );
-				const_iterator cfound( find( name ) );
+				insert( what );
+				const_iterator cfound( find( what ) );
 				if ( cfound == end() ) throw name;
 				cfound->mtime=mtime;
 			} else {
@@ -101,10 +91,32 @@ namespace KrDirectories
 				}
 			}
 		}
+
+		void operator >> ( map< string, ftimevector* >& that )
+		{
+			for ( const_iterator sit=begin();sit!=end(); sit++ )
+			{
+				const ftime& n( *sit );
+				const size_t dot( n.find_last_of( "." ) );
+				if ( dot == string::npos ) throw n;
+				const string suffix( n.substr( dot, n.size()-dot ) );
+				map< string, ftimevector* >::const_iterator pit( that.find( suffix ) );
+				if ( pit == that.end() ) throw suffix;
+				if ( n.crud == Delete ) 
+				{
+					n.kil=true;
+				}
+				if ( n.crud != Retreive )
+				{
+					ftimevector& collection( *pit->second );
+					collection.push_back( n );
+				}
+				n.crud = Delete;
+			}
+		}
 		int throttle;
 	}; 
 
-	inline ostream& operator<<(ostream& o,const FileTimeTracker& m) { return m.operator<<(o); }
 
 
 	struct FileTimes : KruncherDirectory::Directory
@@ -139,7 +151,7 @@ namespace KrDirectories
 			const bool R( !!regexec( &ex, ent.d_name, 0, 0, 0 ) );
 			if ( ! R )
 			{
-				ftime N( where + string("/") + fname );	
+				ftime N( where + string("/") + fname, Create );	
 				struct stat sb;
 				if ( stat( N.c_str(), &sb ) ) throw N;
 				const time_t mtime( sb.st_mtim.tv_sec );
