@@ -18,8 +18,8 @@ informationkruncher
 tradekruncher
 tradekruncher/db
 tickerkruncher
-testfactory/db
 testfactory
+testfactory/db
 infodata
 webkruncher
 EOF
