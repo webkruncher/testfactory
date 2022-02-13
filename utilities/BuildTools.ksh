@@ -11,6 +11,7 @@ TestHost="jackmthompson.ninja"
 function ProjectList
 {
 cat <<EOF
+testfactory/utilities
 krunchercore
 exexml
 datakruncher
