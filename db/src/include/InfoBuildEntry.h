@@ -54,7 +54,9 @@ namespace InfoKruncher
 	template<> 
 		void InfoKruncher::Service< WebKruncherService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
 	{
+Log( VERB_ALWAYS, "KRUNCHER" , "FORK AND SERVE");
 		const WebKruncherService::BuilderProcessOptions& builder( static_cast< const WebKruncherService::BuilderProcessOptions& >( svcoptions ) );
+Log( VERB_ALWAYS, "PURPOSE OF KRUNCHER" , builder.purpose );
 		if ( builder.purpose == "scanner" )
 		{
 			KrScanner( builder );
