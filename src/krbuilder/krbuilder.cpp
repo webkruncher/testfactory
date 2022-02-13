@@ -187,7 +187,9 @@ void KrScanner( const BuilderProcessOptions& options)
 					case Update: 	C='U'; break;
 					case Delete: 	C='D'; break;
 				}
-				cout << what << fence << C << fence << n << endl;
+				stringstream sso;
+				sso << what << fence << C << fence << n << endl;
+				Log( VERB_ALWAYS, "krbuilder", sso.str() );
 			}
 		}
 
