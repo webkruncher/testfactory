@@ -28,11 +28,12 @@
 #include <infokruncher.h>
 #include <infosite.h>
 #include <infobuilder.h>
-#include <db/auth/infoxmlauth.h>
-#include <visitors/visitor.h>
-#include <db/site/infodataservice.h>
+
+//#include <db/auth/infoxmlauth.h>
+//#include <visitors/visitor.h>
+//#include <db/site/infodataservice.h>
 #include <exexml.h>
-#include <db/site/PostProcessor.h>
+//#include <db/site/PostProcessor.h>
 #include <infofigur.h>
 #include <krbuilder.h>
 
@@ -42,6 +43,7 @@ namespace WebKruncherService
 
 	void InfoSite::LoadResponse( InfoKruncher::Responder& r, InfoKruncher::RestResponse& Responder, InfoKruncher::ThreadLocalBase& threadlocal )
 	{
+#if 0
 		if ( r.resource.size() > 512 ) return;
 		const string ipaddr( dotted( r.ipaddr ) );
 		cerr << ipaddr << endl;
@@ -109,6 +111,7 @@ namespace WebKruncherService
 		Responder( AuthorizationStatus, Payload.contenttype, ServiceName, records.IsNewCookie(), records.CookieName(), records.Cookie(), txt );
 		//if ( txt.size() > 4096 ) Responder.SetChunked( 4096 );
 		return ;
+#endif
 	}
 
 	bool InfoSite::ProcessForm( const string formpath, stringmap& formdata )

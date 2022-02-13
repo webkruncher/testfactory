@@ -43,7 +43,6 @@ Libraries(
 add_executable(
 	infobuilder
 		main.cpp
-		buildservice.cpp
 )
 
 

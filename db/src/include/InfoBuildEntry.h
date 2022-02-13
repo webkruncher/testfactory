@@ -30,17 +30,16 @@
 #include <infosite.h>
 #include <exexml.h>
 #include <infofigur.h>
-#include <infotools.h>
-#include <infodataservice.h>
+#include <infobuilder.h>
+#include <krbuilder.h>
 
 
 
 namespace InfoKruncher
 {
+
 	struct DbSite : InfoSite
 	{
-		DbSite() {}
-		virtual ~DbSite() { }
 		bool ProcessForm( const string formpath, stringmap& formdata )
 		{
 			stringstream ssmsg;  ssmsg << "DbSite" << fence << formpath << fence << formdata;
@@ -51,23 +50,20 @@ namespace InfoKruncher
 		{
 			InfoSite::PostProcessing( responder, DefaultResponse, PostedContent, threadlocal );
 		}
-		private:
-		ThreadLocalBase* AllocateThreadLocal( const InfoKruncher::SocketProcessOptions& options )
-		{
-			return InfoSite::AllocateThreadLocal( options );
-		}
 	};
 	template<> 
-		void InfoKruncher::Service< DbSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
+		void InfoKruncher::Service< WebKruncherService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
 	{
-		InfoDataService::SetupDB( svcoptions.datapath );
+		const WebKruncherService::BuilderProcessOptions& builder( static_cast< const WebKruncherService::BuilderProcessOptions& >( svcoptions ) );
+		if ( builder.purpose == "scanner" )
+		{
+			KrScanner( builder );
+			cerr << "Done scanning, exiting" << endl;
+			return;
+		}
 		RunService( svcoptions );
 	}
-	template<> void InfoKruncher::Service< DbSite >::Terminate() 
-	{ 
-		subprocesses.Terminate(); 
-		InfoDataService::TeardownDB();
-	}
+	template<> void InfoKruncher::Service< WebKruncherService::InfoSite >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher
 
 
@@ -75,90 +71,55 @@ namespace InfoKruncher
 
 int main( int argc, char** argv )
 {
+
+
+	//VERBOSITY=VERB_SIGNALS|VERB_SSOCKETS|VERB_PSOCKETS;
+	VERBOSITY=VERB_SERVICE;
 	stringstream ssexcept;
 	try
 	{
-		InfoKruncher::ServiceName=argv[ 0 ];
-		//VERBOSITY=VERB_SIGNALS|VERB_SSOCKETS;
-		//VERBOSITY=VERB_CRUD;
-		//VERBOSITY=VERB_SERVICE;
-		//VERBOSITY=VERB_CONSOLE;
-		InfoKruncher::Options< InfoKruncher::ServiceList > options( argc, argv );
+Log( VERB_ALWAYS, "KRBUILDER", "Starting up" );
+		InfoKruncher::Options< WebKruncherService::BuilderServiceList > options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );
-
-
-		
-		//cerr << yellow << "krestdb is starting up" << normal << endl;
-		{
-
-			const string verbose( options.svalue( "-v", "--verbose", ""  ) );
-			if ( !verbose.empty() )
-			{
-				stringstream sso;
-				sso << "VERBOSITY:" << verbose;
-				if ( verbose.find( "DBCURSOR1" ) != string::npos ) VERBOSITY|=(VERB_CURSOR_1);
-				if ( verbose.find( "DBCURSOR2" ) != string::npos ) VERBOSITY|=(VERB_CURSOR_2|VERB_CURSOR_1);
-				if ( verbose.find( "DBCURSOR3" ) != string::npos ) VERBOSITY|=(VERB_CURSOR_3|VERB_CURSOR_1|VERB_CURSOR_2);
-				if ( verbose.find( "REST1" ) != string::npos ) VERBOSITY|=(VERB_REST_1);
-				if ( verbose.find( "REST2" ) != string::npos ) VERBOSITY|=(VERB_REST_2|VERB_REST_1);
-				if ( verbose.find( "REST3" ) != string::npos ) VERBOSITY|=(VERB_REST_3|VERB_REST_2|VERB_REST_1);
-				if ( verbose.find( "SERVICE" ) != string::npos ) VERBOSITY|=(VERB_SERVICE);
-			}
-		}
-
-		cerr << "Starting " << argv[ 0 ] << " service, verbosity " << hex << VERBOSITY << endl;
-
-
-
 		if ( options.find( "-d" ) == options.end() ) Initialize();
-		else SetSignals();
 
 		const InfoKruncher::ServiceList& workerlist( options.workerlist );
+
+		const size_t nSites( options.workerlist.size() );
 
 		if ( options.find( "--check-config" ) != options.end() )
 		{
 			cerr << "Configuration:" << endl << workerlist << endl;
 			return 0;
 		}
+		
+		cerr << yellow << "krbuilder is starting up with " << nSites << " sites " << normal << endl;
+Log( VERB_ALWAYS, "KRBUILDER", "Wip"  ) ;
+		KruncherTools::Daemonizer daemon( options.daemonize, "KrBuilder" );
 
-		const size_t nSites( options.workerlist.size() );
-		KruncherTools::Daemonizer daemon( options.daemonize, "DbSite" );
 
-
-		InfoKruncher::Service<InfoKruncher::DbSite> sites[ nSites ];
+		InfoKruncher::Service<WebKruncherService::InfoSite> sites[ nSites ];
 
 		for ( size_t c=0;  c < nSites; c++ )
 		{
-			InfoKruncher::Service<InfoKruncher::DbSite>& site( sites[ c ] );
+			InfoKruncher::Service<WebKruncherService::InfoSite>& site( sites[ c ] );
 			const InfoKruncher::SocketProcessOptions& svcoptions( *workerlist[ c ] );
-			site.ForkAndServe( svcoptions );
+			site.ForkAndServe( svcoptions);
 		}
-
-		unsigned long tick( 1 );
-		while ( !TERMINATE ) 
-		{ 
-			usleep( 10000 ); 
-			tick++;
-		}
-		//Log( VERB_ALWAYS, "main", "infodbservice is terminating child processes" );
-
+		while ( !TERMINATE ) sleep( 1 );
+		Log( "krbuilder is exiting" );
 		for ( size_t t=0; t < nSites; t++ ) sites[ t ].Terminate();
 	}
 	catch( const exception& e ) { ssexcept<<e.what(); }
 	catch( const string& s ) { ssexcept<<s;}
 	catch( const char* s ) { ssexcept<<s;}
 	catch( ... ) { ssexcept<<"unknown";}
-	if ( ! ssexcept.str().empty() ) 
+	if (!ssexcept.str().empty())
 	{
-		cerr << red << ssexcept.str() << normal << endl;
-		Log( VERB_ALWAYS, "dbmain", ssexcept.str() );
+		stringstream ssout; ssout << fence << "[EXCEPT]" << fence << ssexcept.str(); Log(VERB_ALWAYS, "webkrunchermain", ssout.str());
 	}
-
-	//Log( VERB_ALWAYS, InfoKruncher::ServiceName, "shutting down" );
 
 	return 0;
 }
-
-
 
 

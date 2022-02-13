@@ -19,7 +19,7 @@ cat <<EOF
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|development|<main.h>|
 
 
-|infobuild|testfactory/db|testfactory/db::infobuild|libinfo|<RestInterface.h>|InfoBuildFace|development|<InfoBuildEntry.h>|
+|infobuild|testfactory;testfactory/db|testfactory/db::infobuild;testfactory::krbuilder|libinfo;krbuilder|<RestInterface.h>|InfoBuildFace|development|<InfoBuildEntry.h>|
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|development|<main.h>|
 EOF
 }
