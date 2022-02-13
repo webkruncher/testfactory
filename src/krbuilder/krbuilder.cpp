@@ -189,7 +189,7 @@ void KrScanner( const BuilderProcessOptions& options)
 				}
 				stringstream sso;
 				sso << what << fence << C << fence << n << endl;
-				Log( VERB_ALWAYS, "krbuilder", sso.str() );
+				Log( VERB_ALWAYS, "KrBuildIt", sso.str() );
 			}
 		}
 

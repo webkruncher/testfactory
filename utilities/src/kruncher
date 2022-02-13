@@ -5,6 +5,7 @@ xml="${fig}/krest.xml"
 
 for service in `informationkrunchers | awk 'BEGIN { FS = "|" }{ if ($8=="development" ) print $2; }'`; do
 	if [ "${1}" == "-stop" ]; then
+		echo "sudo pkill ${service} "
 		sudo pkill ${service} 
 		shift
 	else
