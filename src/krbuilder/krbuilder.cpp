@@ -188,7 +188,7 @@ void KrScanner( const BuilderProcessOptions& options)
 					case Delete: 	C='D'; break;
 				}
 				stringstream sso;
-				sso << what << fence << C << fence << n << endl;
+				sso << ">>" << fence << what << fence << C << fence << n << endl;
 				Log( VERB_ALWAYS, "KrBuildIt", sso.str() );
 			}
 		}

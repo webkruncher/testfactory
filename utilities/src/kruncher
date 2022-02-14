@@ -9,7 +9,15 @@ for service in `informationkrunchers | awk 'BEGIN { FS = "|" }{ if ($8=="develop
 		sudo pkill ${service} 
 		shift
 	else
+		echo "sudo pkill ${service}"
 		sudo pkill ${service} 
+		sleep 2
+
+		for pid in `ps aux | grep ${service} | tr -s ' ' | sed '/grep/d' | cut -d ' ' -f2`; do 
+			echo "sudo kill -9 $pid; "
+			sudo kill -9 $pid; 
+		done
+
 		sleep 2
 
 		x=`informationkrunchers | grep "|${service}|" | cut -d '|' -f10`
