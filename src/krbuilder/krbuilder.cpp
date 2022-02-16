@@ -144,6 +144,7 @@ void KrScanner( const BuilderProcessOptions& options)
 	
 	regex_t rxupdates;
 	const string expfiles( "^.*\\.cpp$|^.*\\.h$|^CMakeLists.txt$|^.*\\.a$" );
+	//const string expfiles( "^.*\\.one$" );
 	if ( regcomp( &rxupdates, expfiles.c_str(), REG_EXTENDED ) ) throw expfiles;
 	FileTimeTracker tracker;
 	bool first( true );
@@ -152,27 +153,29 @@ void KrScanner( const BuilderProcessOptions& options)
 		FileTimes fileupdates( LibPath, true, rxupdates, tracker );
 		if ( ! fileupdates ) return;
 
-		ftimevector cpp,h,make,lib;
+		ftimevector cpp,h,make,lib;// ,one;
 
 		struct P : pair< string, ftimevector* >
 			{ P( const string what, ftimevector* how ) : pair< string, ftimevector* >( what, how ) {} };
 		struct KrCollections : map< string, ftimevector* > {};
 
 		KrCollections collection;
+
 		P Cpp( ".cpp", &cpp );
 		P H( ".h", &h );
 		P Make( ".txt", &make );
 		P Lib( ".a", &lib );
+		//P One( ".one", &one );
 		
 		collection.insert( Cpp );
 		collection.insert( H );
 		collection.insert( Make );
 		collection.insert( Lib );
+		//collection.insert( One );
 
 		tracker >> collection;
-		if ( ! tracker ) throw string("File time tracker error");
 		
-		for ( KrCollections::const_iterator cit=collection.begin();cit!=collection.end();cit++)\
+		for ( KrCollections::const_iterator cit=collection.begin();cit!=collection.end();cit++)
 		{
 			const string& what( cit->first );
 			const ftimevector& where( *cit->second );
@@ -188,11 +191,12 @@ void KrScanner( const BuilderProcessOptions& options)
 					case Delete: 	C='D'; break;
 				}
 				stringstream sso;
-				sso << ">>" << fence << what << fence << C << fence << n << endl;
-				Log( VERB_ALWAYS, "KrBuildSomething", sso.str() );
+				sso << ">" << fence << what << fence << C << fence << n << endl;
+				if ( ! first ) Log( VERB_ALWAYS, "KrBuildIt", sso.str() );
 			}
 		}
-
+		if ( ! tracker ) throw string("File time tracker error");
+		first=false;
 	} 
 
 return;	

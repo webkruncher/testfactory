@@ -132,3 +132,4 @@ struct KrBuildSpecs : KrBuilder
 
 inline ostream& operator<<( ostream& o, const KrBuildSpecs& k ) { return k.operator<<( o ); }
 #endif //KRBUILDER_H
+

@@ -281,7 +281,7 @@ function BuildAll
 	CurrentProject=`pwd`
 	for project in `ProjectList`; do
 		pushd ~/Info/${project}/src 2>&1 >> /dev/null
-		#echo "Project:${project}" >> /dev/stderr
+		echo -ne "\033[43m\033[35mProject:${project}\033[0m\n" >> /dev/stderr
 		[ "${LibPath}" == "" ] && export LibPath=`GetLibPath`
 		envname=`echo "${project}" | tr '/' '_' `
 		needsscanner=`env | grep -e "^LibList_${envname}"`
@@ -298,8 +298,11 @@ function BuildAll
 		needsUpdate=`echo "${Libs}" | sort | uniq | CheckLibs `
 
 		if [ "${needsUpdate}" != "" ]; then
-			logger "`pwd`|Build -clean -install"
-			Build -clean -install 2>&1 >> /dev/null
+			#logger "`pwd`|Build -clean -install"
+			#Build -clean -install 2>&1 >> /dev/null
+
+			echo  -ne "\033[45m${project} ${envname} needsUpdate:${needsUpdate}\033[0m\n"
+			Build -install 2>&1 >> /dev/null
 		else
 			logger "`pwd`|Build -install"
 			Build -install 2>&1 >> /dev/null
