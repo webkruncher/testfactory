@@ -67,8 +67,14 @@ namespace WebKruncherService
 
 	struct BuilderServiceList : InfoKruncher::ServiceList
 	{
-		virtual InfoKruncher::SocketProcessOptions* NewOptions()
-			{ return new BuilderProcessOptions ; }
+		virtual InfoKruncher::SocketProcessOptions* NewOptions( XmlFamily::XmlNode& node ) 
+		{ 
+			XmlFamily::XmlAttributes& attrs( node.Attributes() );
+			XmlFamily::XmlAttributes::iterator a( attrs.find( "purpose" ) );
+			for ( XmlFamily::XmlAttributes::iterator ait=attrs.begin();ait!=attrs.end();ait++)
+				cerr << ait->first << ":" << ait->second << endl;
+			return new BuilderProcessOptions ; 
+		}
 	};
 } // WebKruncherService
 #endif //WEBKRUNCHER_WEBSITE_H
