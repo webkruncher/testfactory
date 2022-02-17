@@ -27,6 +27,10 @@
 				builddefines="/home/jmt/Info/krunchercore/cmake/"
 				buildtools="/home/jmt/Info/testfactory/utilities/BuildTools.ksh"
 			>
+				<builder
+					target="/home/jmt/Info"
+				>
+				</builder>
 			</site>
 		</filter>
 

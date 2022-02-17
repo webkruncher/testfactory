@@ -132,6 +132,25 @@ void UpdateBuildSpecs( const KrBuildSpecs& krbuilder, const string where )
 
 static int times( 0 );
 
+
+
+InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
+{ 
+	XmlFamily::XmlAttributes& attrs( node.Attributes() );
+	XmlFamily::XmlAttributes::iterator a( attrs.find( "purpose" ) );
+	
+	for ( XmlFamily::XmlAttributes::iterator ait=attrs.begin();ait!=attrs.end();ait++)
+	{
+		const string& name( ait->first );
+		const string& value( ait->second );
+		if ( name == "purpose" )
+			if ( value == "scanner" )
+				return new BuildScanner;
+	}
+	return new BuilderProcessOptions ; 
+}
+
+
 void KrScanner( const BuilderProcessOptions& options)
 {
 	using namespace KrDirectories;

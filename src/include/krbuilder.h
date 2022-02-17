@@ -131,5 +131,11 @@ struct KrBuildSpecs : KrBuilder
 };
 
 inline ostream& operator<<( ostream& o, const KrBuildSpecs& k ) { return k.operator<<( o ); }
+
+struct BuildScanner : WebKruncherService::BuilderProcessOptions
+{
+	BuildScanner() {}
+};
+
 #endif //KRBUILDER_H
 
