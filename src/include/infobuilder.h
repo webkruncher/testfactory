@@ -74,7 +74,7 @@ namespace InfoBuilderService
 	struct BuilderServiceList : InfoKruncher::ServiceList
 	{
 		virtual InfoKruncher::SocketProcessOptions* NewOptions( XmlFamily::XmlNode& node ); 
-		XML_BASE& NewConfig( const string& optionnode, const string Filter )
+		PROPERTIES_BASE& NewConfig( const string& optionnode, const string Filter )
 		{
 			if ( cfg ) return *cfg;
 			cfg=new BuildInfoConfiguration( *this, optionnode, Filter );
