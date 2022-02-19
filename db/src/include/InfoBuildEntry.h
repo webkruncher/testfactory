@@ -34,6 +34,26 @@
 #include <krbuilder.h>
 
 
+namespace InfoBuilderService
+{
+
+	XmlFamily::XmlNodeBase* BuilderServiceList::NewNode
+	(
+		XmlFamily::Xml& _doc,
+		XmlFamily::XmlNodeBase* parent,stringtype name,
+		InfoKruncher::ServiceList& servicelist,
+		const string& optionnode,
+		const string& filter
+	) const
+	{ 
+		XmlFamily::XmlNodeBase* ret(NULL);
+		ret=new ServiceXml::Item(_doc,parent,name,servicelist, optionnode, filter); 
+		ServiceXml::Item& n( static_cast<ServiceXml::Item&>(*(ret)) );
+		return ret;
+	}
+
+} // InfoBuilderService
+
 
 namespace InfoKruncher
 {
