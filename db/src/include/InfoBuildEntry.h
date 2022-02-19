@@ -36,11 +36,11 @@
 
 namespace InfoBuilderService
 {
-
 	XmlFamily::XmlNodeBase* BuilderServiceList::NewNode
 	(
 		XmlFamily::Xml& _doc,
-		XmlFamily::XmlNodeBase* parent,stringtype name,
+		XmlFamily::XmlNodeBase* parent,
+		stringtype name,
 		InfoKruncher::ServiceList& servicelist,
 		const string& optionnode,
 		const string& filter
@@ -73,7 +73,7 @@ namespace InfoKruncher
 	};
 
 	template<> 
-		void InfoKruncher::Service< InfoBuilderService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
+		void InfoKruncher::Service< InfoBuilderService::InfoSite >::ForkAndServe( PROPERTIES_BASE& node, const SocketProcessOptions& svcoptions )
 	{
 		const InfoBuilderService::BuilderProcessOptions& builder( static_cast< const InfoBuilderService::BuilderProcessOptions& >( svcoptions ) );
 		Log( VERB_ALWAYS, "Krunching" , builder.purpose );
@@ -103,6 +103,7 @@ int main( int argc, char** argv )
 		InfoBuilderService::BuildInfo options( argc, argv );
 
 		if ( ! options ) throw string( "Invalid options" );
+		PROPERTIES_BASE& Cfg( options );
 		if ( options.find( "-d" ) == options.end() ) Initialize();
 
 		const InfoKruncher::ServiceList& workerlist( options.workerlist );
@@ -125,7 +126,7 @@ int main( int argc, char** argv )
 		{
 			InfoKruncher::Service<InfoBuilderService::InfoSite>& site( sites[ c ] );
 			const InfoKruncher::SocketProcessOptions& svcoptions( *workerlist[ c ] );
-			site.ForkAndServe( svcoptions);
+			site.ForkAndServe( Cfg, svcoptions );
 		}
 		while ( !TERMINATE ) sleep( 1 );
 		Log( "krbuilder is exiting" );

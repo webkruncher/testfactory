@@ -84,7 +84,8 @@ namespace InfoBuilderService
 		XmlFamily::XmlNodeBase* NewNode
 		(
 			XmlFamily::Xml& _doc,
-			XmlFamily::XmlNodeBase* parent,stringtype name,
+			XmlFamily::XmlNodeBase* parent,
+			stringtype name,
 			InfoKruncher::ServiceList& servicelist,
 			const string& optionnode,
 			const string& filter

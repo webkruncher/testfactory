@@ -52,7 +52,7 @@ namespace InfoKruncher
 		}
 	};
 	template<> 
-		void InfoKruncher::Service< InfoBuilderService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
+		void InfoKruncher::Service< InfoBuilderService::InfoSite >::ForkAndServe( PROPERTIES_BASE& node, const SocketProcessOptions& svcoptions )
 	{
 		const InfoBuilderService::BuilderProcessOptions& builder( static_cast< const InfoBuilderService::BuilderProcessOptions& >( svcoptions ) );
 		if ( builder.purpose == "scanner" )
@@ -71,7 +71,6 @@ namespace InfoKruncher
 
 int main( int argc, char** argv )
 {
-
 	//VERBOSITY=VERB_SIGNALS|VERB_SSOCKETS|VERB_PSOCKETS;
 	VERBOSITY=VERB_SERVICE;
 	stringstream ssexcept;
@@ -79,6 +78,7 @@ int main( int argc, char** argv )
 	{
 		InfoKruncher::Options< InfoBuilderService::BuilderServiceList > options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );
+		PROPERTIES_BASE& Cfg( options );
 		if ( options.find( "-d" ) == options.end() ) Initialize();
 
 		const InfoKruncher::ServiceList& workerlist( options.workerlist );
@@ -100,7 +100,7 @@ int main( int argc, char** argv )
 		{
 			InfoKruncher::Service<InfoBuilderService::InfoSite>& site( sites[ c ] );
 			const InfoKruncher::SocketProcessOptions& svcoptions( *workerlist[ c ] );
-			site.ForkAndServe( svcoptions);
+			site.ForkAndServe( Cfg, svcoptions);
 		}
 		while ( !TERMINATE ) sleep( 1 );
 		Log( "krbuilder is exiting" );
