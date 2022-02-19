@@ -33,7 +33,7 @@
 #include <infobuilder.h>
 #include <krbuilder.h>
 
-
+#if 0
 namespace InformationBuilder
 {
 	struct BuilderNode : ServiceXml::Item
@@ -49,7 +49,7 @@ namespace InformationBuilder
 	};
 
 } // InformationBuilder
-
+#endif
 
 namespace InfoBuilderService
 {
@@ -64,7 +64,7 @@ namespace InfoBuilderService
 	) const
 	{ 
 		if ( name == "scanner" ) 
-			return new InformationBuilder::BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
+			return new BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
 
 		XmlFamily::XmlNodeBase* ret(NULL);
 		ret=new ServiceXml::Item(_doc,parent,name,servicelist, optionnode, filter); 
@@ -118,8 +118,8 @@ namespace InfoKruncher
 			if ( ! root ) throw string("No root node for scanner" );
 			ServiceXml::Item* pnode( buildinfo.FindNode( "builder", *root ) );
 			if ( ! pnode )  throw string("Cannot find builder node");
-			InformationBuilder::BuilderNode& Builder( static_cast< InformationBuilder::BuilderNode& >( *pnode ) );
-			KrScanner( builder );
+			BuilderNode& Builder( static_cast< BuilderNode& >( *pnode ) );
+			Builder.Scanner( builder );
 			cerr << "Done scanning, exiting" << endl;
 			return;
 		}

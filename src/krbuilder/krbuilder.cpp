@@ -150,8 +150,7 @@ InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::X
 	return new BuilderProcessOptions ; 
 }
 
-
-void KrScanner( const BuilderProcessOptions& options)
+void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& options)
 {
 	using namespace KrDirectories;
 
@@ -209,7 +208,7 @@ void KrScanner( const BuilderProcessOptions& options)
 				}
 				stringstream sso;
 				sso << ">" << fence << what << fence << C << fence << n << endl;
-				if ( ! first ) Log( VERB_ALWAYS, "KrBuildIt", sso.str() );
+				if ( ! first ) Log( VERB_ALWAYS, "KrBuildItWorks", sso.str() );
 			}
 		}
 		if ( ! tracker ) throw string("File time tracker error");
@@ -244,7 +243,4 @@ return;
 		sleep( 1 );
 	}
 }
-
-
-
 
