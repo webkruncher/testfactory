@@ -51,6 +51,7 @@ namespace InfoKruncher
 			InfoSite::PostProcessing( responder, DefaultResponse, PostedContent, threadlocal );
 		}
 	};
+
 	template<> 
 		void InfoKruncher::Service< InfoBuilderService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
 	{
