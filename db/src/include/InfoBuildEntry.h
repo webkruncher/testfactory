@@ -52,9 +52,9 @@ namespace InfoKruncher
 		}
 	};
 	template<> 
-		void InfoKruncher::Service< WebKruncherService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
+		void InfoKruncher::Service< InfoBuilderService::InfoSite >::ForkAndServe( const SocketProcessOptions& svcoptions )
 	{
-		const WebKruncherService::BuilderProcessOptions& builder( static_cast< const WebKruncherService::BuilderProcessOptions& >( svcoptions ) );
+		const InfoBuilderService::BuilderProcessOptions& builder( static_cast< const InfoBuilderService::BuilderProcessOptions& >( svcoptions ) );
 		Log( VERB_ALWAYS, "Krunching" , builder.purpose );
 		if ( builder.purpose == "scanner" )
 		{
@@ -64,7 +64,7 @@ namespace InfoKruncher
 		}
 		RunService( svcoptions );
 	}
-	template<> void InfoKruncher::Service< WebKruncherService::InfoSite >::Terminate() { subprocesses.Terminate(); }
+	template<> void InfoKruncher::Service< InfoBuilderService::InfoSite >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher
 
 
@@ -79,8 +79,8 @@ int main( int argc, char** argv )
 	stringstream ssexcept;
 	try
 	{
-		//InfoKruncher::Options< WebKruncherService::BuilderServiceList > options( argc, argv );
-		WebKruncherService::BuildInfo options( argc, argv );
+		//InfoKruncher::Options< InfoBuilderService::BuilderServiceList > options( argc, argv );
+		InfoBuilderService::BuildInfo options( argc, argv );
 
 		if ( ! options ) throw string( "Invalid options" );
 		if ( options.find( "-d" ) == options.end() ) Initialize();
@@ -99,11 +99,11 @@ int main( int argc, char** argv )
 
 		KruncherTools::Daemonizer daemon( options.daemonize, "KrBuilder" );
 
-		InfoKruncher::Service<WebKruncherService::InfoSite> sites[ nSites ];
+		InfoKruncher::Service<InfoBuilderService::InfoSite> sites[ nSites ];
 
 		for ( size_t c=0;  c < nSites; c++ )
 		{
-			InfoKruncher::Service<WebKruncherService::InfoSite>& site( sites[ c ] );
+			InfoKruncher::Service<InfoBuilderService::InfoSite>& site( sites[ c ] );
 			const InfoKruncher::SocketProcessOptions& svcoptions( *workerlist[ c ] );
 			site.ForkAndServe( svcoptions);
 		}

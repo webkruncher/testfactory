@@ -33,7 +33,7 @@
 #include <infosite.h>
 #include <infokruncher.h>
 using namespace KruncherTools;
-namespace WebKruncherService
+namespace InfoBuilderService
 {
 	struct InfoSite : InfoKruncher::Site
 	{
@@ -70,12 +70,12 @@ namespace WebKruncherService
 		virtual InfoKruncher::SocketProcessOptions* NewOptions( XmlFamily::XmlNode& node ); 
 	};
 
-	struct BuildInfo : InfoKruncher::Options< WebKruncherService::BuilderServiceList > 
+	struct BuildInfo : InfoKruncher::Options< InfoBuilderService::BuilderServiceList > 
 	{
-		BuildInfo( int _argc, char** _argv ) :InfoKruncher::Options< WebKruncherService::BuilderServiceList >( _argc, _argv ) {} 
+		BuildInfo( int _argc, char** _argv ) :InfoKruncher::Options< InfoBuilderService::BuilderServiceList >( _argc, _argv ) {} 
 	};
 
-} // WebKruncherService
+} // InfoBuilderService
 #endif //WEBKRUNCHER_WEBSITE_H
 
 

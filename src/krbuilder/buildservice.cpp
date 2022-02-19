@@ -37,7 +37,7 @@
 #include <infofigur.h>
 #include <krbuilder.h>
 
-namespace WebKruncherService
+namespace InfoBuilderService
 {
 	const string ServiceName( "BuildService" );
 
@@ -154,5 +154,5 @@ namespace WebKruncherService
 		return new ThreadLocal();
 	}
 
-} // WebKruncherService
+} // InfoBuilderService
 

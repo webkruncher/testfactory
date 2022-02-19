@@ -33,11 +33,11 @@
 
 
 
-void KrScanner( const WebKruncherService::BuilderProcessOptions& options);
+void KrScanner( const InfoBuilderService::BuilderProcessOptions& options);
 
 struct KrBuildDefinitions : stringmap
 {
-	KrBuildDefinitions( const WebKruncherService::BuilderProcessOptions& _options) : options( _options ) {}
+	KrBuildDefinitions( const InfoBuilderService::BuilderProcessOptions& _options) : options( _options ) {}
 	operator bool ();
 	string operator []( const string& what ) const
 	{
@@ -46,7 +46,7 @@ struct KrBuildDefinitions : stringmap
 		return it->second;
 	}
 	private:
-	const WebKruncherService::BuilderProcessOptions& options;
+	const InfoBuilderService::BuilderProcessOptions& options;
 };
 
 
@@ -132,7 +132,7 @@ struct KrBuildSpecs : KrBuilder
 
 inline ostream& operator<<( ostream& o, const KrBuildSpecs& k ) { return k.operator<<( o ); }
 
-struct BuildScanner : WebKruncherService::BuilderProcessOptions
+struct BuildScanner : InfoBuilderService::BuilderProcessOptions
 {
 	BuildScanner() {}
 };

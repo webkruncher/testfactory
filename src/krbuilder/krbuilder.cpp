@@ -32,7 +32,7 @@
 #include <infofigur.h>
 #include <infobuilder.h>
 #include <krbuilder.h>
-using namespace WebKruncherService;
+using namespace InfoBuilderService;
 #include "directories.h"
 
 
