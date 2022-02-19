@@ -26,8 +26,8 @@
  */
 
 
-#ifndef WEBKRUNCHER_WEBSITE_H
-#define WEBKRUNCHER_WEBSITE_H
+#ifndef INFOBUILDER_SERVICES_H
+#define INFOBUILDER_SERVICES_H
 #include <infotools.h>
 #include <infofigur.h>
 #include <infosite.h>
@@ -101,7 +101,7 @@ namespace InfoBuilderService
 	};
 
 } // InfoBuilderService
-#endif //WEBKRUNCHER_WEBSITE_H
+#endif //INFOBUILDER_SERVICES_H
 
 
 

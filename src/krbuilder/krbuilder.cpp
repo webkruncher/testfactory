@@ -34,7 +34,7 @@
 #include <krbuilder.h>
 using namespace InfoBuilderService;
 #include "directories.h"
-
+#include "krbuildactors.h"
 
 
 KrBuildDefinitions::operator bool( )
@@ -252,8 +252,9 @@ return;
 	XmlFamily::XmlNodeBase* BuilderNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
 	{ 
 		XmlFamily::XmlNodeBase* ret(NULL);
-		ret=new BuilderNode( _doc, parent, name, servicelist, optionnode, filter); 
-		cerr << "Created a " << name << endl;
+		if ( name == "builder" ) 
+			ret=new KrBuildActors::BuildActorNode( _doc, parent, name, servicelist, optionnode, filter); 
+		if ( ! ret ) ret=new BuilderNode( _doc, parent, name, servicelist, optionnode, filter); 
 		return ret;
 	}
 
