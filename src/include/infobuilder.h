@@ -69,11 +69,13 @@ namespace InfoBuilderService
 	{
 		BuildInfoConfiguration( InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
 			: ServiceXml::Configuration( _servicelist, _optionnode, _filter ) {} 
+		void FindScannerNode( ServiceXml::Item& );
 	};
 
 	struct BuilderServiceList : InfoKruncher::ServiceList
 	{
 		virtual InfoKruncher::SocketProcessOptions* NewOptions( XmlFamily::XmlNode& node ); 
+
 		PROPERTIES_BASE& NewConfig( const string& optionnode, const string Filter )
 		{
 			if ( cfg ) return *cfg;

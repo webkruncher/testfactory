@@ -34,6 +34,23 @@
 #include <krbuilder.h>
 
 
+namespace InformationBuilder
+{
+	struct BuilderNode : ServiceXml::Item
+	{
+		BuilderNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
+			: ServiceXml::Item(_doc,_parent,_name,_servicelist,_optionnode,_filter )  {}
+		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
+		{ 
+			XmlFamily::XmlNodeBase* ret(NULL);
+			ret=new BuilderNode( _doc, parent, name, servicelist, optionnode, filter); 
+			return ret;
+		}
+	};
+
+} // InformationBuilder
+
+
 namespace InfoBuilderService
 {
 	XmlFamily::XmlNodeBase* BuilderServiceList::NewNode
@@ -46,10 +63,26 @@ namespace InfoBuilderService
 		const string& filter
 	) const
 	{ 
+		if ( name == "scanner" ) 
+			return new InformationBuilder::BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
+
 		XmlFamily::XmlNodeBase* ret(NULL);
 		ret=new ServiceXml::Item(_doc,parent,name,servicelist, optionnode, filter); 
 		ServiceXml::Item& n( static_cast<ServiceXml::Item&>(*(ret)) );
 		return ret;
+	}
+
+
+	void BuildInfoConfiguration::FindScannerNode( ServiceXml::Item& node )
+	{
+		cerr << "Scrubbing for scanner>>" << endl;
+		ServiceXml::Item& nodes( static_cast<ServiceXml::Item& >( node ) );
+		for (XmlFamily::XmlNodeSet::iterator it=nodes.children.begin();it!=nodes.children.end();it++) 
+		{
+			ServiceXml::Item& n(static_cast<ServiceXml::Item&>(*(*it)));
+			cerr << n.name << endl;
+			FindScannerNode( n );
+		}
 	}
 
 } // InfoBuilderService
@@ -79,6 +112,10 @@ namespace InfoKruncher
 		Log( VERB_ALWAYS, "Krunching" , builder.purpose );
 		if ( builder.purpose == "scanner" )
 		{
+			InfoBuilderService::BuildInfoConfiguration& buildinfo( static_cast< InfoBuilderService::BuildInfoConfiguration& > ( node ) );
+			ServiceXml::Item* root( static_cast< ServiceXml::Item* >( buildinfo.Root ) );
+			if ( ! root ) throw string("No root node for scanner" );
+			buildinfo.FindScannerNode( *root );
 			KrScanner( builder );
 			cerr << "Done scanning, exiting" << endl;
 			return;
@@ -93,8 +130,6 @@ namespace InfoKruncher
 
 int main( int argc, char** argv )
 {
-
-
 	//VERBOSITY=VERB_SIGNALS|VERB_SSOCKETS|VERB_PSOCKETS;
 	VERBOSITY=VERB_SERVICE;
 	stringstream ssexcept;
