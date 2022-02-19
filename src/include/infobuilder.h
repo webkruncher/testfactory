@@ -70,6 +70,7 @@ namespace InfoBuilderService
 		BuildInfoConfiguration( InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
 			: ServiceXml::Configuration( _servicelist, _optionnode, _filter ) {} 
 		ServiceXml::Item* FindNode( const string& what, ServiceXml::Item& );
+		virtual XmlFamily::XmlNode* NewNode(XmlFamily::Xml& _doc,stringtype name) const ;
 	};
 
 	struct BuilderServiceList : InfoKruncher::ServiceList

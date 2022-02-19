@@ -41,9 +41,9 @@ KrBuildDefinitions::operator bool( )
 {
 	stringmap& me( *this );
 	//cerr << "KrBuildDefinitions:" << endl; 
-	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetBuildDefines", (char*) options.builddefines.c_str(), nullptr };
+	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetBuildDefines", (char*) builddefines.c_str(), nullptr };
 	stringstream ss;
-	KruncherTools::forkpipe( options.buildtools, parameters, "", ss );
+	KruncherTools::forkpipe( buildtools, parameters, "", ss );
 	//cerr << ss.str() << endl;
 	stringvector lines; lines.split( ss.str(), "\n" );
 	for ( stringvector::const_iterator lit=lines.begin();lit!=lines.end();lit++)
@@ -59,7 +59,7 @@ KrBuildDefinitions::operator bool( )
 	return true;
 }
 
-void ScanForMakefiles( const BuilderProcessOptions& options, stringstream& ss )
+void ScanForMakefiles( const string buildtools, const BuilderProcessOptions& options, stringstream& ss )
 {
 	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetCmakeLists", nullptr };
 	KruncherTools::forkpipe( options.buildtools, parameters, "", ss );
@@ -80,7 +80,7 @@ const string SliceProjectName( const KrBuildDefinitions& defines,  const string&
 }
 
 
-void ScanCmake( const KrBuildDefinitions& defines, const BuilderProcessOptions& options, const string cmake, KrBuilder& builder, const string how )
+void ScanCmake( const KrBuildDefinitions& defines, const string& buildtools, const string cmake, KrBuilder& builder, const string how )
 {
 	const size_t ls( cmake.find_last_of( '/' ) );
 	if ( ls == string::npos ) return;
@@ -94,7 +94,7 @@ void ScanCmake( const KrBuildDefinitions& defines, const BuilderProcessOptions& 
 	KrProjects& projects( builder[ ProjectName ] );
 	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) how.c_str(), (char*) pathname.c_str(), nullptr };
 	stringstream ss;
-	KruncherTools::forkpipe( options.buildtools, parameters, "", ss );
+	KruncherTools::forkpipe( buildtools, parameters, "", ss );
 	stringvector lines; lines.split( ss.str(), "\n" );
 	for ( stringvector::const_iterator lit=lines.begin(); lit!=lines.end(); lit++ )
 	{
@@ -153,8 +153,9 @@ InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::X
 void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& options)
 {
 	using namespace KrDirectories;
+	cerr << "Scanning:" << endl << (*this) << endl;
 
-	KrBuildDefinitions defines( options );
+	KrBuildDefinitions defines( options.builddefines, options.buildtools );
 	if ( ! defines ) throw string("Cannot load build definitions");
 	const string LibPath( defines[ string( "LIBPATH" ) ] );
 	
@@ -208,7 +209,7 @@ void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& opti
 				}
 				stringstream sso;
 				sso << ">" << fence << what << fence << C << fence << n << endl;
-				if ( ! first ) Log( VERB_ALWAYS, "KrBuildItWorks", sso.str() );
+				if ( ! first ) Log( VERB_ALWAYS, "KrBuildIt>>", sso.str() );
 			}
 		}
 		if ( ! tracker ) throw string("File time tracker error");
@@ -217,7 +218,7 @@ void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& opti
 
 return;	
 
-
+#if 0
 	//cerr << defines << endl;
 
 	KrBuildSpecs libraries, includes;	
@@ -225,7 +226,7 @@ return;
 	while ( ! TERMINATE )
 	{
 		stringstream ssCMakefiles;
-		ScanForMakefiles( options, ssCMakefiles );
+		ScanForMakefiles( options.buildtools, ssCMakefiles );
 		stringvector sv; sv.split( ssCMakefiles.str(), "\n" );
 	
 		for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
@@ -233,8 +234,8 @@ return;
 			const string projectpath( *sit );
 			if ( projectpath.empty() ) continue;
 			if ( projectpath[ 0 ] != '/' ) continue;
-			ScanCmake( defines, options, projectpath, libraries, "-GetCmakeLinkage" );
-			ScanCmake( defines, options, projectpath, includes, "-GetCmakeIncludes" );
+			ScanCmake( defines, options.buildtools, projectpath, libraries, "-GetCmakeLinkage" );
+			ScanCmake( defines, options.buildtools, projectpath, includes, "-GetCmakeIncludes" );
 		}
 
 		UpdateBuildSpecs( libraries, "libraries" );	
@@ -242,5 +243,25 @@ return;
 
 		sleep( 1 );
 	}
+#endif
 }
+
+
+
+
+	XmlFamily::XmlNodeBase* BuilderNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
+	{ 
+		XmlFamily::XmlNodeBase* ret(NULL);
+		ret=new BuilderNode( _doc, parent, name, servicelist, optionnode, filter); 
+		cerr << "Created a " << name << endl;
+		return ret;
+	}
+
+	BuilderNode::operator bool ()
+	{
+		cerr << "Indexing node:" << name << endl;
+		return ServiceXml::Item::operator bool ();
+	}
+
+
 

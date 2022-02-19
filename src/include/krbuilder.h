@@ -34,7 +34,7 @@
 
 struct KrBuildDefinitions : stringmap
 {
-	KrBuildDefinitions( const InfoBuilderService::BuilderProcessOptions& _options) : options( _options ) {}
+	KrBuildDefinitions( const string& _builddefines, const string& _buildtools) : builddefines( _builddefines ), buildtools( _buildtools ) {}
 	operator bool ();
 	string operator []( const string& what ) const
 	{
@@ -43,7 +43,8 @@ struct KrBuildDefinitions : stringmap
 		return it->second;
 	}
 	private:
-	const InfoBuilderService::BuilderProcessOptions& options;
+	const string& builddefines;
+	const string& buildtools;
 };
 
 
@@ -138,18 +139,12 @@ struct BuildScanner : InfoBuilderService::BuilderProcessOptions
 struct BuilderNode : ServiceXml::Item
 {
 	BuilderNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
-		: ServiceXml::Item(_doc,_parent,_name,_servicelist,_optionnode,_filter )  {}
-	virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
-	{ 
-		XmlFamily::XmlNodeBase* ret(NULL);
-		ret=new BuilderNode( _doc, parent, name, servicelist, optionnode, filter); 
-		return ret;
-	}
-
+		: ServiceXml::Item(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
+	{}
+	virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const;
+	virtual operator bool ();
 	void Scanner( const InfoBuilderService::BuilderProcessOptions& options);
 };
-
-
 
 #endif //KRBUILDER_H
 

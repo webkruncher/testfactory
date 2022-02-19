@@ -124,13 +124,7 @@ namespace InfoBuilderService
 	void InfoSite::PostProcessing( InfoKruncher::Responder&, InfoKruncher::RestResponse& DefaultResponse, const binarystring& PostedContent, InfoKruncher::ThreadLocalBase& threadlocal ) 
 	{
 		{ofstream o( "/home/jmt/hists.txt", ios::app ); o << "POSTED:" << endl << (char*) PostedContent.data() << endl; }
-
 		Log( VERB_ALWAYS, "InfoSite::PostProcessing", (char*) PostedContent.data() );
-
-		//stringmap formdata;
-		//PostProcessingXml::PostedXml xml( formdata, *this );
-		//xml.Load( (char*)PostedContent.c_str() );
-		//if ( ! xml ) Log( "InfoSite::PostProcessing", "Form processing failed" );
 	}
 
 	void InfoSite::Throttle( const InfoKruncher::SocketProcessOptions& svcoptions )
@@ -154,5 +148,8 @@ namespace InfoBuilderService
 		return new ThreadLocal();
 	}
 
+	XmlFamily::XmlNode* BuildInfoConfiguration::NewNode(XmlFamily::Xml& _doc,stringtype name) const 
+		{ return new BuilderNode(_doc,NULL,name, servicelist, optionnode, filter ); } 
 } // InfoBuilderService
+
 

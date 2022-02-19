@@ -30,6 +30,9 @@
 				<builder
 					target="/home/jmt/Info"
 				>
+					<Maker
+						TBD="cmake"
+					/>
 				</builder>
 			</site>
 		</filter>
