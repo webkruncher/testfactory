@@ -70,6 +70,11 @@ namespace WebKruncherService
 		virtual InfoKruncher::SocketProcessOptions* NewOptions( XmlFamily::XmlNode& node ); 
 	};
 
+	struct BuildInfo : InfoKruncher::Options< WebKruncherService::BuilderServiceList > 
+	{
+		BuildInfo( int _argc, char** _argv ) :InfoKruncher::Options< WebKruncherService::BuilderServiceList >( _argc, _argv ) {} 
+	};
+
 } // WebKruncherService
 #endif //WEBKRUNCHER_WEBSITE_H
 

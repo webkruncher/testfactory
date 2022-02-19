@@ -155,11 +155,9 @@ void KrScanner( const BuilderProcessOptions& options)
 {
 	using namespace KrDirectories;
 
-
 	KrBuildDefinitions defines( options );
 	if ( ! defines ) throw string("Cannot load build definitions");
 	const string LibPath( defines[ string( "LIBPATH" ) ] );
-
 	
 	regex_t rxupdates;
 	const string expfiles( "^.*\\.cpp$|^.*\\.h$|^CMakeLists.txt$|^.*\\.a$" );
@@ -246,5 +244,7 @@ return;
 		sleep( 1 );
 	}
 }
+
+
 
 

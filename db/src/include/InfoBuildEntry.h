@@ -79,8 +79,9 @@ int main( int argc, char** argv )
 	stringstream ssexcept;
 	try
 	{
-Log( VERB_ALWAYS, "KRBUILDER", "Starting up" );
-		InfoKruncher::Options< WebKruncherService::BuilderServiceList > options( argc, argv );
+		//InfoKruncher::Options< WebKruncherService::BuilderServiceList > options( argc, argv );
+		WebKruncherService::BuildInfo options( argc, argv );
+
 		if ( ! options ) throw string( "Invalid options" );
 		if ( options.find( "-d" ) == options.end() ) Initialize();
 
@@ -95,9 +96,8 @@ Log( VERB_ALWAYS, "KRBUILDER", "Starting up" );
 		}
 		
 		cerr << yellow << "krbuilder is starting up with " << nSites << " sites " << normal << endl;
-Log( VERB_ALWAYS, "KRBUILDER", "Wip"  ) ;
-		KruncherTools::Daemonizer daemon( options.daemonize, "KrBuilder" );
 
+		KruncherTools::Daemonizer daemon( options.daemonize, "KrBuilder" );
 
 		InfoKruncher::Service<WebKruncherService::InfoSite> sites[ nSites ];
 
