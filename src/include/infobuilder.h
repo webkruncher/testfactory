@@ -65,9 +65,21 @@ namespace InfoBuilderService
 		}
 	};
 
+	struct BuildInfoConfiguration : ServiceXml::Configuration
+	{
+		BuildInfoConfiguration( InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
+			: ServiceXml::Configuration( _servicelist, _optionnode, _filter ) {} 
+	};
+
 	struct BuilderServiceList : InfoKruncher::ServiceList
 	{
 		virtual InfoKruncher::SocketProcessOptions* NewOptions( XmlFamily::XmlNode& node ); 
+		XML_BASE& NewConfig( const string& optionnode, const string Filter )
+		{
+			if ( cfg ) return *cfg;
+			cfg=new BuildInfoConfiguration( *this, optionnode, Filter );
+			return *cfg;
+		}
 	};
 
 	struct BuildInfo : InfoKruncher::Options< InfoBuilderService::BuilderServiceList > 
