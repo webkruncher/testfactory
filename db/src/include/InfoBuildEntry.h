@@ -73,16 +73,17 @@ namespace InfoBuilderService
 	}
 
 
-	void BuildInfoConfiguration::FindScannerNode( ServiceXml::Item& node )
+	ServiceXml::Item* BuildInfoConfiguration::FindNode( const string& what, ServiceXml::Item& node )
 	{
-		cerr << "Scrubbing for scanner>>" << endl;
+		if ( node.name == what ) return &node;
 		ServiceXml::Item& nodes( static_cast<ServiceXml::Item& >( node ) );
 		for (XmlFamily::XmlNodeSet::iterator it=nodes.children.begin();it!=nodes.children.end();it++) 
 		{
 			ServiceXml::Item& n(static_cast<ServiceXml::Item&>(*(*it)));
-			cerr << n.name << endl;
-			FindScannerNode( n );
+			ServiceXml::Item* found( FindNode( what, n ) );
+			if ( found ) return found;
 		}
+		return nullptr;
 	}
 
 } // InfoBuilderService
@@ -115,7 +116,9 @@ namespace InfoKruncher
 			InfoBuilderService::BuildInfoConfiguration& buildinfo( static_cast< InfoBuilderService::BuildInfoConfiguration& > ( node ) );
 			ServiceXml::Item* root( static_cast< ServiceXml::Item* >( buildinfo.Root ) );
 			if ( ! root ) throw string("No root node for scanner" );
-			buildinfo.FindScannerNode( *root );
+			ServiceXml::Item* pnode( buildinfo.FindNode( "builder", *root ) );
+			if ( ! pnode )  throw string("Cannot find builder node");
+			InformationBuilder::BuilderNode& Builder( static_cast< InformationBuilder::BuilderNode& >( *pnode ) );
 			KrScanner( builder );
 			cerr << "Done scanning, exiting" << endl;
 			return;
