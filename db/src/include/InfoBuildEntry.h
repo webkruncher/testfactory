@@ -79,7 +79,6 @@ int main( int argc, char** argv )
 	stringstream ssexcept;
 	try
 	{
-		//InfoKruncher::Options< InfoBuilderService::BuilderServiceList > options( argc, argv );
 		InfoBuilderService::BuildInfo options( argc, argv );
 
 		if ( ! options ) throw string( "Invalid options" );
