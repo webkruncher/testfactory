@@ -61,7 +61,7 @@ namespace InfoKruncher
 			cerr << "Done scanning, exiting" << endl;
 			return;
 		}
-		RunService( svcoptions );
+		RunService( node, svcoptions );
 	}
 	template<> void InfoKruncher::Service< InfoBuilderService::InfoSite >::Terminate() { subprocesses.Terminate(); }
 } // InfoKruncher
