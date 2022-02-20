@@ -33,7 +33,8 @@
 #include <directory.h>
 #include <directories.h>
 
-//namespace krbuilder {
+namespace krbuilder 
+{
 	struct KrBuildDefinitions : stringmap
 	{
 		KrBuildDefinitions( const string& _builddefines, const string& _buildtools) : builddefines( _builddefines ), buildtools( _buildtools ) {}
@@ -148,7 +149,7 @@
 		protected:
 		XmlFamily::NodeIndex index;
 	};
-//} // krbuilder
+} // krbuilder
 
 #endif //KRBUILDER_H
 

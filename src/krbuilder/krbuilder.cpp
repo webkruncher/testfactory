@@ -37,7 +37,8 @@ using namespace InfoBuilderService;
 #include "krbuildactors.h"
 
 
-//namespace krbuilder {
+namespace krbuilder 
+{
 	KrBuildDefinitions::operator bool( )
 	{
 		stringmap& me( *this );
@@ -57,21 +58,6 @@ using namespace InfoBuilderService;
 		return true;
 	}
 
-	InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
-	{ 
-		XmlFamily::XmlAttributes& attrs( node.Attributes() );
-		XmlFamily::XmlAttributes::iterator a( attrs.find( "purpose" ) );
-		
-		for ( XmlFamily::XmlAttributes::iterator ait=attrs.begin();ait!=attrs.end();ait++)
-		{
-			const string& name( ait->first );
-			const string& value( ait->second );
-			if ( name == "purpose" )
-				if ( value == "scanner" )
-					return new BuildScanner;
-		}
-		return new BuilderProcessOptions ; 
-	}
 
 	void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& options)
 	{
@@ -160,5 +146,20 @@ using namespace InfoBuilderService;
 		return ServiceXml::Item::operator bool ();
 	}
 
-//} // krbuilder
+} // krbuilder
 
+	InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
+	{ 
+		XmlFamily::XmlAttributes& attrs( node.Attributes() );
+		XmlFamily::XmlAttributes::iterator a( attrs.find( "purpose" ) );
+		
+		for ( XmlFamily::XmlAttributes::iterator ait=attrs.begin();ait!=attrs.end();ait++)
+		{
+			const string& name( ait->first );
+			const string& value( ait->second );
+			if ( name == "purpose" )
+				if ( value == "scanner" )
+					return new krbuilder::BuildScanner;
+		}
+		return new BuilderProcessOptions ; 
+	}

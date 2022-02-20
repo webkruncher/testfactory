@@ -37,7 +37,8 @@ using namespace InfoBuilderService;
 #include "krbuildactors.h"
 
 
-//namespace krbuilder {
+namespace krbuilder 
+{
 
 	void ScanForMakefiles( const string buildtools, const BuilderProcessOptions& options, stringstream& ss )
 	{
@@ -193,7 +194,7 @@ cerr << red << "BRIDGE OUT " << what << normal << endl;
 	void BuildHeaderNode::Updating( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
 	void BuildHeaderNode::Deleting( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
 
-//} //krbuilder
+} //krbuilder
 
 
 

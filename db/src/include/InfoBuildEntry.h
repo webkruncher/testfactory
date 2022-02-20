@@ -45,9 +45,9 @@ namespace InfoBuilderService
 		const string& filter
 	) const
 	{ 
-cerr << blue << name << normal << endl;
+cerr << red << "NewNode:" << name << normal << endl;
 		if ( name == "builder" ) 
-			return new BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
+			return new krbuilder::BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
 
 		XmlFamily::XmlNodeBase* ret(NULL);
 		ret=new ServiceXml::Item(_doc,parent,name,servicelist, optionnode, filter); 
@@ -101,7 +101,7 @@ namespace InfoKruncher
 			if ( ! root ) throw string("No root node for scanner" );
 			ServiceXml::Item* pnode( buildinfo.FindNode( "builder", *root ) );
 			if ( ! pnode )  throw string("Cannot find builder node");
-			BuilderNode& Builder( static_cast< BuilderNode& >( *pnode ) );
+			krbuilder::BuilderNode& Builder( static_cast< krbuilder::BuilderNode& >( *pnode ) );
 			Builder.Scanner( builder );
 			cerr << "Done scanning, exiting" << endl;
 			return;
