@@ -38,8 +38,6 @@ using namespace InfoBuilderService;
 
 
 
-
-
 	InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
 	{ 
 		XmlFamily::XmlAttributes& attrs( node.Attributes() );
