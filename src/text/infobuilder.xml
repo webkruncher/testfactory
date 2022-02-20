@@ -31,16 +31,16 @@
 					target="/home/jmt/Info"
 				>
 					<Makefiles
-						TBD="cmake"
+						TBD="makefile"
 					/>
 					<Sources
-						TBD="g++"
+						TBD="source"
 					/>
 					<Headers
-						TBD="g++"
+						TBD="header"
 					/>
 					<Libraries
-						TBD="g++"
+						TBD="library"
 					/>
 				</builder>
 			</site>

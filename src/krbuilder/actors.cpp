@@ -68,6 +68,32 @@ namespace KrBuildActors
 		}
 	}
 
+	void BuildMakeNode::Creating( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
+	void BuildMakeNode::Retreiving( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
+	void BuildMakeNode::Updating( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
+	void BuildMakeNode::Deleting( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
+
+
+	void BuildSourceNode::Creating( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
+	void BuildSourceNode::Retreiving( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
+	void BuildSourceNode::Updating( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
+	void BuildSourceNode::Deleting( const ftime& what )
+	{
+		cerr << "Deleted " << what << endl << (*this) << endl;
+	}
+
+
+	void BuildLibraryNode::Creating( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
+	void BuildLibraryNode::Retreiving( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
+	void BuildLibraryNode::Updating( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
+	void BuildLibraryNode::Deleting( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
+
+
+	void BuildHeaderNode::Creating( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
+	void BuildHeaderNode::Retreiving( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
+	void BuildHeaderNode::Updating( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
+	void BuildHeaderNode::Deleting( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
+
 } //KrBuildActors
 
 

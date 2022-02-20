@@ -55,10 +55,10 @@ namespace KrBuildActors
 		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
 			{ return new BuildMakeNode	( _doc, parent, name, servicelist, optionnode, filter); }
 		operator bool () { return BuildActorNode::operator bool(); }
-		virtual void Creating( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
-		virtual void Retreiving( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
-		virtual void Updating( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
-		virtual void Deleting( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
+		virtual void Creating( const ftime& );
+		virtual void Retreiving( const ftime& );
+		virtual void Updating( const ftime& );
+		virtual void Deleting( const ftime& );
 	};
 
 	struct BuildSourceNode : BuildActorNode
@@ -69,10 +69,10 @@ namespace KrBuildActors
 		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
 			{ return new BuildSourceNode	( _doc, parent, name, servicelist, optionnode, filter); }
 		operator bool () { return BuildActorNode::operator bool(); }
-		virtual void Creating( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
-		virtual void Retreiving( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
-		virtual void Updating( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
-		virtual void Deleting( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
+		virtual void Creating( const ftime& );
+		virtual void Retreiving( const ftime& );
+		virtual void Updating( const ftime& );
+		virtual void Deleting( const ftime& );
 	};
 
 	struct BuildLibraryNode : BuildActorNode
@@ -83,10 +83,10 @@ namespace KrBuildActors
 		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
 			{ return new BuildLibraryNode	( _doc, parent, name, servicelist, optionnode, filter); }
 		operator bool () { return BuildActorNode::operator bool(); }
-		virtual void Creating( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
-		virtual void Retreiving( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
-		virtual void Updating( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
-		virtual void Deleting( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
+		virtual void Creating( const ftime& what );
+		virtual void Retreiving( const ftime& what );
+		virtual void Updating( const ftime& what );
+		virtual void Deleting( const ftime& what );
 	};
 
 	struct BuildHeaderNode : BuildActorNode
@@ -97,10 +97,10 @@ namespace KrBuildActors
 		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
 			{ return new BuildHeaderNode	( _doc, parent, name, servicelist, optionnode, filter); }
 		operator bool () { return BuildActorNode::operator bool(); }
-		virtual void Creating( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
-		virtual void Retreiving( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
-		virtual void Updating( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
-		virtual void Deleting( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
+		virtual void Creating( const ftime& );
+		virtual void Retreiving( const ftime& );
+		virtual void Updating( const ftime& );
+		virtual void Deleting( const ftime& );
 	};
 
 
