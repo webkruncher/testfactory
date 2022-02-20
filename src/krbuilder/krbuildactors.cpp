@@ -45,9 +45,8 @@ namespace krbuilder
 		KruncherTools::forkpipe( buildtools, parameters, "", ss );
 	}
 
-	const string SliceProjectName( const KrBuildDefinitions& defines,  const string& pathname )
+	const string SliceProjectName( const string& LibPath,  const string& pathname )
 	{
-		const string LibPath( defines[ "LIBPATH" ] );
 		if ( pathname.find( LibPath ) != 0 ) throw pathname;
 		const string pathlessname( pathname.substr( LibPath.size(), pathname.size()-LibPath.size() ) );
 		const size_t ls( pathlessname.find_last_of( "/" ) );
@@ -58,7 +57,7 @@ namespace krbuilder
 
 	void ScanCmake
 	(
-		const KrBuildDefinitions& defines, 
+		const string& LibPath, 
 		const string& buildtools, 
 		const string cmake, 
 		KrBuilder& builder, 
@@ -71,7 +70,8 @@ namespace krbuilder
 		KrProjects empty;
 		builder.emplace( pathname, empty );
 
-		const string ProjectName( SliceProjectName( defines, pathname ) );
+		const string ProjectName( SliceProjectName( LibPath, pathname ) );
+cerr << "Project:" << ProjectName << fence << how << endl;
 
 
 		KrProjects& projects( builder[ ProjectName ] );
@@ -139,18 +139,36 @@ namespace krbuilder
 		}
 	}
 
-	void BuildMakeNode::Creating( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
-	void BuildMakeNode::Retreiving( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
+	void BuildMakeNode::Creating( const ftime& what ) 	{ Updating( what ); }
+	void BuildMakeNode::Retreiving( const ftime& what ) 	{ throw string( "No retreive method in BuildNode: " ) + what; }
+
+
+		bool IsProject( const string& fname, const string buildtools )
+		{
+cerr << "IsProject:" << fname << endl;
+			stringstream ss;
+			KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-IsProject", nullptr };
+			KruncherTools::forkpipe( buildtools, parameters, "", ss );
+cerr << blue << buildtools << fence << red << ss.str() << normal << endl;
+			return ( ss.str() == "VERSION 3.10" );
+		};
+
+
 	void BuildMakeNode::Updating( const ftime& what ) 	
 	{ 
 		const string& BuildTools( XmlFamilyUtils::AncestorsAttribute( this, "buildtools" ) );
 		const string& BuildDefines( XmlFamilyUtils::AncestorsAttribute( this, "builddefines" ) );
+		const string& LibPath( Property( "LibPath" ) );
 
-		cerr << "Tools:" << BuildTools << endl;
-		cerr << "Defines:" << BuildDefines << endl;
+		//cerr << "Tools:" << BuildTools << endl;
+		//cerr << "Defines:" << BuildDefines << endl;
+		cerr << yellow << "LibPath:" << LibPath << normal << endl;
 
-		cerr << yellow << "LibPath:" << Property( "LibPath" ) << normal << endl;
 
+return;
+		if ( ! IsProject( BuildTools, what ) ) return;
+		cerr << green << what << normal << endl;
+return;
 		KrBuildSpecs libraries, includes;	
 
 		stringstream ssCMakefiles;
@@ -162,36 +180,32 @@ namespace krbuilder
 			const string projectpath( *sit );
 			if ( projectpath.empty() ) continue;
 			if ( projectpath[ 0 ] != '/' ) continue;
-//			ScanCmake( BuildDefines, BuildTools, projectpath, libraries, "-GetCmakeLinkage" );
-//			ScanCmake( BuildDefines, BuildTools, projectpath, includes, "-GetCmakeIncludes" );
+			ScanCmake( LibPath, BuildTools, projectpath, libraries, "-GetCmakeLinkage" );
+			ScanCmake( LibPath, BuildTools, projectpath, includes, "-GetCmakeIncludes" );
 		}
 
-		UpdateBuildSpecs( libraries, "libraries" );	
-		UpdateBuildSpecs( includes, "includes" );	
-
+		//UpdateBuildSpecs( libraries, "libraries" );	
+		//UpdateBuildSpecs( includes, "includes" );	
 
 	}
-	void BuildMakeNode::Deleting( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
+	void BuildMakeNode::Deleting( const ftime& what ) 	{}//{ cerr << "MakeNode:" << what << endl; }
 
-	void BuildSourceNode::Creating( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
-	void BuildSourceNode::Retreiving( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
-	void BuildSourceNode::Updating( const ftime& what ) 	{ cerr << "SourceNode:" << what << endl; }
-	void BuildSourceNode::Deleting( const ftime& what )
-	{
-		cerr << "Deleted " << what << endl << (*this) << endl;
-	}
+	void BuildSourceNode::Creating( const ftime& what ) 	{}//{ cerr << "SourceNode:" << what << endl; }
+	void BuildSourceNode::Retreiving( const ftime& what ) 	{}//{ cerr << "SourceNode:" << what << endl; }
+	void BuildSourceNode::Updating( const ftime& what ) 	{}//{ cerr << "SourceNode:" << what << endl; }
+	void BuildSourceNode::Deleting( const ftime& what ) 	{}//{ cerr << "Deleted " << what << endl << (*this) << endl; }
 
 
-	void BuildLibraryNode::Creating( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
-	void BuildLibraryNode::Retreiving( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
-	void BuildLibraryNode::Updating( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
-	void BuildLibraryNode::Deleting( const ftime& what ) 	{ cerr << "LibraryNode:" << what << endl; }
+	void BuildLibraryNode::Creating( const ftime& what ) 	{}//{ cerr << "LibraryNode:" << what << endl; }
+	void BuildLibraryNode::Retreiving( const ftime& what ) 	{}//{ cerr << "LibraryNode:" << what << endl; }
+	void BuildLibraryNode::Updating( const ftime& what ) 	{}//{ cerr << "LibraryNode:" << what << endl; }
+	void BuildLibraryNode::Deleting( const ftime& what ) 	{}//{ cerr << "LibraryNode:" << what << endl; }
 
 
-	void BuildHeaderNode::Creating( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
-	void BuildHeaderNode::Retreiving( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
-	void BuildHeaderNode::Updating( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
-	void BuildHeaderNode::Deleting( const ftime& what ) 	{ cerr << "HeaderNode:" << what << endl; }
+	void BuildHeaderNode::Creating( const ftime& what ) 	{}//{ cerr << "HeaderNode:" << what << endl; }
+	void BuildHeaderNode::Retreiving( const ftime& what ) 	{}//{ cerr << "HeaderNode:" << what << endl; }
+	void BuildHeaderNode::Updating( const ftime& what ) 	{}//{ cerr << "HeaderNode:" << what << endl; }
+	void BuildHeaderNode::Deleting( const ftime& what ) 	{}//{ cerr << "HeaderNode:" << what << endl; }
 
 } //krbuilder
 

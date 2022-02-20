@@ -78,7 +78,6 @@ namespace krbuilder
 		const string expfiles( "^.*\\.cpp$|^.*\\.h$|^CMakeLists.txt$|^.*\\.a$" );
 		if ( regcomp( &rxupdates, expfiles.c_str(), REG_EXTENDED ) ) throw expfiles;
 		FileTimeTracker tracker;
-		bool first( true );
 		while ( ! TERMINATE )
 		{
 			FileTimes fileupdates( LibPath, true, rxupdates, tracker );
@@ -115,17 +114,14 @@ namespace krbuilder
 				if ( ! ftimes.empty() ) b( ftimes );
 			};
 
-			if ( ! first )
 			{
 				Run( index, make, "Makefiles" );
 				Run( index, cpp, "Sources" );
 				Run( index, h, "Headers" );
 				Run( index, lib, "Libraries" );
 			}
-
 			
 			if ( ! tracker ) throw string("File time tracker error");
-			first=false;
 		} 
 
 	}
