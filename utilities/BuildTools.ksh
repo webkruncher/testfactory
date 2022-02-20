@@ -434,7 +434,10 @@ fi
 
 if [ "${1}" == "-IsProject" ]; then
 	shift
-	#echo -ne "\033[45m\033[34m${1}\033[0m\n" >> /home/jmt/scratch.txt
-	cat ${1} | grep "cmake_minimum_required" | cut -d '(' -f2 | cut -d ')' -f1
+	if [ ! -z ${1} ]; then
+		if [ -f ${1} ]; then
+			head ${1} | grep "cmake_minimum_required" | cut -d '(' -f2 | cut -d ')' -f1
+		fi
+	fi
 fi
 

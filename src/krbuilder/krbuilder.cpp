@@ -80,8 +80,14 @@ namespace krbuilder
 		FileTimeTracker tracker;
 		while ( ! TERMINATE )
 		{
+			usleep( 100 );
 			FileTimes fileupdates( LibPath, true, rxupdates, tracker );
-			if ( ! fileupdates ) return;
+			if ( ! fileupdates ) 
+			{
+				cerr << "Cannot open " << LibPath << endl;
+				sleep( 1 );
+				continue;
+			}
 
 			ftimevector cpp,h,make,lib;
 

@@ -71,8 +71,6 @@ namespace krbuilder
 		builder.emplace( pathname, empty );
 
 		const string ProjectName( SliceProjectName( LibPath, pathname ) );
-cerr << "Project:" << ProjectName << fence << how << endl;
-
 
 		KrProjects& projects( builder[ ProjectName ] );
 		KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) how.c_str(), (char*) pathname.c_str(), nullptr };
@@ -174,18 +172,16 @@ cerr << "Project:" << ProjectName << fence << how << endl;
 		const string& LibPath( Property( "LibPath" ) );
 
 		const string projectline( ProjectLine( BuildTools, what ) );
-		
 		if ( projectline.empty() ) return; // TBD...
-		
 		Log( VERB_ALWAYS, what, projectline );
 
 		KrBuildSpecs libraries, includes;	
-
 		ScanCmake( LibPath, BuildTools, what, libraries, "-GetCmakeLinkage" );
 		ScanCmake( LibPath, BuildTools, what, includes, "-GetCmakeIncludes" );
 
 		UpdateBuildSpecs( libraries, "libraries" );	
-		UpdateBuildSpecs( includes, "includes" );	
+		UpdateBuildSpecs( includes, "includes" );
+		cerr << "Done with " << what << endl;	
 
 	}
 	void BuildMakeNode::Deleting( const ftime& what ) 	{}//{ cerr << "MakeNode:" << what << endl; }

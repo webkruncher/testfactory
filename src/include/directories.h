@@ -124,6 +124,7 @@ namespace KrDirectories
 		FileTimes( const string& _where, const bool _recurse, const regex_t _ex, FileTimeTracker& _tracker ) 
 			: Directory( _where, _recurse ), ex( _ex ), tracker( _tracker )
 		{}
+		virtual ~FileTimes(){}
 		const FileTimes& operator = (const FileTimes& that )
 		{
 			if ( this == &that ) return *this;
@@ -131,6 +132,11 @@ namespace KrDirectories
 			recurse=that.recurse;
 			ex=that.ex;
 			return *this;
+		}
+		virtual operator bool ()
+		{
+			if ( ! subs.empty() ) cerr << red << "Clearing " << where << endl;
+			return KruncherDirectory::Directory::operator bool ();
 		}
 		Directory& NewSub( const string _where, const bool _recurse );
 		private:
