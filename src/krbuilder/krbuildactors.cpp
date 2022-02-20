@@ -173,32 +173,19 @@ cerr << "Project:" << ProjectName << fence << how << endl;
 		const string& BuildDefines( XmlFamilyUtils::AncestorsAttribute( this, "builddefines" ) );
 		const string& LibPath( Property( "LibPath" ) );
 
-		//cerr << "Tools:" << BuildTools << endl;
-		//cerr << "Defines:" << BuildDefines << endl;
-		//cerr << yellow << "LibPath:" << LibPath << normal << endl;
-
 		const string projectline( ProjectLine( BuildTools, what ) );
-		if ( projectline.find( "VERSION" ) != 0 ) return; // TBD...
-		//cerr << green << what << blue << fence << teal << projectline << normal << endl;
+		
+		if ( projectline.empty() ) return; // TBD...
+		
 		Log( VERB_ALWAYS, what, projectline );
-return;
+
 		KrBuildSpecs libraries, includes;	
 
-		stringstream ssCMakefiles;
-		ScanForMakefiles( BuildTools, ssCMakefiles );
-		stringvector sv; sv.split( ssCMakefiles.str(), "\n" );
-	
-		for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
-		{
-			const string projectpath( *sit );
-			if ( projectpath.empty() ) continue;
-			if ( projectpath[ 0 ] != '/' ) continue;
-			ScanCmake( LibPath, BuildTools, projectpath, libraries, "-GetCmakeLinkage" );
-			ScanCmake( LibPath, BuildTools, projectpath, includes, "-GetCmakeIncludes" );
-		}
+		ScanCmake( LibPath, BuildTools, what, libraries, "-GetCmakeLinkage" );
+		ScanCmake( LibPath, BuildTools, what, includes, "-GetCmakeIncludes" );
 
-		//UpdateBuildSpecs( libraries, "libraries" );	
-		//UpdateBuildSpecs( includes, "includes" );	
+		UpdateBuildSpecs( libraries, "libraries" );	
+		UpdateBuildSpecs( includes, "includes" );	
 
 	}
 	void BuildMakeNode::Deleting( const ftime& what ) 	{}//{ cerr << "MakeNode:" << what << endl; }
