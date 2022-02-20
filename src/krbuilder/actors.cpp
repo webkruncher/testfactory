@@ -38,17 +38,40 @@ using namespace InfoBuilderService;
 
 namespace KrBuildActors
 {
+	XmlFamily::XmlNodeBase* BuildActorNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
+	{ 
+		XmlFamily::XmlNodeBase* ret(NULL);
+		if ( name == "Makefiles" ) 	ret=new BuildMakeNode	( _doc, parent, name, servicelist, optionnode, filter); 
+		if ( name == "Sources" ) 	ret=new BuildSourceNode	( _doc, parent, name, servicelist, optionnode, filter); 
+		if ( name == "Libraries" ) 	ret=new BuildLibraryNode( _doc, parent, name, servicelist, optionnode, filter); 
+		if ( name == "Headers" ) 	ret=new BuildHeaderNode	( _doc, parent, name, servicelist, optionnode, filter); 
+		if ( ! ret ) throw name;
+		return ret;
+	}
 
-		XmlFamily::XmlNodeBase* BuildActorNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
-		{ 
-			XmlFamily::XmlNodeBase* ret(NULL);
-			ret=new BuildActorNode( _doc, parent, name, servicelist, optionnode, filter); 
-			return ret;
-		}
-		BuildActorNode::operator bool ()
+	void BuildActorNode::operator()( const KrDirectories::ftimevector& ftimes)
+	{
+		for ( KrDirectories::ftimevector::const_iterator it=ftimes.begin();it!=ftimes.end();it++)
 		{
-			return BuilderNode::operator bool ();
+			const KrDirectories::ftime& what( *it );
+			char C( '-' );
+			switch ( what.crud )
+			{
+				case Create: 	Creation( what ); C='C'; break;
+				case Retreive: 	C='R'; break;
+				case Update: 	C='U'; break;
+				case Delete: 	C='D'; break;
+			}
+			stringstream sso;
+			sso << C << fence << what;
+			Log( VERB_ALWAYS, name, sso.str() );
 		}
+	}
+
 } //KrBuildActors
+
+
+
+
 
 

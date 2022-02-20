@@ -233,9 +233,6 @@ return;
 #endif
 }
 
-
-
-
 	XmlFamily::XmlNodeBase* BuilderNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
 	{ 
 		XmlFamily::XmlNodeBase* ret(NULL);
@@ -251,29 +248,10 @@ return;
 		{
 			XmlNode& n=static_cast<XmlNode&>(*(*it));
 			BuilderNode& b( static_cast<BuilderNode&>( n ) );
+			//cerr << name << "->" << b.name << endl;
 			index( b.name, &b );
 		}
 		return ServiceXml::Item::operator bool ();
-	}
-
-
-	void BuilderNode::operator()( const KrDirectories::ftimevector& ftimes)
-	{
-		for ( KrDirectories::ftimevector::const_iterator it=ftimes.begin();it!=ftimes.end();it++)
-		{
-			const KrDirectories::ftime& what( *it );
-			char C( '-' );
-			switch ( what.crud )
-			{
-				case Create: 	C='C'; break;
-				case Retreive: 	C='R'; break;
-				case Update: 	C='U'; break;
-				case Delete: 	C='D'; break;
-			}
-			stringstream sso;
-			sso << C << fence << what;
-			Log( VERB_ALWAYS, name, sso.str() );
-		}
 	}
 
 

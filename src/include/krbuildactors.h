@@ -29,14 +29,71 @@
 #define KRBUILDER_ACTORS_H
 namespace KrBuildActors
 {
+	using namespace KrDirectories;
 	struct BuildActorNode : BuilderNode
 	{
 		BuildActorNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
 			: BuilderNode(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
 		{}
 		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const;
-		virtual operator bool ();
+		operator bool () { return BuilderNode::operator bool(); }
+		private:
+		virtual void Creation( const ftime& what )
+			{ throw name + string( " Unimplemented BuildActorNode " ) +  what ; }
+		virtual void operator()( const KrDirectories::ftimevector& ftimes ); 
 	};
+
+
+
+	struct BuildMakeNode : BuildActorNode
+	{
+		BuildMakeNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
+			: BuildActorNode(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
+		{}
+		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
+			{ return new BuildMakeNode	( _doc, parent, name, servicelist, optionnode, filter); }
+		operator bool () { return BuildActorNode::operator bool(); }
+		virtual void Creation( const ftime& what )
+			{ cerr << "MakeNode:" << what << endl; }
+	};
+
+	struct BuildSourceNode : BuildActorNode
+	{
+		BuildSourceNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
+			: BuildActorNode(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
+		{}
+		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
+			{ return new BuildSourceNode	( _doc, parent, name, servicelist, optionnode, filter); }
+		operator bool () { return BuildActorNode::operator bool(); }
+		virtual void Creation( const ftime& what )
+			{ cerr << "SourceNode:" << what << endl; }
+	};
+
+	struct BuildLibraryNode : BuildActorNode
+	{
+		BuildLibraryNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
+			: BuildActorNode(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
+		{}
+		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
+			{ return new BuildLibraryNode	( _doc, parent, name, servicelist, optionnode, filter); }
+		operator bool () { return BuildActorNode::operator bool(); }
+		virtual void Creation( const ftime& what )
+			{ cerr << "LibraryNode:" << what << endl; }
+	};
+
+	struct BuildHeaderNode : BuildActorNode
+	{
+		BuildHeaderNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
+			: BuildActorNode(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
+		{}
+		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
+			{ return new BuildHeaderNode	( _doc, parent, name, servicelist, optionnode, filter); }
+		operator bool () { return BuildActorNode::operator bool(); }
+		virtual void Creation( const ftime& what )
+			{ cerr << "HeaderNode:" << what << endl; }
+	};
+
+
 } //KrBuildActors
 #endif // KRBUILDER_ACTORS_H
 

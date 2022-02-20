@@ -142,7 +142,8 @@ struct BuilderNode : ServiceXml::Item
 	virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const;
 	virtual operator bool ();
 	void Scanner( const InfoBuilderService::BuilderProcessOptions& options);
-	virtual void operator()( const KrDirectories::ftimevector& ftimes );
+	virtual void operator()( const KrDirectories::ftimevector& ftimes )
+		{ throw string( "Unimplemented BuilderNode: ") + name; }
 	protected:
 	XmlFamily::NodeIndex index;
 };
