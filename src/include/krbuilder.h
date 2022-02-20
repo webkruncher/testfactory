@@ -30,7 +30,8 @@
 #include <infobuilder.h>
 #include <directory.h>
 #include <regex.h>
-
+#include <directory.h>
+#include <directories.h>
 
 struct KrBuildDefinitions : stringmap
 {
@@ -130,10 +131,7 @@ struct KrBuildSpecs : KrBuilder
 
 inline ostream& operator<<( ostream& o, const KrBuildSpecs& k ) { return k.operator<<( o ); }
 
-struct BuildScanner : InfoBuilderService::BuilderProcessOptions
-{
-	BuildScanner() {}
-};
+struct BuildScanner : InfoBuilderService::BuilderProcessOptions {};
 
 
 struct BuilderNode : ServiceXml::Item
@@ -144,6 +142,9 @@ struct BuilderNode : ServiceXml::Item
 	virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const;
 	virtual operator bool ();
 	void Scanner( const InfoBuilderService::BuilderProcessOptions& options);
+	virtual void operator()( const KrDirectories::ftimevector& ftimes );
+	protected:
+	XmlFamily::NodeIndex index;
 };
 
 #endif //KRBUILDER_H

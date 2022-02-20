@@ -40,11 +40,9 @@ using namespace InfoBuilderService;
 KrBuildDefinitions::operator bool( )
 {
 	stringmap& me( *this );
-	//cerr << "KrBuildDefinitions:" << endl; 
 	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetBuildDefines", (char*) builddefines.c_str(), nullptr };
 	stringstream ss;
 	KruncherTools::forkpipe( buildtools, parameters, "", ss );
-	//cerr << ss.str() << endl;
 	stringvector lines; lines.split( ss.str(), "\n" );
 	for ( stringvector::const_iterator lit=lines.begin();lit!=lines.end();lit++)
 	{
@@ -53,7 +51,6 @@ KrBuildDefinitions::operator bool( )
 		if ( parts.size() < 3 ) continue;
 		const string name( parts[ 1 ] );
 		const string value( parts[ 2 ] );
-		//cerr << name << " = " << value << endl;
 		me[ name ] = value;
 	}
 	return true;
@@ -68,14 +65,11 @@ void ScanForMakefiles( const string buildtools, const BuilderProcessOptions& opt
 const string SliceProjectName( const KrBuildDefinitions& defines,  const string& pathname )
 {
 	const string LibPath( defines[ "LIBPATH" ] );
-	//cerr << red << LibPath << "->" << pathname << normal << endl;
 	if ( pathname.find( LibPath ) != 0 ) throw pathname;
 	const string pathlessname( pathname.substr( LibPath.size(), pathname.size()-LibPath.size() ) );
-	//cerr << green << LibPath << "->" << pathlessname << normal << endl;
 	const size_t ls( pathlessname.find_last_of( "/" ) );
 	if ( ls == string::npos ) throw pathlessname;
 	const string projectname( pathlessname.substr( 1, ls-1 ) );
-	//cerr << teal << LibPath << "->" << projectname << normal << endl;
 	return projectname;
 }
 
@@ -121,9 +115,6 @@ void UpdateBuildSpecs( const KrBuildSpecs& krbuilder, const string where )
 
 	if ( true )
 	{
-		//cerr << green << where << normal << endl;
-		//cerr << buildprinter ;
-		//cerr << teal << builder << normal << endl;
 		cout << "Post:" << endl << sspost.str();
 		cout << setw( 128 ) << setfill( '-' ) << "-" << endl;
 	}
@@ -153,7 +144,6 @@ InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::X
 void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& options)
 {
 	using namespace KrDirectories;
-	cerr << "Scanning:" << endl << (*this) << endl;
 
 	KrBuildDefinitions defines( options.builddefines, options.buildtools );
 	if ( ! defines ) throw string("Cannot load build definitions");
@@ -161,7 +151,6 @@ void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& opti
 	
 	regex_t rxupdates;
 	const string expfiles( "^.*\\.cpp$|^.*\\.h$|^CMakeLists.txt$|^.*\\.a$" );
-	//const string expfiles( "^.*\\.one$" );
 	if ( regcomp( &rxupdates, expfiles.c_str(), REG_EXTENDED ) ) throw expfiles;
 	FileTimeTracker tracker;
 	bool first( true );
@@ -170,7 +159,7 @@ void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& opti
 		FileTimes fileupdates( LibPath, true, rxupdates, tracker );
 		if ( ! fileupdates ) return;
 
-		ftimevector cpp,h,make,lib;// ,one;
+		ftimevector cpp,h,make,lib;
 
 		struct P : pair< string, ftimevector* >
 			{ P( const string what, ftimevector* how ) : pair< string, ftimevector* >( what, how ) {} };
@@ -182,36 +171,34 @@ void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& opti
 		P H( ".h", &h );
 		P Make( ".txt", &make );
 		P Lib( ".a", &lib );
-		//P One( ".one", &one );
 		
 		collection.insert( Cpp );
 		collection.insert( H );
 		collection.insert( Make );
 		collection.insert( Lib );
-		//collection.insert( One );
 
 		tracker >> collection;
-		
-		for ( KrCollections::const_iterator cit=collection.begin();cit!=collection.end();cit++)
+
+		auto Run = []( XmlFamily::NodeIndex& index, ftimevector& ftimes, const string& nodename )
 		{
-			const string& what( cit->first );
-			const ftimevector& where( *cit->second );
-			for ( ftimevector::const_iterator fit=where.begin();fit!=where.end();fit++)
+			XmlNodeBase* p( index[ nodename ] );
+			if ( !p ) 
 			{
-				const ftime& n( *fit );
-				char C( '-' );
-				switch ( n.crud )
-				{
-					case Create: 	C='C'; break;
-					case Retreive: 	C='R'; break;
-					case Update: 	C='U'; break;
-					case Delete: 	C='D'; break;
-				}
-				stringstream sso;
-				sso << ">" << fence << what << fence << C << fence << n << endl;
-				if ( ! first ) Log( VERB_ALWAYS, "KrBuildIt>>", sso.str() );
+				Log( VERB_ALWAYS, "NodeBuilder - No support for ", nodename );
 			}
+			BuilderNode& b( static_cast< BuilderNode& >( *p ) );
+			if ( ! ftimes.empty() ) b( ftimes );
+		};
+
+		if ( ! first )
+		{
+			Run( index, make, "Makefiles" );
+			Run( index, cpp, "Sources" );
+			Run( index, h, "Headers" );
+			Run( index, lib, "Libraries" );
 		}
+
+		
 		if ( ! tracker ) throw string("File time tracker error");
 		first=false;
 	} 
@@ -260,9 +247,33 @@ return;
 
 	BuilderNode::operator bool ()
 	{
-		cerr << "Indexing node:" << name << endl;
+		for (XmlFamily::XmlNodeSet::iterator it=children.begin();it!=children.end();it++) 
+		{
+			XmlNode& n=static_cast<XmlNode&>(*(*it));
+			BuilderNode& b( static_cast<BuilderNode&>( n ) );
+			index( b.name, &b );
+		}
 		return ServiceXml::Item::operator bool ();
 	}
 
+
+	void BuilderNode::operator()( const KrDirectories::ftimevector& ftimes)
+	{
+		for ( KrDirectories::ftimevector::const_iterator it=ftimes.begin();it!=ftimes.end();it++)
+		{
+			const KrDirectories::ftime& what( *it );
+			char C( '-' );
+			switch ( what.crud )
+			{
+				case Create: 	C='C'; break;
+				case Retreive: 	C='R'; break;
+				case Update: 	C='U'; break;
+				case Delete: 	C='D'; break;
+			}
+			stringstream sso;
+			sso << C << fence << what;
+			Log( VERB_ALWAYS, name, sso.str() );
+		}
+	}
 
 

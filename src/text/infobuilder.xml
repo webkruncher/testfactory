@@ -30,8 +30,17 @@
 				<builder
 					target="/home/jmt/Info"
 				>
-					<Maker
+					<Makefiles
 						TBD="cmake"
+					/>
+					<Sources
+						TBD="g++"
+					/>
+					<Headers
+						TBD="g++"
+					/>
+					<Libraries
+						TBD="g++"
 					/>
 				</builder>
 			</site>

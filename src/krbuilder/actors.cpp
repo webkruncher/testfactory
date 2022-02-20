@@ -25,18 +25,30 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef KRBUILDER_ACTORS_H
-#define KRBUILDER_ACTORS_H
+
+#include <infokruncher.h>
+#include <infosite.h>
+#include <exexml.h>
+#include <infofigur.h>
+#include <infobuilder.h>
+#include <krbuilder.h>
+using namespace InfoBuilderService;
+#include "directories.h"
+#include "krbuildactors.h"
+
 namespace KrBuildActors
 {
-	struct BuildActorNode : BuilderNode
-	{
-		BuildActorNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
-			: BuilderNode(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
-		{}
-		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const;
-		virtual operator bool ();
-	};
+
+		XmlFamily::XmlNodeBase* BuildActorNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
+		{ 
+			XmlFamily::XmlNodeBase* ret(NULL);
+			ret=new BuildActorNode( _doc, parent, name, servicelist, optionnode, filter); 
+			return ret;
+		}
+		BuildActorNode::operator bool ()
+		{
+			return BuilderNode::operator bool ();
+		}
 } //KrBuildActors
-#endif // KRBUILDER_ACTORS_H
+
 
