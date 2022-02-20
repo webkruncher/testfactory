@@ -143,15 +143,28 @@ cerr << "Project:" << ProjectName << fence << how << endl;
 	void BuildMakeNode::Retreiving( const ftime& what ) 	{ throw string( "No retreive method in BuildNode: " ) + what; }
 
 
-		bool IsProject( const string& fname, const string buildtools )
-		{
-cerr << "IsProject:" << fname << endl;
+	string ProjectLine( const string& buildtools, const string& fname )
+	{
+		#if 1
+			//cerr << buildtools << " -IsProject:" << fname << endl;
 			stringstream ss;
-			KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-IsProject", nullptr };
+			KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-IsProject", (char*)fname.c_str(), nullptr };
 			KruncherTools::forkpipe( buildtools, parameters, "", ss );
-cerr << blue << buildtools << fence << red << ss.str() << normal << endl;
-			return ( ss.str() == "VERSION 3.10" );
-		};
+			//cerr << blue << buildtools << fence << red << ss.str() << normal << endl;
+			return ss.str();
+		#else
+			ifstream in( fname.c_str() );
+			for ( int j=0;j<10;j++ )
+			{
+				string line;
+				getline( in, line );
+				if ( line.empty() ) continue;
+				if ( line.find( "project") == 0 )
+					return line;
+			}
+			return "";
+		#endif
+	};
 
 
 	void BuildMakeNode::Updating( const ftime& what ) 	
@@ -162,12 +175,12 @@ cerr << blue << buildtools << fence << red << ss.str() << normal << endl;
 
 		//cerr << "Tools:" << BuildTools << endl;
 		//cerr << "Defines:" << BuildDefines << endl;
-		cerr << yellow << "LibPath:" << LibPath << normal << endl;
+		//cerr << yellow << "LibPath:" << LibPath << normal << endl;
 
-
-return;
-		if ( ! IsProject( BuildTools, what ) ) return;
-		cerr << green << what << normal << endl;
+		const string projectline( ProjectLine( BuildTools, what ) );
+		if ( projectline.find( "VERSION" ) != 0 ) return; // TBD...
+		//cerr << green << what << blue << fence << teal << projectline << normal << endl;
+		Log( VERB_ALWAYS, what, projectline );
 return;
 		KrBuildSpecs libraries, includes;	
 
