@@ -63,11 +63,16 @@ namespace krbuilder
 	{
 		using namespace KrDirectories;
 
-		const string& BuildDefines( attributes[ "builddefines" ] );
-		const string& BuildTools( attributes[ "buildtools" ] );
-		KrBuildDefinitions defines( BuildDefines, BuildTools );
-		if ( ! defines ) throw string("Cannot load build definitions");
-		const string LibPath( defines[ string( "LIBPATH" ) ] );
+		{
+			const string& BuildDefines( attributes[ "builddefines" ] );
+			const string& BuildTools( attributes[ "buildtools" ] );
+			KrBuildDefinitions defines( BuildDefines, BuildTools );
+			if ( ! defines ) throw string("Cannot load build definitions");
+			properties[ "LibPath" ]=( defines[ string( "LIBPATH" ) ] );
+		}
+
+		const string LibPath( properties[ "LibPath" ] );
+		if ( LibPath.empty() ) throw string("LibPath");
 		
 		regex_t rxupdates;
 		const string expfiles( "^.*\\.cpp$|^.*\\.h$|^CMakeLists.txt$|^.*\\.a$" );
@@ -148,18 +153,20 @@ namespace krbuilder
 
 } // krbuilder
 
-	InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
-	{ 
-		XmlFamily::XmlAttributes& attrs( node.Attributes() );
-		XmlFamily::XmlAttributes::iterator a( attrs.find( "purpose" ) );
-		
-		for ( XmlFamily::XmlAttributes::iterator ait=attrs.begin();ait!=attrs.end();ait++)
-		{
-			const string& name( ait->first );
-			const string& value( ait->second );
-			if ( name == "purpose" )
-				if ( value == "scanner" )
-					return new krbuilder::BuildScanner;
-		}
-		return new BuilderProcessOptions ; 
+InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
+{ 
+	XmlFamily::XmlAttributes& attrs( node.Attributes() );
+	XmlFamily::XmlAttributes::iterator a( attrs.find( "purpose" ) );
+	
+	for ( XmlFamily::XmlAttributes::iterator ait=attrs.begin();ait!=attrs.end();ait++)
+	{
+		const string& name( ait->first );
+		const string& value( ait->second );
+		if ( name == "purpose" )
+			if ( value == "scanner" )
+				return new krbuilder::BuildScanner;
 	}
+	return new BuilderProcessOptions ; 
+}
+
+

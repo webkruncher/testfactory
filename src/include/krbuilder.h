@@ -50,7 +50,6 @@ namespace krbuilder
 		const string& buildtools;
 	};
 
-
 	struct crudstring : string
 	{
 		crudstring() : crud( Create ) {}
@@ -146,7 +145,18 @@ namespace krbuilder
 		void Scanner( const InfoBuilderService::BuilderProcessOptions& options);
 		virtual void operator()( const KrDirectories::ftimevector& ftimes )
 			{ throw string( "Unimplemented BuilderNode: ") + name; }
+	
 		protected:
+		virtual const string Property( const string& what ) const
+		{
+			stringmap::const_iterator it( properties.find( what ) );
+			if ( it == properties.end() )
+			{
+				ServiceXml::Item& P( static_cast< ServiceXml::Item& > ( GetParent() ) );
+				return P.Property( what );
+			} 
+			return it->second;
+		}
 		XmlFamily::NodeIndex index;
 	};
 } // krbuilder

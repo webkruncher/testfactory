@@ -30,6 +30,8 @@
 namespace krbuilder 
 {
 	using namespace KrDirectories;
+
+
 	struct BuildActorNode : BuilderNode
 	{
 		BuildActorNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 

@@ -27,7 +27,7 @@ add_library(
 		STATIC
 			krbuilder.cpp
 			buildservice.cpp
-			actors.cpp
+			krbuildactors.cpp
 )
 
 add_library( kruncher::krbuilder  ALIAS krbuilder  )
