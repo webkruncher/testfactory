@@ -57,10 +57,10 @@ namespace KrBuildActors
 			char C( '-' );
 			switch ( what.crud )
 			{
-				case Create: 	Creation( what ); C='C'; break;
-				case Retreive: 	C='R'; break;
-				case Update: 	C='U'; break;
-				case Delete: 	C='D'; break;
+				case Create: 	Creating( what );   C='C'; break;
+				case Retreive: 	Retreiving( what ); C='R'; break;
+				case Update: 	Updating( what );   C='U'; break;
+				case Delete: 	Deleting( what );   C='D'; break;
 			}
 			stringstream sso;
 			sso << C << fence << what;
