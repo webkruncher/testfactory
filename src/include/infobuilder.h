@@ -52,10 +52,8 @@ namespace InfoBuilderService
 		{
 			SocketProcessOptions::operator()( name, value );
 			if ( name == "purpose" ) purpose=value;
-			if ( name == "buildtools" ) buildtools=value;
-			if ( name == "builddefines" ) builddefines=value;
 		}
-		string purpose, buildtools, builddefines;
+		string purpose;
 		private:
 		virtual ostream& operator<<(ostream& o) const
 		{

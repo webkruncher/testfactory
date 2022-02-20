@@ -37,201 +37,90 @@ using namespace InfoBuilderService;
 #include "krbuildactors.h"
 
 
-KrBuildDefinitions::operator bool( )
-{
-	stringmap& me( *this );
-	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetBuildDefines", (char*) builddefines.c_str(), nullptr };
-	stringstream ss;
-	KruncherTools::forkpipe( buildtools, parameters, "", ss );
-	stringvector lines; lines.split( ss.str(), "\n" );
-	for ( stringvector::const_iterator lit=lines.begin();lit!=lines.end();lit++)
-	{
-		const string line( *lit );
-		stringvector parts; parts.split( line, "|" );
-		if ( parts.size() < 3 ) continue;
-		const string name( parts[ 1 ] );
-		const string value( parts[ 2 ] );
-		me[ name ] = value;
-	}
-	return true;
-}
-
-void ScanForMakefiles( const string buildtools, const BuilderProcessOptions& options, stringstream& ss )
-{
-	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetCmakeLists", nullptr };
-	KruncherTools::forkpipe( options.buildtools, parameters, "", ss );
-}
-
-const string SliceProjectName( const KrBuildDefinitions& defines,  const string& pathname )
-{
-	const string LibPath( defines[ "LIBPATH" ] );
-	if ( pathname.find( LibPath ) != 0 ) throw pathname;
-	const string pathlessname( pathname.substr( LibPath.size(), pathname.size()-LibPath.size() ) );
-	const size_t ls( pathlessname.find_last_of( "/" ) );
-	if ( ls == string::npos ) throw pathlessname;
-	const string projectname( pathlessname.substr( 1, ls-1 ) );
-	return projectname;
-}
-
-
-void ScanCmake( const KrBuildDefinitions& defines, const string& buildtools, const string cmake, KrBuilder& builder, const string how )
-{
-	const size_t ls( cmake.find_last_of( '/' ) );
-	if ( ls == string::npos ) return;
-	const string pathname( cmake.substr( 0, ls ) );
-	KrProjects empty;
-	builder.emplace( pathname, empty );
-
-	const string ProjectName( SliceProjectName( defines, pathname ) );
-
-
-	KrProjects& projects( builder[ ProjectName ] );
-	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) how.c_str(), (char*) pathname.c_str(), nullptr };
-	stringstream ss;
-	KruncherTools::forkpipe( buildtools, parameters, "", ss );
-	stringvector lines; lines.split( ss.str(), "\n" );
-	for ( stringvector::const_iterator lit=lines.begin(); lit!=lines.end(); lit++ )
-	{
-		const string line( *lit );
-		stringvector items;
-		items.split( line, " " );
-		if ( items.empty() ) continue;
-		const string target( items[ 0 ] );
-
-		for ( size_t t=1; t<items.size();t++)
-		{
-			const crudstring lib( items[ t ] );
-			if ( lib.empty() ) continue;
-			projects[ target ]( lib );
-		}
-	}
-}
-
-void UpdateBuildSpecs( const KrBuildSpecs& krbuilder, const string where )
-{
-	const KrBuilder& buildprinter( krbuilder );	
-	stringstream sspost;
-	sspost << krbuilder;
-
-	if ( true )
-	{
-		cout << "Post:" << endl << sspost.str();
-		cout << setw( 128 ) << setfill( '-' ) << "-" << endl;
-	}
-}
-
-
-static int times( 0 );
 
 
 
-InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
-{ 
-	XmlFamily::XmlAttributes& attrs( node.Attributes() );
-	XmlFamily::XmlAttributes::iterator a( attrs.find( "purpose" ) );
-	
-	for ( XmlFamily::XmlAttributes::iterator ait=attrs.begin();ait!=attrs.end();ait++)
-	{
-		const string& name( ait->first );
-		const string& value( ait->second );
-		if ( name == "purpose" )
-			if ( value == "scanner" )
-				return new BuildScanner;
-	}
-	return new BuilderProcessOptions ; 
-}
-
-void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& options)
-{
-	using namespace KrDirectories;
-
-	KrBuildDefinitions defines( options.builddefines, options.buildtools );
-	if ( ! defines ) throw string("Cannot load build definitions");
-	const string LibPath( defines[ string( "LIBPATH" ) ] );
-	
-	regex_t rxupdates;
-	const string expfiles( "^.*\\.cpp$|^.*\\.h$|^CMakeLists.txt$|^.*\\.a$" );
-	if ( regcomp( &rxupdates, expfiles.c_str(), REG_EXTENDED ) ) throw expfiles;
-	FileTimeTracker tracker;
-	bool first( true );
-	while ( ! TERMINATE )
-	{
-		FileTimes fileupdates( LibPath, true, rxupdates, tracker );
-		if ( ! fileupdates ) return;
-
-		ftimevector cpp,h,make,lib;
-
-		struct P : pair< string, ftimevector* >
-			{ P( const string what, ftimevector* how ) : pair< string, ftimevector* >( what, how ) {} };
-		struct KrCollections : map< string, ftimevector* > {};
-
-		KrCollections collection;
-
-		P Cpp( ".cpp", &cpp );
-		P H( ".h", &h );
-		P Make( ".txt", &make );
-		P Lib( ".a", &lib );
+	InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
+	{ 
+		XmlFamily::XmlAttributes& attrs( node.Attributes() );
+		XmlFamily::XmlAttributes::iterator a( attrs.find( "purpose" ) );
 		
-		collection.insert( Cpp );
-		collection.insert( H );
-		collection.insert( Make );
-		collection.insert( Lib );
-
-		tracker >> collection;
-
-		auto Run = []( XmlFamily::NodeIndex& index, ftimevector& ftimes, const string& nodename )
+		for ( XmlFamily::XmlAttributes::iterator ait=attrs.begin();ait!=attrs.end();ait++)
 		{
-			XmlNodeBase* p( index[ nodename ] );
-			if ( !p ) 
+			const string& name( ait->first );
+			const string& value( ait->second );
+			if ( name == "purpose" )
+				if ( value == "scanner" )
+					return new BuildScanner;
+		}
+		return new BuilderProcessOptions ; 
+	}
+
+	void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& options)
+	{
+		using namespace KrDirectories;
+
+		const string& BuildDefines( attributes[ "builddefines" ] );
+		const string& BuildTools( attributes[ "buildtools" ] );
+		KrBuildDefinitions defines( BuildDefines, BuildTools );
+		if ( ! defines ) throw string("Cannot load build definitions");
+		const string LibPath( defines[ string( "LIBPATH" ) ] );
+		
+		regex_t rxupdates;
+		const string expfiles( "^.*\\.cpp$|^.*\\.h$|^CMakeLists.txt$|^.*\\.a$" );
+		if ( regcomp( &rxupdates, expfiles.c_str(), REG_EXTENDED ) ) throw expfiles;
+		FileTimeTracker tracker;
+		bool first( true );
+		while ( ! TERMINATE )
+		{
+			FileTimes fileupdates( LibPath, true, rxupdates, tracker );
+			if ( ! fileupdates ) return;
+
+			ftimevector cpp,h,make,lib;
+
+			struct P : pair< string, ftimevector* >
+				{ P( const string what, ftimevector* how ) : pair< string, ftimevector* >( what, how ) {} };
+			struct KrCollections : map< string, ftimevector* > {};
+
+			KrCollections collection;
+
+			P Cpp( ".cpp", &cpp );
+			P H( ".h", &h );
+			P Make( ".txt", &make );
+			P Lib( ".a", &lib );
+			
+			collection.insert( Cpp );
+			collection.insert( H );
+			collection.insert( Make );
+			collection.insert( Lib );
+
+			tracker >> collection;
+
+			auto Run = []( XmlFamily::NodeIndex& index, ftimevector& ftimes, const string& nodename )
 			{
-				Log( VERB_ALWAYS, "NodeBuilder - No support for ", nodename );
+				XmlNodeBase* p( index[ nodename ] );
+				if ( !p ) 
+				{
+					Log( VERB_ALWAYS, "NodeBuilder - No support for ", nodename );
+				}
+				BuilderNode& b( static_cast< BuilderNode& >( *p ) );
+				if ( ! ftimes.empty() ) b( ftimes );
+			};
+
+			if ( ! first )
+			{
+				Run( index, make, "Makefiles" );
+				Run( index, cpp, "Sources" );
+				Run( index, h, "Headers" );
+				Run( index, lib, "Libraries" );
 			}
-			BuilderNode& b( static_cast< BuilderNode& >( *p ) );
-			if ( ! ftimes.empty() ) b( ftimes );
-		};
 
-		if ( ! first )
-		{
-			Run( index, make, "Makefiles" );
-			Run( index, cpp, "Sources" );
-			Run( index, h, "Headers" );
-			Run( index, lib, "Libraries" );
-		}
+			
+			if ( ! tracker ) throw string("File time tracker error");
+			first=false;
+		} 
 
-		
-		if ( ! tracker ) throw string("File time tracker error");
-		first=false;
-	} 
-
-return;	
-
-#if 0
-	//cerr << defines << endl;
-
-	KrBuildSpecs libraries, includes;	
-
-	while ( ! TERMINATE )
-	{
-		stringstream ssCMakefiles;
-		ScanForMakefiles( options.buildtools, ssCMakefiles );
-		stringvector sv; sv.split( ssCMakefiles.str(), "\n" );
-	
-		for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
-		{
-			const string projectpath( *sit );
-			if ( projectpath.empty() ) continue;
-			if ( projectpath[ 0 ] != '/' ) continue;
-			ScanCmake( defines, options.buildtools, projectpath, libraries, "-GetCmakeLinkage" );
-			ScanCmake( defines, options.buildtools, projectpath, includes, "-GetCmakeIncludes" );
-		}
-
-		UpdateBuildSpecs( libraries, "libraries" );	
-		UpdateBuildSpecs( includes, "includes" );	
-
-		sleep( 1 );
 	}
-#endif
-}
 
 	XmlFamily::XmlNodeBase* BuilderNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
 	{ 

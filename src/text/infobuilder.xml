@@ -24,11 +24,11 @@
 				service="infobuild"
 				port="83"
 				purpose="scanner"
-				builddefines="/home/jmt/Info/krunchercore/cmake/"
-				buildtools="/home/jmt/Info/testfactory/utilities/BuildTools.ksh"
 			>
 				<builder
 					target="/home/jmt/Info"
+					builddefines="/home/jmt/Info/krunchercore/cmake/"
+					buildtools="/home/jmt/Info/testfactory/utilities/BuildTools.ksh"
 				>
 					<Makefiles
 						TBD="makefile"

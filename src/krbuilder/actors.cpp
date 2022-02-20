@@ -36,6 +36,95 @@ using namespace InfoBuilderService;
 #include "directories.h"
 #include "krbuildactors.h"
 
+
+
+KrBuildDefinitions::operator bool( )
+{
+	stringmap& me( *this );
+	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetBuildDefines", (char*) builddefines.c_str(), nullptr };
+	stringstream ss;
+	KruncherTools::forkpipe( buildtools, parameters, "", ss );
+	stringvector lines; lines.split( ss.str(), "\n" );
+	for ( stringvector::const_iterator lit=lines.begin();lit!=lines.end();lit++)
+	{
+		const string line( *lit );
+		stringvector parts; parts.split( line, "|" );
+		if ( parts.size() < 3 ) continue;
+		const string name( parts[ 1 ] );
+		const string value( parts[ 2 ] );
+		me[ name ] = value;
+	}
+	return true;
+}
+
+void ScanForMakefiles( const string buildtools, const BuilderProcessOptions& options, stringstream& ss )
+{
+	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetCmakeLists", nullptr };
+	KruncherTools::forkpipe( buildtools, parameters, "", ss );
+}
+
+const string SliceProjectName( const KrBuildDefinitions& defines,  const string& pathname )
+{
+	const string LibPath( defines[ "LIBPATH" ] );
+	if ( pathname.find( LibPath ) != 0 ) throw pathname;
+	const string pathlessname( pathname.substr( LibPath.size(), pathname.size()-LibPath.size() ) );
+	const size_t ls( pathlessname.find_last_of( "/" ) );
+	if ( ls == string::npos ) throw pathlessname;
+	const string projectname( pathlessname.substr( 1, ls-1 ) );
+	return projectname;
+}
+
+
+void ScanCmake( const KrBuildDefinitions& defines, const string& buildtools, const string cmake, KrBuilder& builder, const string how )
+{
+	const size_t ls( cmake.find_last_of( '/' ) );
+	if ( ls == string::npos ) return;
+	const string pathname( cmake.substr( 0, ls ) );
+	KrProjects empty;
+	builder.emplace( pathname, empty );
+
+	const string ProjectName( SliceProjectName( defines, pathname ) );
+
+
+	KrProjects& projects( builder[ ProjectName ] );
+	KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) how.c_str(), (char*) pathname.c_str(), nullptr };
+	stringstream ss;
+	KruncherTools::forkpipe( buildtools, parameters, "", ss );
+	stringvector lines; lines.split( ss.str(), "\n" );
+	for ( stringvector::const_iterator lit=lines.begin(); lit!=lines.end(); lit++ )
+	{
+		const string line( *lit );
+		stringvector items;
+		items.split( line, " " );
+		if ( items.empty() ) continue;
+		const string target( items[ 0 ] );
+
+		for ( size_t t=1; t<items.size();t++)
+		{
+			const crudstring lib( items[ t ] );
+			if ( lib.empty() ) continue;
+			projects[ target ]( lib );
+		}
+	}
+}
+
+void UpdateBuildSpecs( const KrBuildSpecs& krbuilder, const string where )
+{
+	const KrBuilder& buildprinter( krbuilder );	
+	stringstream sspost;
+	sspost << krbuilder;
+
+	if ( true )
+	{
+		cout << "Post:" << endl << sspost.str();
+		cout << setw( 128 ) << setfill( '-' ) << "-" << endl;
+	}
+}
+
+
+
+
+
 namespace KrBuildActors
 {
 	XmlFamily::XmlNodeBase* BuildActorNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
@@ -70,7 +159,37 @@ namespace KrBuildActors
 
 	void BuildMakeNode::Creating( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
 	void BuildMakeNode::Retreiving( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
-	void BuildMakeNode::Updating( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
+	void BuildMakeNode::Updating( const ftime& what ) 	
+	{ 
+cerr << red << "BRIDGE OUT " << what << normal << endl;
+#if 0
+		const string BuildTools="/home/jmt/Info/testfactory/utilities/BuildTools.ksh";
+		const string BuildDefines="/home/jmt/Info/krunchercore/cmake/";
+
+		KrBuildSpecs libraries, includes;	
+
+		//while ( ! TERMINATE )
+		{
+			stringstream ssCMakefiles;
+			ScanForMakefiles( BuildTools, ssCMakefiles );
+			stringvector sv; sv.split( ssCMakefiles.str(), "\n" );
+		
+			for ( stringvector::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+			{
+				const string projectpath( *sit );
+				if ( projectpath.empty() ) continue;
+				if ( projectpath[ 0 ] != '/' ) continue;
+				ScanCmake( BuildDefines, BuildTools, projectpath, libraries, "-GetCmakeLinkage" );
+				ScanCmake( BuildDefines, BuildTools, projectpath, includes, "-GetCmakeIncludes" );
+			}
+
+			UpdateBuildSpecs( libraries, "libraries" );	
+			UpdateBuildSpecs( includes, "includes" );	
+
+		}
+#endif
+
+	}
 	void BuildMakeNode::Deleting( const ftime& what ) 	{ cerr << "MakeNode:" << what << endl; }
 
 
