@@ -37,6 +37,25 @@ using namespace InfoBuilderService;
 #include "krbuildactors.h"
 
 
+//namespace krbuilder {
+	KrBuildDefinitions::operator bool( )
+	{
+		stringmap& me( *this );
+		KruncherTools::CharVector parameters{ (char*) "BuildTools", (char*) "-GetBuildDefines", (char*) builddefines.c_str(), nullptr };
+		stringstream ss;
+		KruncherTools::forkpipe( buildtools, parameters, "", ss );
+		stringvector lines; lines.split( ss.str(), "\n" );
+		for ( stringvector::const_iterator lit=lines.begin();lit!=lines.end();lit++)
+		{
+			const string line( *lit );
+			stringvector parts; parts.split( line, "|" );
+			if ( parts.size() < 3 ) continue;
+			const string name( parts[ 1 ] );
+			const string value( parts[ 2 ] );
+			me[ name ] = value;
+		}
+		return true;
+	}
 
 	InfoKruncher::SocketProcessOptions* BuilderServiceList::NewOptions( XmlFamily::XmlNode& node ) 
 	{ 
@@ -124,7 +143,7 @@ using namespace InfoBuilderService;
 	{ 
 		XmlFamily::XmlNodeBase* ret(NULL);
 		if ( name == "builder" ) 
-			ret=new KrBuildActors::BuildActorNode( _doc, parent, name, servicelist, optionnode, filter); 
+			ret=new BuildActorNode( _doc, parent, name, servicelist, optionnode, filter); 
 		if ( ! ret ) ret=new BuilderNode( _doc, parent, name, servicelist, optionnode, filter); 
 		return ret;
 	}
@@ -141,4 +160,5 @@ using namespace InfoBuilderService;
 		return ServiceXml::Item::operator bool ();
 	}
 
+//} // krbuilder
 

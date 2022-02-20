@@ -27,8 +27,7 @@
 
 #ifndef KRBUILDER_ACTORS_H
 #define KRBUILDER_ACTORS_H
-namespace KrBuildActors
-{
+//namespace krbuilder {
 	using namespace KrDirectories;
 	struct BuildActorNode : BuilderNode
 	{
@@ -104,6 +103,6 @@ namespace KrBuildActors
 	};
 
 
-} //KrBuildActors
+//} //krbuilder
 #endif // KRBUILDER_ACTORS_H
 

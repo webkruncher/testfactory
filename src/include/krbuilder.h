@@ -33,120 +33,122 @@
 #include <directory.h>
 #include <directories.h>
 
-struct KrBuildDefinitions : stringmap
-{
-	KrBuildDefinitions( const string& _builddefines, const string& _buildtools) : builddefines( _builddefines ), buildtools( _buildtools ) {}
-	operator bool ();
-	string operator []( const string& what ) const
+//namespace krbuilder {
+	struct KrBuildDefinitions : stringmap
 	{
-		const_iterator it( find( what ) );
-		if ( it == end() ) throw what;
-		return it->second;
-	}
-	private:
-	const string& builddefines;
-	const string& buildtools;
-};
-
-
-struct crudstring : string
-{
-	crudstring() : crud( Create ) {}
-	crudstring(const string& s) : string( s ), crud( Create ) {}
-	private:
-	KruncherTools::Crud crud;
-};
-
-struct crudstringset : set< crudstring >
-{
-	void operator()( const crudstring& s )
-	{
-		insert( s );
-	}
-};
-
-struct KrProjects : map< string, crudstringset >
-{
-	friend ostream& operator<<( ostream&, const KrProjects& );
-	ostream& operator<<( ostream& o ) const
-	{
-		return o;
-	}
-};
-inline ostream& operator<<( ostream& o, const KrProjects& k ) { return k.operator<<( o ); }
-
-struct KrBuilder : map< string, KrProjects >
-{
-	private:
-	friend ostream& operator<<( ostream&, const KrBuilder& );
-	ostream& operator<<( ostream& o ) const
-	{
-		for ( const_iterator it=begin();it!=end();it++ ) 
+		KrBuildDefinitions( const string& _builddefines, const string& _buildtools) : builddefines( _builddefines ), buildtools( _buildtools ) {}
+		operator bool ();
+		string operator []( const string& what ) const
 		{
-			o << it->first << endl ;
+			const_iterator it( find( what ) );
+			if ( it == end() ) throw what;
+			return it->second;
+		}
+		private:
+		const string& builddefines;
+		const string& buildtools;
+	};
 
-			const KrProjects& p( it->second );
-			for ( KrProjects::const_iterator kit=p.begin();kit!=p.end();kit++ ) 
+
+	struct crudstring : string
+	{
+		crudstring() : crud( Create ) {}
+		crudstring(const string& s) : string( s ), crud( Create ) {}
+		private:
+		KruncherTools::Crud crud;
+	};
+
+	struct crudstringset : set< crudstring >
+	{
+		void operator()( const crudstring& s )
+		{
+			insert( s );
+		}
+	};
+
+	struct KrProjects : map< string, crudstringset >
+	{
+		friend ostream& operator<<( ostream&, const KrProjects& );
+		ostream& operator<<( ostream& o ) const
+		{
+			return o;
+		}
+	};
+	inline ostream& operator<<( ostream& o, const KrProjects& k ) { return k.operator<<( o ); }
+
+	struct KrBuilder : map< string, KrProjects >
+	{
+		private:
+		friend ostream& operator<<( ostream&, const KrBuilder& );
+		ostream& operator<<( ostream& o ) const
+		{
+			for ( const_iterator it=begin();it!=end();it++ ) 
 			{
-				const string targetname( kit->first );
-				o << tab << targetname << endl;
-				const crudstringset& sv( kit->second );
-				for ( crudstringset::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+				o << it->first << endl ;
+
+				const KrProjects& p( it->second );
+				for ( KrProjects::const_iterator kit=p.begin();kit!=p.end();kit++ ) 
 				{
-					const string& lib( *sit );
-					o << tab << tab << lib << endl; 
+					const string targetname( kit->first );
+					o << tab << targetname << endl;
+					const crudstringset& sv( kit->second );
+					for ( crudstringset::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+					{
+						const string& lib( *sit );
+						o << tab << tab << lib << endl; 
+					}
 				}
 			}
+			return o;
 		}
-		return o;
-	}
-};
+	};
 
-inline ostream& operator<<( ostream& o, const KrBuilder& k ) { return k.operator<<( o ); }
+	inline ostream& operator<<( ostream& o, const KrBuilder& k ) { return k.operator<<( o ); }
 
-struct KrBuildSpecs : KrBuilder 
-{
-	private:
-	friend ostream& operator<<( ostream&, const KrBuildSpecs& );
-	ostream& operator<<( ostream& o ) const
+	struct KrBuildSpecs : KrBuilder 
 	{
-		for ( const_iterator it=begin();it!=end();it++ ) 
+		private:
+		friend ostream& operator<<( ostream&, const KrBuildSpecs& );
+		ostream& operator<<( ostream& o ) const
 		{
-
-			const KrProjects& p( it->second );
-			for ( KrProjects::const_iterator kit=p.begin();kit!=p.end();kit++ ) 
+			for ( const_iterator it=begin();it!=end();it++ ) 
 			{
-				const string targetname( kit->first );
-				const crudstringset& sv( kit->second );
-				for ( crudstringset::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+
+				const KrProjects& p( it->second );
+				for ( KrProjects::const_iterator kit=p.begin();kit!=p.end();kit++ ) 
 				{
-					const string& lib( *sit );
-					o << fence << it->first << fence << targetname << fence << lib << fence << endl; 
+					const string targetname( kit->first );
+					const crudstringset& sv( kit->second );
+					for ( crudstringset::const_iterator sit=sv.begin();sit!=sv.end();sit++)
+					{
+						const string& lib( *sit );
+						o << fence << it->first << fence << targetname << fence << lib << fence << endl; 
+					}
 				}
 			}
+			return o;
 		}
-		return o;
-	}
-};
+	};
 
-inline ostream& operator<<( ostream& o, const KrBuildSpecs& k ) { return k.operator<<( o ); }
+	inline ostream& operator<<( ostream& o, const KrBuildSpecs& k ) { return k.operator<<( o ); }
 
-struct BuildScanner : InfoBuilderService::BuilderProcessOptions {};
+	struct BuildScanner : InfoBuilderService::BuilderProcessOptions {};
 
 
-struct BuilderNode : ServiceXml::Item
-{
-	BuilderNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
-		: ServiceXml::Item(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
-	{}
-	virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const;
-	virtual operator bool ();
-	void Scanner( const InfoBuilderService::BuilderProcessOptions& options);
-	virtual void operator()( const KrDirectories::ftimevector& ftimes )
-		{ throw string( "Unimplemented BuilderNode: ") + name; }
-	protected:
-	XmlFamily::NodeIndex index;
-};
+	struct BuilderNode : ServiceXml::Item
+	{
+		BuilderNode(XmlFamily::Xml& _doc,const XmlNodeBase* _parent,stringtype _name, InfoKruncher::ServiceList& _servicelist, const string _optionnode, const string _filter ) 
+			: ServiceXml::Item(_doc,_parent,_name,_servicelist,_optionnode,_filter )  
+		{}
+		virtual XmlFamily::XmlNodeBase* NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const;
+		virtual operator bool ();
+		void Scanner( const InfoBuilderService::BuilderProcessOptions& options);
+		virtual void operator()( const KrDirectories::ftimevector& ftimes )
+			{ throw string( "Unimplemented BuilderNode: ") + name; }
+		protected:
+		XmlFamily::NodeIndex index;
+	};
+//} // krbuilder
 
 #endif //KRBUILDER_H
 
