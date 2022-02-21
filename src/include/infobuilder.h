@@ -69,6 +69,10 @@ namespace InfoBuilderService
 			: ServiceXml::Configuration( _servicelist, _optionnode, _filter ) {} 
 		ServiceXml::Item* FindNode( const string& what, ServiceXml::Item& );
 		virtual XmlFamily::XmlNode* NewNode(XmlFamily::Xml& _doc,stringtype name) const ;
+		void trigger( const string& how )
+		{
+			cerr << "Trigger:" << how << endl;
+		}
 	};
 
 	struct BuilderServiceList : InfoKruncher::ServiceList

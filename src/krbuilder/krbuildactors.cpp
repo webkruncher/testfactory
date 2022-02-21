@@ -64,6 +64,7 @@ namespace krbuilder
 		const string how
 	)
 	{
+		cerr << green << "scanning " << cmake << normal << endl;
 		const size_t ls( cmake.find_last_of( '/' ) );
 		if ( ls == string::npos ) return;
 		const string pathname( cmake.substr( 0, ls ) );
@@ -94,18 +95,6 @@ namespace krbuilder
 		}
 	}
 
-	void UpdateBuildSpecs( const KrBuildSpecs& krbuilder, const string where )
-	{
-		const KrBuilder& buildprinter( krbuilder );	
-		stringstream sspost;
-		sspost << krbuilder;
-
-		if ( true )
-		{
-			cout << "Post:" << endl << sspost.str();
-			cout << setw( 128 ) << setfill( '-' ) << "-" << endl;
-		}
-	}
 
 	XmlFamily::XmlNodeBase* BuildActorNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
 	{ 
@@ -133,7 +122,7 @@ namespace krbuilder
 			}
 			stringstream sso;
 			sso << C << fence << what;
-			Log( VERB_ALWAYS, name, sso.str() );
+			//Log( VERB_ALWAYS, name, sso.str() );
 		}
 	}
 
@@ -165,23 +154,52 @@ namespace krbuilder
 	};
 
 
-	void BuildMakeNode::Updating( const ftime& what ) 	
+	void BuildMakeNode::Updating( const ftime& _what ) 	
 	{ 
 		const string& BuildTools( XmlFamilyUtils::AncestorsAttribute( this, "buildtools" ) );
 		const string& BuildDefines( XmlFamilyUtils::AncestorsAttribute( this, "builddefines" ) );
 		const string& LibPath( Property( "LibPath" ) );
 
-		const string projectline( ProjectLine( BuildTools, what ) );
-		if ( projectline.empty() ) return; // TBD...
+
+		int depth( 0 );
+		XmlFamilyUtils::Depth( this, depth );
+		XmlFamily::XmlNodeBase& ScannerNode( Ascend( this, depth-3 ) );
+		BuilderNode& scanner( static_cast< BuilderNode& > ( ScannerNode ) );
+
+		auto up = []( string& what, const string& LibPath )
+		{
+			const size_t ls( what.find_last_of( "/" ) );
+			if ( ls == string::npos ) { what=LibPath; return ; }
+			if ( ls == 0 ) { what=LibPath; return ; }
+			const size_t sls( what.find_last_of( "/", ls-1 ) );
+			if ( sls == string::npos ) { what=LibPath; return ; }
+			if ( sls == 0 ) { what=LibPath; return ; }
+			what.erase( sls, ls-sls );
+		};
+
+		string what( _what );
+		string projectline;
+		while ( projectline.empty() )
+		{
+			if ( what.empty() ) return;
+			if ( what == LibPath ) return;
+			projectline=( ProjectLine( BuildTools, what ) );
+			if ( ! projectline.empty() ) break;
+			up( what, LibPath );
+		}
+
 		Log( VERB_ALWAYS, what, projectline );
 
 		KrBuildSpecs libraries, includes;	
 		ScanCmake( LibPath, BuildTools, what, libraries, "-GetCmakeLinkage" );
 		ScanCmake( LibPath, BuildTools, what, includes, "-GetCmakeIncludes" );
 
-		UpdateBuildSpecs( libraries, "libraries" );	
-		UpdateBuildSpecs( includes, "includes" );
-		cerr << "Done with " << what << endl;	
+
+		scanner.UpdateBuildSpecs( libraries, "libraries" );	
+		scanner.UpdateBuildSpecs( includes, "includes" );
+
+		InfoBuilderService::BuildInfoConfiguration& Cfg( static_cast< InfoBuilderService::BuildInfoConfiguration& >( GetDoc() ) );
+		Cfg.trigger( "TBD" );
 
 	}
 	void BuildMakeNode::Deleting( const ftime& what ) 	{}//{ cerr << "MakeNode:" << what << endl; }

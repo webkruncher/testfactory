@@ -45,7 +45,8 @@ namespace InfoBuilderService
 		const string& filter
 	) const
 	{ 
-cerr << red << "NewNode:" << name << normal << endl;
+		cerr << red << "NewNode:" << name << normal << endl;
+		throw "UNDER CONSTRUCTION";
 		if ( name == "builder" ) 
 			return new krbuilder::BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
 

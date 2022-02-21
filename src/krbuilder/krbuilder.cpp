@@ -61,6 +61,9 @@ namespace krbuilder
 
 	void BuilderNode::Scanner( const InfoBuilderService::BuilderProcessOptions& options)
 	{
+		cerr << yellow << "Scanner:" << name << endl;
+
+		properties[ "Role" ] = "Scanner";
 		using namespace KrDirectories;
 
 		{

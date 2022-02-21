@@ -436,7 +436,7 @@ if [ "${1}" == "-IsProject" ]; then
 	shift
 	if [ ! -z ${1} ]; then
 		if [ -f ${1} ]; then
-			head ${1} | grep "cmake_minimum_required" | cut -d '(' -f2 | cut -d ')' -f1
+			head ${1} | grep "^project" | cut -d '(' -f2 | cut -d ')' -f1 | cut -d '"' -f2 | tr -d ' '
 		fi
 	fi
 fi

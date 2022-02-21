@@ -145,6 +145,20 @@ namespace krbuilder
 		void Scanner( const InfoBuilderService::BuilderProcessOptions& options);
 		virtual void operator()( const KrDirectories::ftimevector& ftimes )
 			{ throw string( "Unimplemented BuilderNode: ") + name; }
+		operator const stringmap& () const { return properties; }
+
+		void UpdateBuildSpecs( const krbuilder::KrBuildSpecs& krbuilder, const string where )
+		{
+			const krbuilder::KrBuilder& buildprinter( krbuilder );	
+			stringstream sspost;
+			sspost << krbuilder;
+
+			if ( true )
+			{
+				cout << "Update:" << endl << sspost.str();
+				cout << setw( 128 ) << setfill( '-' ) << "-" << endl;
+			}
+		}
 	
 		protected:
 		virtual const string Property( const string& what ) const
