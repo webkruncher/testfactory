@@ -19,7 +19,7 @@ cat <<EOF
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|HOLD|<main.h>|(default_xml)|
 
 
-|infobuild|testfactory;testfactory/db|testfactory/db::infobuild;testfactory::krbuilder|libinfo;krbuilder|<RestInterface.h>|InfoBuildFace|development|<InfoBuildEntry.h>|/home/jmt/Info/testfactory/src/text/infobuilder.xml --node site --filter jackmthompson.ninja|
+|infobuild|exexml;testfactory;testfactory/db|testfactory/db::infobuild;testfactory::krbuilder|libinfo;krbuilder|<RestInterface.h>|InfoBuildFace|development|<InfoBuildEntry.h>|/home/jmt/Info/testfactory/src/text/infobuilder.xml --node site --filter jackmthompson.ninja|
 #|webkruncherdata|webkruncher/db::visitors|webkruncher/db::visitors|visitors|<webkruncher/RestInterface.h>|DataFace|HOLD|<main.h>|
 EOF
 }

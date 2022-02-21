@@ -32,13 +32,35 @@
 #include <sstream>
 using namespace std;
 
-#include <recordset.h>
-#include <markets/Ticker.h>
-#include <markets/TickerDetails.h>
 
-namespace StockMarket
+#include <infokruncher.h>
+#include <infosite.h>
+#include <exexml.h>
+#include <infofigur.h>
+#include <infobuilder.h>
+#include <krbuilder.h>
+
+
+#include <recordset.h>
+#include <InfoBuild.h>
+//#include <markets/Ticker.h>
+//#include <markets/TickerDetails.h>
+
+namespace InfoBuilderService
 {
-	unique_ptr< LibraryDb > 			LibraryData;
-	unique_ptr< TickerDetailsDb > 		TickerDetailsData;
-} // StockMarket
+	void BuildInfoConfiguration::operator()( const krbuilder::BuilderNode& node, const krbuilder::KrBuildSpecs& specs )
+	{
+		cerr << "EntryPointTrigger:" << endl << green << node << endl << yellow << specs << normal << endl;
+		//InfoBuilder::Trigger( node, specs );
+	}
+
+} // InfoBuilderService
+
+
+
+namespace InfoBuilder
+{
+	//unique_ptr< LibraryDb > 			LibraryData;
+	//unique_ptr< TickerDetailsDb > 		TickerDetailsData;
+} // InfoBuilder
 

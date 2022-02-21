@@ -78,6 +78,10 @@ namespace InfoBuilder
 	};
 
 
+//	void Trigger( const krbuilder::BuilderNode& node, const krbuilder::KrBuildSpecs& specs ) { }
+
+
+
 } // InfoBuilder
 
 #endif // INFOKRUNCHER_INFOBUILD_LIBTIMES_H

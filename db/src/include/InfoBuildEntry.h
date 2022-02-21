@@ -33,6 +33,7 @@
 #include <infobuilder.h>
 #include <krbuilder.h>
 
+
 namespace InfoBuilderService
 {
 
@@ -70,12 +71,13 @@ namespace InfoBuilderService
 		}
 		return nullptr;
 	}
-
+#if 0
 	void BuildInfoConfiguration::operator()( const krbuilder::BuilderNode& node, const krbuilder::KrBuildSpecs& specs )
 	{
 		cerr << "EntryPointTrigger:" << endl << green << node << endl << yellow << specs << normal << endl;
+		//InfoBuilder::Trigger( node, specs );
 	}
-
+#endif
 } // InfoBuilderService
 
 

@@ -5,6 +5,7 @@ Headers(
 	datakruncher
 	informationkruncher
 	testfactory
+	exexml
 #	librarykruncher
 )
 
@@ -13,6 +14,7 @@ add_library(
 		InfoBuildFace.cpp
 		LibCatalog.cpp
 		InfoLibData.cpp
+		marketdata.cpp
 )
 
 add_library( infobuild::libinfo  ALIAS libinfo  )
