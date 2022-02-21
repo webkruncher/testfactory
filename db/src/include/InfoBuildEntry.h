@@ -35,6 +35,7 @@
 
 namespace InfoBuilderService
 {
+
 	XmlFamily::XmlNodeBase* BuilderServiceList::NewNode
 	(
 		XmlFamily::Xml& _doc,
@@ -45,7 +46,7 @@ namespace InfoBuilderService
 		const string& filter
 	) const
 	{ 
-		cerr << red << "NewNode:" << name << normal << endl;
+		cerr << redbk << yellow << "InfoBuildEntry->NewNode:" << name << normal << endl;
 		throw "UNDER CONSTRUCTION";
 		if ( name == "builder" ) 
 			return new krbuilder::BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
@@ -68,6 +69,11 @@ namespace InfoBuilderService
 			if ( found ) return found;
 		}
 		return nullptr;
+	}
+
+	void BuildInfoConfiguration::operator()( const krbuilder::BuilderNode& node, const krbuilder::KrBuildSpecs& specs )
+	{
+		cerr << "EntryPointTrigger:" << endl << green << node << endl << yellow << specs << normal << endl;
 	}
 
 } // InfoBuilderService

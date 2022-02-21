@@ -194,13 +194,11 @@ namespace krbuilder
 		ScanCmake( LibPath, BuildTools, what, libraries, "-GetCmakeLinkage" );
 		ScanCmake( LibPath, BuildTools, what, includes, "-GetCmakeIncludes" );
 
-
 		scanner.UpdateBuildSpecs( libraries, "libraries" );	
 		scanner.UpdateBuildSpecs( includes, "includes" );
 
 		InfoBuilderService::BuildInfoConfiguration& Cfg( static_cast< InfoBuilderService::BuildInfoConfiguration& >( GetDoc() ) );
-		Cfg.trigger( "TBD" );
-
+		Cfg( *this, libraries );
 	}
 	void BuildMakeNode::Deleting( const ftime& what ) 	{}//{ cerr << "MakeNode:" << what << endl; }
 

@@ -68,6 +68,14 @@ namespace InfoKruncher
 } // InfoKruncher
 
 
+namespace InfoBuilderService
+{
+	void BuildInfoConfiguration::operator()( const krbuilder::BuilderNode& node, const krbuilder::KrBuildSpecs& specs )
+	{
+		cerr << "ServerTrigger:" << endl << green << node << endl << yellow << specs << normal << endl;
+	}
+
+} // InfoBuilderService
 
 
 int main( int argc, char** argv )
@@ -77,7 +85,8 @@ int main( int argc, char** argv )
 	stringstream ssexcept;
 	try
 	{
-		InfoKruncher::Options< InfoBuilderService::BuilderServiceList > options( argc, argv );
+		//InfoKruncher::Options< InfoBuilderService::BuilderServiceList > options( argc, argv );
+		InfoBuilderService::BuildInfo options( argc, argv );
 		if ( ! options ) throw string( "Invalid options" );
 		PROPERTIES_BASE& Cfg( options );
 		if ( options.find( "-d" ) == options.end() ) Initialize();

@@ -33,6 +33,13 @@
 #include <infosite.h>
 #include <infokruncher.h>
 using namespace KruncherTools;
+
+namespace krbuilder 
+{
+	struct BuilderNode;
+	struct KrBuildSpecs;
+} // krbuilder
+
 namespace InfoBuilderService
 {
 	struct InfoSite : InfoKruncher::Site
@@ -69,10 +76,7 @@ namespace InfoBuilderService
 			: ServiceXml::Configuration( _servicelist, _optionnode, _filter ) {} 
 		ServiceXml::Item* FindNode( const string& what, ServiceXml::Item& );
 		virtual XmlFamily::XmlNode* NewNode(XmlFamily::Xml& _doc,stringtype name) const ;
-		void trigger( const string& how )
-		{
-			cerr << "Trigger:" << how << endl;
-		}
+		void operator()( const krbuilder::BuilderNode& node, const krbuilder::KrBuildSpecs& specs );
 	};
 
 	struct BuilderServiceList : InfoKruncher::ServiceList
