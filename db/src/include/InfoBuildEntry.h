@@ -48,7 +48,7 @@ namespace InfoBuilderService
 	) const
 	{ 
 		cerr << redbk << yellow << "InfoBuildEntry->NewNode:" << name << normal << endl;
-		throw "UNDER CONSTRUCTION";
+		throw string( "UNDER CONSTRUCTION" );
 		if ( name == "builder" ) 
 			return new krbuilder::BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
 
@@ -131,6 +131,7 @@ int main( int argc, char** argv )
 	try
 	{
 		InfoBuilderService::BuildInfo options( argc, argv );
+		//InfoKruncher::Options< InfoKruncher::ServiceList > options( argc, argv );
 
 		if ( ! options ) throw string( "Invalid options" );
 		PROPERTIES_BASE& Cfg( options );

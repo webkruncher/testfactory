@@ -14,7 +14,7 @@ add_library(
 		InfoBuildFace.cpp
 		LibCatalog.cpp
 		InfoLibData.cpp
-		marketdata.cpp
+		builderdata.cpp
 )
 
 add_library( infobuild::libinfo  ALIAS libinfo  )

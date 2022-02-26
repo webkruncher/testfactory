@@ -149,7 +149,9 @@ namespace InfoBuilderService
 	}
 
 	XmlFamily::XmlNode* BuildInfoConfiguration::NewNode(XmlFamily::Xml& _doc,stringtype name) const 
-		{ return new krbuilder::BuilderNode(_doc,NULL,name, servicelist, optionnode, filter ); } 
+	{ 
+		return new krbuilder::BuilderNode(_doc,NULL,name, servicelist, optionnode, filter ); 
+	} 
 
 
 } // InfoBuilderService

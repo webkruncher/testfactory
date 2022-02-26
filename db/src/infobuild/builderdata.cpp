@@ -40,11 +40,8 @@ using namespace std;
 #include <infobuilder.h>
 #include <krbuilder.h>
 
-
 #include <recordset.h>
 #include <InfoBuild.h>
-//#include <markets/Ticker.h>
-//#include <markets/TickerDetails.h>
 
 namespace InfoBuilderService
 {
@@ -55,12 +52,4 @@ namespace InfoBuilderService
 	}
 
 } // InfoBuilderService
-
-
-
-namespace InfoBuilder
-{
-	//unique_ptr< LibraryDb > 			LibraryData;
-	//unique_ptr< TickerDetailsDb > 		TickerDetailsData;
-} // InfoBuilder
 

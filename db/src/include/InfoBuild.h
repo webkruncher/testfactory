@@ -77,7 +77,6 @@ namespace InfoBuilder
 		void SetLastUpdatedUTC( const time_t when );
 	};
 
-
 //	void Trigger( const krbuilder::BuilderNode& node, const krbuilder::KrBuildSpecs& specs ) { }
 
 
