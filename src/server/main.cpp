@@ -57,7 +57,7 @@ namespace InfoKruncher
 		const InfoBuilderService::BuilderProcessOptions& builder( static_cast< const InfoBuilderService::BuilderProcessOptions& >( svcoptions ) );
 		if ( builder.purpose == "scanner" )
 		{
-			Log( VERB_ALWAYS, "BRIDGE OUT", "KrScanner" );
+			Log( VERB_ALWAYS, "BRIDGE OUT - scanner", "KrScanner" );
 			//KrScanner( builder );
 			cerr << "Done scanning, exiting" << endl;
 			return;

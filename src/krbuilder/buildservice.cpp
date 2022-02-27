@@ -69,7 +69,7 @@ namespace InfoBuilderService
 
 
 
-		Responder( 200, "text/plain", ServiceName, false, "", "", "BRIDGE OUT" );
+		Responder( 200, "text/plain", ServiceName, false, "", "", "BRIDGE OUT - TBD" );
 		return;
 
 		InfoDataService::DataResource Payload( r, records );
