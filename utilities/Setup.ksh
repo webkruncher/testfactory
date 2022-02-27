@@ -9,3 +9,5 @@
 sudo  ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 
 
+pkg_add -I vim-8.2.3456-no_x11 bash git cmake sudo
+
