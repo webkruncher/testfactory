@@ -1,0 +1,45 @@
+export TICKERSOURCE_APIKEY=""
+set -o vi
+export PATH=$PATH:~/Info/testfactory/utilities/
+
+export PS1='\u@\h \W> '
+
+
+function BuildBoth
+{
+	export KRUNCHER_DEV_LIBS=1 
+	rm -rf ../src.build
+	./go 
+	rm -rf ../src.build
+	unset KRUNCHER_DEV_LIBS
+	./go
+}
+
+
+function Tools
+{
+	. ~/Info/testfactory/utilities/DevTools.ksh
+	. ~/Info/testfactory/utilities/BuildTools.ksh
+	. ~/Info/testfactory/utilities/GitTools.ksh
+	. ~/Info/testfactory/utilities/Status.ksh
+	. ~/Info/testfactory/utilities/CTags.ksh
+	#. ~/Info/testfactory/utilities/BeepTools.ksh
+	. ~/Info/krunchercore/Builder.ksh
+}
+
+#
+
+Tools
+export EDITOR=vim 
+
+function Title
+{
+	echo -ne "\033]0;${1}\007"
+	PS1="${1}>"
+}
+
+export MAKEFLAGS=-j4
+
+
+#export VERBOSE=1
+
