@@ -53,7 +53,6 @@ target_include_directories(
     krbuild
 	    PRIVATE
 		../include/
-		/home/jmt/libdb/build_unix/
 		${INCLUDE_PATHS}
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 		$<INSTALL_INTERFACE:include>
@@ -65,7 +64,8 @@ target_link_libraries(
 		${LIBRARIES}
 		ssl
 		crypto
-		/home/jmt/libdb/build_unix/libdb_cxx.a
+		db_cxx
+		uuid
 )
 
 install(
