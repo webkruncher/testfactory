@@ -72,11 +72,13 @@ function Test
 	else
 		if [ "${1}" == "-serve" ]; then
 			shift
-			sudo HOME=${HOME} webkruncher --xml ~/Info/websites/sites/contractkruncher.xml  --node site --filter ${TestHost}&
+            cd ~/Info/webkruncher/src.build/site
+            pwd
+			sudo HOME=${HOME} ./webkruncher -d --xml ~/Info/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
 		fi
 	fi
 	sleep 1
-	sudo HOME=${HOME} restful --xml ~/Info/websites/sites/contractkruncher.xml  --node site --filter ${TestHost}&
+	#sudo HOME=${HOME} restful --xml ~/Info/websites/sites/contractkruncher.xml  --node site --filter ${TestHost}&
 	#sudo HOME=${HOME} datafactory --xml ~/Info/websites/sites/contractkruncher.xml  --node data --filter ${TestHost}
 
 	#Status - function not defined, commenting out
