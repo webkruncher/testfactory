@@ -52,7 +52,7 @@ namespace InfoBuilderService
 		if ( name == "builder" ) 
 			return new krbuilder::BuilderNode(_doc,parent,name,servicelist, optionnode, filter); 
 
-		XmlFamily::XmlNodeBase* ret(NULL);
+		XmlFamily::XmlNodeBase* ret{nullptr};
 		ret=new ServiceXml::Item(_doc,parent,name,servicelist, optionnode, filter); 
 		ServiceXml::Item& n( static_cast<ServiceXml::Item&>(*(ret)) );
 		return ret;

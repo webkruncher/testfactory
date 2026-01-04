@@ -134,11 +134,11 @@ namespace krbuilder
 	}
 
 	XmlFamily::XmlNodeBase* BuilderNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
-	{ 
-		XmlFamily::XmlNodeBase* ret(NULL);
-		if ( name == "builder" ) 
-			ret=new BuildActorNode( _doc, parent, name, servicelist, optionnode, filter); 
-		if ( ! ret ) ret=new BuilderNode( _doc, parent, name, servicelist, optionnode, filter); 
+	{
+		XmlFamily::XmlNodeBase* ret{nullptr};
+		if ( name == "builder" )
+			ret=new BuildActorNode( _doc, parent, name, servicelist, optionnode, filter);
+		if ( ! ret ) ret=new BuilderNode( _doc, parent, name, servicelist, optionnode, filter);
 		return ret;
 	}
 

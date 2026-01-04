@@ -148,9 +148,9 @@ namespace InfoBuilderService
 		return new ThreadLocal();
 	}
 
-	XmlFamily::XmlNode* BuildInfoConfiguration::NewNode(XmlFamily::Xml& _doc,stringtype name) const 
-	{ 
-		return new krbuilder::BuilderNode(_doc,NULL,name, servicelist, optionnode, filter ); 
+	XmlFamily::XmlNode* BuildInfoConfiguration::NewNode(XmlFamily::Xml& _doc,stringtype name) const
+	{
+		return new krbuilder::BuilderNode(_doc,nullptr,name, servicelist, optionnode, filter );
 	} 
 
 

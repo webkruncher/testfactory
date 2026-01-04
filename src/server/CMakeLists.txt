@@ -47,7 +47,6 @@ target_include_directories(
 	    PRIVATE
 		${INCLUDE_PATHS}
 		../include/
-		/home/jmt/libdb/build_unix
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 		$<INSTALL_INTERFACE:include>
 )
@@ -61,10 +60,11 @@ target_link_directories(
 target_link_libraries(
     infobuilder
 	    PUBLIC
+		${LIBRARIES}
 		ssl
 		crypto
-		/home/jmt/libdb/build_unix/libdb_cxx.a
-		${LIBRARIES}
+		db_cxx
+		uuid
 )
 
 install(
