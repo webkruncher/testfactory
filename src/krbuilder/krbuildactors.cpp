@@ -97,12 +97,12 @@ namespace krbuilder
 
 
 	XmlFamily::XmlNodeBase* BuildActorNode::NewNode(XmlFamily::Xml& _doc,XmlFamily::XmlNodeBase* parent,stringtype name ) const
-	{ 
-		XmlFamily::XmlNodeBase* ret(NULL);
-		if ( name == "Makefiles" ) 	ret=new BuildMakeNode	( _doc, parent, name, servicelist, optionnode, filter); 
-		if ( name == "Sources" ) 	ret=new BuildSourceNode	( _doc, parent, name, servicelist, optionnode, filter); 
-		if ( name == "Libraries" ) 	ret=new BuildLibraryNode( _doc, parent, name, servicelist, optionnode, filter); 
-		if ( name == "Headers" ) 	ret=new BuildHeaderNode	( _doc, parent, name, servicelist, optionnode, filter); 
+	{
+		XmlFamily::XmlNodeBase* ret{nullptr};
+		if ( name == "Makefiles" ) 	ret=new BuildMakeNode	( _doc, parent, name, servicelist, optionnode, filter);
+		if ( name == "Sources" ) 	ret=new BuildSourceNode	( _doc, parent, name, servicelist, optionnode, filter);
+		if ( name == "Libraries" ) 	ret=new BuildLibraryNode( _doc, parent, name, servicelist, optionnode, filter);
+		if ( name == "Headers" ) 	ret=new BuildHeaderNode	( _doc, parent, name, servicelist, optionnode, filter);
 		if ( ! ret ) throw name;
 		return ret;
 	}

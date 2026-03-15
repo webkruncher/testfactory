@@ -23,7 +23,6 @@ target_include_directories(
     libinfo
 	    PRIVATE
 		../include/
-		/home/jmt/libdb/build_unix/
 		${INCLUDE_PATHS}
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 		$<INSTALL_INTERFACE:include>

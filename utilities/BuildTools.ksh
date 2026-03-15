@@ -2,7 +2,7 @@
 
 #echo "Testing: $@"
 
-TestHost="jackmthompson.ninja"
+TestHost="nobara"
 
 
 
@@ -26,13 +26,28 @@ webkruncher
 EOF
 }
 
+function GetMtime
+{
+	# Cross-platform mtime getter - works on both OpenBSD and Linux
+	local file="${1}"
+	[ -z "${file}" ] && return
+	[ ! -f "${file}" ] && return
+	if [[ "$OSTYPE" == "openbsd"* ]] || uname -a | grep -q OpenBSD; then
+		# OpenBSD: use stat -s
+		stat -s "${file}" | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1
+	else
+		# Linux: use stat -c %Y
+		stat -c %Y "${file}"
+	fi
+}
+
 function Install
 {
 	pushd ~/Info/${1}/src 2>&1 >> /dev/null
 	Build -install
 	if [ $? != 0 ]; then
 		echo -ne "\033[41m\033[33m`pwd` install failed\033[0m\n"
-		exit -1 
+		exit -1
 	fi
 	popd
 }
@@ -50,24 +65,26 @@ function Test
 	sudo pkill datafactory
 	sudo pkill webkruncher
 	sudo pkill restful
-	if [ "${1}" == "-rebuild" ]; then 
+	if [ "${1}" == "-rebuild" ]; then
 		ReBuild
 		shift
-		sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
+		sudo HOME=${HOME} webkruncher --xml ~/Info/websites/sites/contractkruncher.xml  --node site --filter ${TestHost}&
 	else
-		if [ "${1}" == "-serve" ]; then 
+		if [ "${1}" == "-serve" ]; then
 			shift
-			sudo webkruncher --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
+            cd ~/Info/webkruncher/src.build/site
+            pwd
+			sudo HOME=${HOME} ./webkruncher -d --xml ~/Info/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
 		fi
 	fi
 	sleep 1
-	sudo restful --xml /home/jmt/websites/sites/webkruncher.xml  --node site --filter ${TestHost}&
-	#sudo datafactory --xml /home/jmt/websites/sites/webkruncher.xml  --node data --filter ${TestHost}
+	#sudo HOME=${HOME} restful --xml ~/Info/websites/sites/contractkruncher.xml  --node site --filter ${TestHost}&
+	#sudo HOME=${HOME} datafactory --xml ~/Info/websites/sites/contractkruncher.xml  --node data --filter ${TestHost}
 
-	Status
-	
+	#Status - function not defined, commenting out
 
-}	
+
+}
 
 
 function Wip
@@ -160,7 +177,7 @@ IFS=$' '
 		#echo -ne "\033[33mfind ${LibPath} -name lib${lib}.a \033[0m\n" 2>>/dev/stderr
 		dota=`find ${LibPath} -name "lib${lib}.a" ` 2>>/dev/null
 		if [ ! -z ${dota} ]; then
-			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+			mtime=`GetMtime ${dota}`
 			list="${list}${dota};${mtime}|"
 			#logger "export Libs_${target}_${lib}=${mtime}"
 			export Libs_${target}_${lib}=${mtime}
@@ -183,7 +200,7 @@ function TargetLinkage
 			if [[ ${liblist:0:1} != "/" ]] ; then
 				#echo "find ${LibPath} -name lib${depline}.a"  >> /dev/stderr
 				dota=`find ${LibPath} -name "lib${depline}.a" ` 2>>/dev/null
-				mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+				mtime=`GetMtime ${dota}`
 				[ "${dota}" != "" ] && echo -ne "${dota};${mtime}|" 
 			fi
 		done
@@ -217,7 +234,7 @@ function CheckLibs
 		if [ "${liblin}" != "" ]; then
 			dota=`echo "${liblin}" | cut -d ';' -f1`
 			when=`echo "${liblin}" | cut -d ';' -f2`
-			mtime=`stat -s ${dota} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+			mtime=`GetMtime ${dota}`
 			#echo -ne "\t\033[36m${dota} = ${when}\033[0m\n" >> /dev/stderr
 			if [ "${mtime}" != "${when}" ]; then
 				logger "${dota} was last updated at ${when}, and the current timestamp is ${mtime}"
@@ -233,10 +250,10 @@ function UpdateTimestamps
 	Libs=`env | grep -e "^LibList_${envname}" | cut -d '|' -f2- | tr '|' '\n'` 
 
 	while read liblin; do
-		#echo "Removing:${liblin};" 
+		#echo "Removing:${liblin};"
 		Libs=`echo "${Libs}" | grep -v "${liblin}"`
 
-		mtime=`stat -s ${liblin} | sed -n -e 's/^.*\(st_mtime=\)/\1/p' | cut -d '=' -f2 | cut -d ' ' -f1`
+		mtime=`GetMtime ${liblin}`
 		Libs=`echo -ne "${Libs}\n${liblin};${mtime}\n"`
 	done
 
@@ -440,4 +457,21 @@ if [ "${1}" == "-IsProject" ]; then
 		fi
 	fi
 fi
+
+function InfoProjects
+{
+	echo -ne "\033[45m\033[34mBuildAll in `pwd`\033[0m\n"
+	CurrentProject=`pwd`
+	for project in `ProjectList`; do
+		pushd ~/Info/${project}/src 2>&1 >> /dev/null
+		echo -ne "\033[44m\033[32mProject:${project}\033[0m\n" 
+		git status
+        /usr/bin/bash
+		echo -ne "\033[44m\033[32mDone with Project:${project}\033[0m\n" 
+		popd 2>&1 >> /dev/null
+	done
+	echo -ne "\r\033[3m\033[36mfinished in `pwd`\033[0m\033[K\n"
+	return 0
+}
+
 

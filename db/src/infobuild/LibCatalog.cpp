@@ -75,7 +75,7 @@ Log( VERB_ALWAYS, "SetName", value );
 	{
 Log( VERB_ALWAYS, "SetLastUpdatedUTC", value );
 		struct tm tm;
-		if (strptime(value.c_str(), "%Y-%m-%dT%H:%M:%S%z", &tm) == NULL)
+		if (strptime(value.c_str(), "%Y-%m-%dT%H:%M:%S%z", &tm) == nullptr)
 		{ Log(VERB_ALWAYS, "Cannot convert time", value ); return; }
 		record.last_updated=mktime(&tm);
 	}
